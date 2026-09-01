@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""离线模拟 userscript v2 判定逻辑（与 userscript/bilibili-clean.user.js v0.2 逐条对齐）
+"""离线模拟过滤器判定逻辑（与 extension/content.js / config/clean.config.json v2 逐条对齐）
 目的：上线前验证过滤率/误杀率。判定顺序：
   同步层：短视频75s(R1) / 标题签名正则(R7) —— 样本无 goto/live 字段，直播不计
   异步层：竖屏(R1) -> 低播放<1000(R1) -> 官方区白名单(R4) -> CBI<0.5(R2, view>=5w)
