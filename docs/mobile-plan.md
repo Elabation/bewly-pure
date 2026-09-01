@@ -21,7 +21,7 @@
 
 ## 安装（免 root）
 
-- **Android 推荐**：Via / X 浏览器（内置脚本引擎，轻量）或 Firefox + Tampermonkey
+- **Android 推荐**：Via / X 浏览器（内置脚本引擎，轻量）
   1. 安装脚本：新建脚本 → 粘贴 `userscript/bilibili-clean-mobile.user.js` 全文 → 保存
   2. 用浏览器打开 `m.bilibili.com`（建议设为书签/主页）
 - **iOS**：App Store 装 Userscripts（免费开源）或 Stay → Safari 关联 → 导入脚本 → 打开 m.bilibili.com
