@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "洁净B站 Clean Bilibili",
+  "version": "1.0.0",
+  "description": "网格铺平B站首页 · CBI 感谢指数过滤「看过，却不给」· 短视频/直播/竖屏/切片硬过滤。数据与判定全部本地完成。",
+  "permissions": [],
+  "host_permissions": [
+    "https://api.bilibili.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.bilibili.com/", "https://www.bilibili.com/index.html", "https://www.bilibili.com/?*"],
+      "js": ["md5.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
