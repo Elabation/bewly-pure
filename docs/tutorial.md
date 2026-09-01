@@ -27,17 +27,21 @@
 
 装好后浏览器右上角会出现黑底方块图标。
 
-### 第 1 步：装脚本（二选一）
+### 第 1 步：装脚本（三选一）
 
-**方式 A · 一键安装（推荐）**
+**方式 A · 一键安装 · CDN 镜像（国内推荐，最快）**
 
 Tampermonkey 保持启用状态，点击这个链接，Tampermonkey 会自动弹出安装页：
+
+> https://cdn.jsdelivr.net/gh/Elabation/clean-bilibili-report@main/userscript/bilibili-clean.user.js
+
+**方式 B · 一键安装 · GitHub 直连**
 
 > https://github.com/Elabation/clean-bilibili-report/raw/main/userscript/bilibili-clean.user.js
 
 在弹出的页面里点绿色按钮「安装」即可。
 
-**方式 B · 手动粘贴**
+**方式 C · 手动粘贴（以上链接都打不开时）**
 
 1. 打开 https://github.com/Elabation/clean-bilibili-report/blob/main/userscript/bilibili-clean.user.js
 2. 点右上角「Raw」（或「复制」按钮）拿到全文
