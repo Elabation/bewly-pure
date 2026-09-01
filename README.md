@@ -1,5 +1,7 @@
 # 洁净B站 Clean Bilibili
 
+> **在线阅读调查报告：《看过，却不给》→ https://elabation.github.io/clean-bilibili-report/web/ecosystem-report.html**
+
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
 > 主战场手机端（免 root），PC 端同步覆盖。动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
 >
