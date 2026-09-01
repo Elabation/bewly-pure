@@ -1,6 +1,13 @@
 # 洁净B站 Clean Bilibili
 
-> **在线阅读调查报告：《看过，却不给》→ https://elabation.github.io/clean-bilibili-report/web/ecosystem-report.html**
+![report](https://img.shields.io/badge/调查报告-在线阅读-334EAC) ![userscript](https://img.shields.io/badge/脚本-一键安装-081F5C) ![samples](https://img.shields.io/badge/样本-7,537条·2019--2026-7096D1) ![license](https://img.shields.io/badge/立场-过滤低质·不封神-7096D1)
+
+> **📖 调查报告《看过，却不给》在线阅读 → https://elabation.github.io/clean-bilibili-report/web/ecosystem-report.html**
+>
+> **⚡ 三分钟安装浏览器插件（当前已可用）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
+>
+> 一键安装链接（Tampermonkey 启用时点击即装）：
+> https://github.com/Elabation/clean-bilibili-report/raw/main/userscript/bilibili-clean.user.js
 
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
 > 主战场手机端（免 root），PC 端同步覆盖。动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
