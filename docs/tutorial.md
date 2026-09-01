@@ -57,6 +57,24 @@ Tampermonkey 保持启用状态，点击这个链接，Tampermonkey 会自动弹
 
 看不到角标？见第五节 FAQ。
 
+### 手机版（免 root，主战场）
+
+脚本：`userscript/bilibili-clean-mobile.user.js`（作用于 `m.bilibili.com` 全站）。
+
+**Android（推荐 Via / X 浏览器，体积小、自带脚本引擎）**
+
+1. 应用商店安装 Via 浏览器 → 菜单 → 设置 → 通用 → 脚本执行 → 右上角「+」新建脚本
+2. 粘贴 `bilibili-clean-mobile.user.js` 全文 → 保存
+3. 用 Via 打开 `m.bilibili.com`（建议设为书签/主页）
+
+**iOS（Safari + Userscripts App，免费开源）**
+
+1. App Store 安装 Userscripts → Safari 设置 → 扩展 → Userscripts 允许 + 所有网站
+2. 在 Userscripts App 里新建脚本，粘贴脚本全文保存
+3. Safari 打开 `m.bilibili.com`
+
+**过滤范围（与 PC 版判定核心完全一致）**：首页热榜（SSR 直读）+ 频道信息流 + 视频页相关推荐，三股流全覆盖；左下角常驻过滤计数角标，卡片右上角 CBI/F7 评分角标。控制台调试 `CleanBili.test(stat, title, tname)`。
+
 ## 三、判定逻辑一览（对应调查报告 §13）
 
 ```

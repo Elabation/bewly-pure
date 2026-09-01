@@ -93,6 +93,8 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 
 PC 端：Tampermonkey 安装 `userscript/bilibili-clean.user.js`（CONFIG 与 clean.config.json 手动同步）。
 
+**手机端（免 root，主战场）**：Via/X 浏览器（Android）或 Safari + Userscripts App（iOS）安装 `userscript/bilibili-clean-mobile.user.js`，打开 `m.bilibili.com` 即生效——首页热榜（SSR）/频道流（region/feed/rcmd）/视频页相关流（archive/related）三股全过滤，判定核心与 PC 版逐字段一致。详见 `docs/mobile-plan.md`。
+
 ### userscript v0.2 判定流程（对应报告 §13 过滤器设计）
 
 ```
@@ -127,7 +129,7 @@ PC 端：Tampermonkey 安装 `userscript/bilibili-clean.user.js`（CONFIG 与 cl
 | 2.5 | 生态调查《看过，却不给》 | ✅✅ **第三版：十三项统计实验**（偏相关/分位回归/洛伦兹/PCA/χ²/MWU/**时代演化 2020-2026**/**时长×质量**/**层间对比**），单栏可读性重写，报告 web/ecosystem-report.html |
 | 3 | 过滤验证：真实页面验证规则 | ✅ **userscript v0.2 已实测**（dsh 浏览器注入 bilibili.com：拦截 12 批推荐、CBI 判定 149 条、过滤 59 条、badge 41 张；离线全样本模拟 feed 层砍 32% 卡片收回 54% 播放份额） |
 | 3.5 | 引擎 v2：CBI 相对基线取代全局阈值 | ✅ 设计+参数落地：config 新增 `cbi` 段（threshold 0.5 / min_view 5w）+ 8 条过滤器规则（报告§13），userscript 同步待做 |
-| 4 | 手机端方案（免 root） | 📝 评估完成见 docs/mobile-plan.md，待接口探测 |
+| 4 | 手机端方案（免 root） | ✅ **机制落地**：`userscript/bilibili-clean-mobile.user.js`（m.bilibili.com 首页热榜 SSR / 频道流 / 视频页相关流三股全过滤），单测 21/21 + 真实样本端到端 23.3% 过滤率验证，安装指南见 docs/mobile-plan.md，待真机实测 |
 | 5 | 成果发布 | ⏳ 配置即成果；GitHub 备份通道已就绪 |
 
 ## 现成方案对比（为什么自己写）
