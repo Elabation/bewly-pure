@@ -1,5 +1,5 @@
 {
-  "_说明": "洁净B站 总配置 —— 所有权重/阈值都在这里手调。评分公式：score = (收藏×w_fav + 投币×w_coin + 点赞×w_like) / 分母。改完配置重跑 engine/scoring.py 即生效；userscript 里的 CONFIG 需手动同步（见 README 手调指南）。",
+  "_说明": "洁净B站 总配置 —— 所有权重/阈值都在这里手调。评分公式：score = (收藏×w_fav + 投币×w_coin + 点赞×w_like) / 分母。改完配置重跑 engine/scoring.py 即生效；extension/content.js 里的 CONFIG 需手动同步（见 README 手调指南）。",
   "config_version": 2,
 
   "scoring": {
@@ -65,7 +65,7 @@
   },
 
   "enrich": {
-    "_doc": "userscript v0.3 运行时参数（与脚本 CONFIG.enrich 同步）：懒判定 + 缓存",
+    "_doc": "扩展/脚本运行时参数（与 extension/content.js 的 CONFIG.enrich 同步）：懒判定 + 缓存",
     "cache_minutes": 1440,
     "cache_minutes_doc": "判定结果缓存时长；互动数变化慢，24h 内 CBI 基本稳定",
     "concurrency": 6,
@@ -74,12 +74,11 @@
   "lazy": {
     "enabled": true,
     "root_margin": "1600px 0px",
-    "lazy_doc": "v0.3 懒判定：卡片滚近视口（rootMargin 提前量）才调 view API，请求量比全量判定降约 60%"
+    "lazy_doc": "懒判定：卡片滚近视口（rootMargin 提前量）才调 view API，请求量比全量判定降约 60%"
   },
   "ui": {
     "show_counter": true,
     "show_badge": true,
-    "placeholder": true,
-    "placeholder_doc": "v0.3：被隐藏卡片位置显示「已过滤」占位薄条（保持布局密度，点击可临时放行该视频）"
+    "ui_doc": "过滤计数角标与 CBI 评分角标显示开关（扩展与手机脚本通用）"
   }
 }
