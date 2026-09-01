@@ -7,7 +7,8 @@
 > **⚡ 三分钟安装浏览器插件（当前已可用）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
 >
 > 一键安装链接（Tampermonkey 启用时点击即装）：
-> https://github.com/Elabation/clean-bilibili-report/raw/main/userscript/bilibili-clean.user.js
+> - CDN 镜像（国内推荐）：https://cdn.jsdelivr.net/gh/Elabation/clean-bilibili-report@main/userscript/bilibili-clean.user.js
+> - GitHub 直连：https://github.com/Elabation/clean-bilibili-report/raw/main/userscript/bilibili-clean.user.js
 
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
 > 主战场手机端（免 root），PC 端同步覆盖。动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
