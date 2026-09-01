@@ -1,0 +1,126 @@
+/* 洁净B站 Clean Bilibili · 网格模式样式（接管 B 站首页推荐流） */
+
+/* 接管时隐藏原版推荐流（.bili-feed4-layout 只含推荐区；顶栏 .bili-header 在其外部，原生保留） */
+html.cleanbili-on .bili-feed4-layout,
+html.cleanbili-on .recommended-container_floor-aside {
+  display: none !important;
+}
+
+/* 网格根容器 */
+#cleanbili-root {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 24px 60px;
+}
+
+/* 状态条 */
+#cleanbili-root .cb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4px 2px 14px;
+  font: 12.5px/1.6 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #6b7280;
+}
+#cleanbili-root .cb-off {
+  color: #334EAC;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 2px 10px;
+  border: 1px solid #C9D4EE;
+  border-radius: 999px;
+}
+#cleanbili-root .cb-off:hover { background: #EEF2FB; }
+
+/* 网格：等宽铺平，随窗口自适应列数 */
+#cleanbili-root .cb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px 16px;
+}
+@media (max-width: 900px) {
+  #cleanbili-root .cb-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px 10px; }
+}
+
+/* 卡片 */
+#cleanbili-root .cb-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 10px;
+  background: transparent;
+  transition: transform .12s ease;
+}
+#cleanbili-root .cb-card:hover { transform: translateY(-2px); }
+#cleanbili-root .cb-card:hover .cb-title { color: #334EAC; }
+
+#cleanbili-root .cb-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #E8E2D6;
+}
+#cleanbili-root .cb-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+#cleanbili-root .cb-dur {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(8, 15, 30, .78);
+  color: #fff;
+  font: 11px/1 system-ui, sans-serif;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+#cleanbili-root .cb-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(8, 15, 30, .78);
+  color: #fff;
+  font: 11px/1 system-ui, sans-serif;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, .35);
+}
+#cleanbili-root .cb-badge.high   { border-color: #2FBF8F; }
+#cleanbili-root .cb-badge.normal { border-color: #9aa3b5; }
+#cleanbili-root .cb-badge.low    { border-color: #E8A05C; }
+
+#cleanbili-root .cb-info { padding: 8px 2px 0; }
+#cleanbili-root .cb-title {
+  font: 600 13.5px/1.5 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #18202c;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+#cleanbili-root .cb-meta {
+  margin-top: 4px;
+  font: 11.5px/1.6 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #9aa3b5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 滚动哨兵 */
+#cleanbili-root .cb-sentinel { height: 4px; }
+
+/* 暗色（跟随系统） */
+@media (prefers-color-scheme: dark) {
+  html.cleanbili-on { background: #101418; }
+  #cleanbili-root .cb-title { color: #e7ecf3; }
+  #cleanbili-root .cb-card:hover .cb-title { color: #9CC7FF; }
+  #cleanbili-root .cb-thumb { background: #1c2430; }
+  #cleanbili-root .cb-bar { color: #8b95a6; }
+  #cleanbili-root .cb-off { color: #9CC7FF; border-color: #2c3a52; }
+  #cleanbili-root .cb-off:hover { background: #1a2331; }
+}
