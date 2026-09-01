@@ -46,11 +46,11 @@
     "live": true,
     "min_views": 1000,
     "min_views_doc": "总播放低于此值直接过滤（与 min_view_threshold 不同：这个是硬过滤开关）",
-    "block_keywords": [],
-    "block_keywords_doc": "关键词黑名单（§13 R7：仅放经过大样本检验的签名，推荐正则：第[0-9一二三四五六七八九十百]+[集话] 等；不要放 emoji/感叹等文体特征，§14 证明无效甚至反向）",
-    "zone_whitelist": [],
-    "zone_whitelist_doc": "§13 R4：官方版权分区（电影/电视剧/纪录片）感谢率天然垫底，建议整体加白名单（v3 将实现分区内基线）",
-    "beggar_patterns": ["投币.*更新", "三连.*更新", "点赞过.*更新"],
+    "block_keywords": ["第[0-9一二三四五六七八九十百]+[集话]", "挑战[^，。！？\\s]{1,12}(？|\\?|成功的可能性|能成吗)"],
+    "block_keywords_doc": "标题签名黑名单（§13 R7：仅放经过大样本检验的签名；不要放 emoji/感叹等文体特征，§14 证明无效甚至反向）",
+    "zone_whitelist": ["电影", "电视剧", "纪录片"],
+    "zone_whitelist_doc": "§13 R4：官方版权分区感谢率天然垫底，整体加白名单（tname 子串匹配；v3 方向：分区内基线）",
+    "beggar_patterns": ["投币.{0,6}更新", "三连.{0,6}更新", "点赞过.{0,6}更新"],
     "beggar_patterns_doc": "§13 R8 观察项：乞讨互动文本打标不惩罚",
     "hide_tiers": ["junk"],
     "hide_tiers_doc": "评分落在这些等级的推荐卡片直接隐藏（v2 只隐藏 junk；low 只打标不隐藏——R2：不冤枉规模稀释，报告§13）",
@@ -62,5 +62,24 @@
     "max_videos_per_source": 40,
     "sources": ["ranking", "popular", "feed"],
     "sources_doc": "ranking=排行榜 popular=热门 feed=首页推荐流(未登录态)；feed 最接近真实刷到的分布"
+  },
+
+  "enrich": {
+    "_doc": "userscript v0.3 运行时参数（与脚本 CONFIG.enrich 同步）：懒判定 + 缓存",
+    "cache_minutes": 1440,
+    "cache_minutes_doc": "判定结果缓存时长；互动数变化慢，24h 内 CBI 基本稳定",
+    "concurrency": 6,
+    "concurrency_doc": "view API 并发上限；过高会挤占页面自身请求通道"
+  },
+  "lazy": {
+    "enabled": true,
+    "root_margin": "1600px 0px",
+    "lazy_doc": "v0.3 懒判定：卡片滚近视口（rootMargin 提前量）才调 view API，请求量比全量判定降约 60%"
+  },
+  "ui": {
+    "show_counter": true,
+    "show_badge": true,
+    "placeholder": true,
+    "placeholder_doc": "v0.3：被隐藏卡片位置显示「已过滤」占位薄条（保持布局密度，点击可临时放行该视频）"
   }
 }
