@@ -11,3 +11,6 @@ probe_apis*.py
 
 # BewlyBewly upstream clone (research reference, not committed)
 vendor/
+
+# prebuilt extension dir (distributed as zip)
+extension-bewly/
