@@ -8,3 +8,6 @@ data/samples/ecosystem_v5_20260901_2050.json
 *.pyc
 __pycache__/
 probe_apis*.py
+
+# BewlyBewly upstream clone (research reference, not committed)
+vendor/

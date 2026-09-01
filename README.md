@@ -7,7 +7,7 @@
 > **⚡ 浏览器扩展安装（2 分钟）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
 
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
-> PC 端：自研 Edge/Chrome 扩展，网格铺平首页，低质卡片根本不渲染。
+> PC 端：**基于 BewlyBewly（MIT）做增量开发**——UI/网格/无限滚动用它的成熟框架，推荐过滤算法是我们自己的 CBI 感谢指数；版权声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，增量方案见 [docs/bewly-integration-plan.md](docs/bewly-integration-plan.md)。
 > 手机端（免 root）：Via/X（Android）+ Userscripts（iOS）。
 > 动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
 >
