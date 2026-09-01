@@ -85,6 +85,23 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 
 PC 端：Tampermonkey 安装 `userscript/bilibili-clean.user.js`（CONFIG 与 clean.config.json 手动同步）。
 
+### userscript v0.2 判定流程（对应报告 §13 过滤器设计）
+
+```
+同步层（响应即删，卡片根本不渲染）：
+  直播 R1 / 时长≤75s R1 / 标题命中签名正则 R7（第N集/话、挑战体）
+
+异步层（view API 补全收藏/投币后判定，CBI 曲线内置）：
+  竖屏 R1 → hide
+  播放 < 1000 R1 → hide
+  官方区白名单（电影/电视剧/纪录片）R4 → 跳过 CBI，不判低质
+  播放 ≥ 5万 且 CBI < 0.5 R2 → hide「看过不给」
+  播放 3千~5万 全局兜底 R2' → 只 hide junk（low 打标不隐藏）
+  「投币X更新」乞讨文本 R8 → badge 打「乞」标，不惩罚
+```
+
+控制台调试：`CleanBili.test(stat, title, tname, dimension)` 单视频试算；`CleanBili.counts` 看实时过滤统计。
+
 ## 工作原理
 
 - **数据层**：`x/web-interface/view` 拿 `stat`（view/favorite/coin/like）+ `dimension`（宽高/rotate）+ `duration`；
@@ -100,7 +117,7 @@ PC 端：Tampermonkey 安装 `userscript/bilibili-clean.user.js`（CONFIG 与 cl
 | 1 | 数据层：API 采集播放/收藏/投币 | ✅ 采集五件套 + **每周必看/入站必刷大采样**（累计 7000+ 条，2020-2026 七年跨度） |
 | 2 | 评分模型：验证公式、定权重与阈值 | ✅ 首轮校准 + 31 配置网格扫描（币/播 = 低质探测冠军，详见报告§9） |
 | 2.5 | 生态调查《看过，却不给》 | ✅✅ **第三版：十三项统计实验**（偏相关/分位回归/洛伦兹/PCA/χ²/MWU/**时代演化 2020-2026**/**时长×质量**/**层间对比**），单栏可读性重写，报告 web/ecosystem-report.html |
-| 3 | 过滤验证：真实页面验证规则 | ⏳ userscript 原型就绪，待 dsh-pilot 实测 |
+| 3 | 过滤验证：真实页面验证规则 | ✅ **userscript v0.2 已实测**（dsh 浏览器注入 bilibili.com：拦截 12 批推荐、CBI 判定 149 条、过滤 59 条、badge 41 张；离线全样本模拟 feed 层砍 32% 卡片收回 54% 播放份额） |
 | 3.5 | 引擎 v2：CBI 相对基线取代全局阈值 | ✅ 设计+参数落地：config 新增 `cbi` 段（threshold 0.5 / min_view 5w）+ 8 条过滤器规则（报告§13），userscript 同步待做 |
 | 4 | 手机端方案（免 root） | 📝 评估完成见 docs/mobile-plan.md，待接口探测 |
 | 5 | 成果发布 | ⏳ 配置即成果；GitHub 备份通道已就绪 |

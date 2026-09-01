@@ -52,8 +52,8 @@
     "zone_whitelist_doc": "§13 R4：官方版权分区（电影/电视剧/纪录片）感谢率天然垫底，建议整体加白名单（v3 将实现分区内基线）",
     "beggar_patterns": ["投币.*更新", "三连.*更新", "点赞过.*更新"],
     "beggar_patterns_doc": "§13 R8 观察项：乞讨互动文本打标不惩罚",
-    "hide_tiers": ["low", "junk"],
-    "hide_tiers_doc": "评分落在这些等级的推荐卡片直接隐藏；unproven 默认显示并打标，想隐藏就把它加进来",
+    "hide_tiers": ["junk"],
+    "hide_tiers_doc": "评分落在这些等级的推荐卡片直接隐藏（v2 只隐藏 junk；low 只打标不隐藏——R2：不冤枉规模稀释，报告§13）",
     "hide_unproven": false
   },
 
