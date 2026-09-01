@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>看过，却不给 —— 用硬币账本透视B站生态（第三版：七年跨度 · 剥干扰 · 过滤器设计）</title>
+<style>
+:root{--ink:#081F5C;--data1:#334EAC;--data2:#7096D1;--data3:#BAD6EB;--paper:#F7F2EB;--shadow:#E3DACB;--sub:#5B7EC2;--dim:#9FB6D4;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:14px/1.9 -apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 80px}
+header.hero{padding:76px 0 30px;border-bottom:1px solid var(--shadow)}
+.kicker{font-size:11px;letter-spacing:4px;color:var(--data1);border:1px dashed var(--data2);display:inline-block;padding:4px 14px;border-radius:999px;margin-bottom:22px}
+h1{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:42px;font-weight:900;letter-spacing:2px;line-height:1.3}
+.hero .lede{font-size:15.5px;color:var(--sub);margin-top:14px;max-width:700px}
+.badges{margin-top:22px;font-size:11.5px;color:var(--data1);letter-spacing:.5px}
+.badges span{border:1px solid var(--data3);border-radius:4px;padding:2px 9px;margin-right:8px;display:inline-block;margin-bottom:6px;background:#fff8}
+nav{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--shadow);z-index:9;font-size:12px;padding:9px 0}
+nav a{color:var(--sub);text-decoration:none;margin-right:12px}
+nav a:hover{color:var(--ink)}
+section{padding:50px 0 10px;border-bottom:1px solid var(--shadow)}
+.sn{font-size:11px;letter-spacing:3px;color:var(--data2)}
+h2{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:25px;margin:6px 0 10px}
+h3{font-size:15px;color:var(--data1);margin:26px 0 8px}
+h4{font-size:13.5px;color:var(--ink);margin:14px 0 4px}
+p{margin:10px 0;max-width:780px}
+p.note{font-size:12.5px;color:var(--sub)}
+.guide{background:#EFE8DA;border-left:4px solid var(--data1);padding:12px 18px;margin:14px 0;font-size:13.5px;color:#22346B;max-width:780px}
+.guide b{color:#081F5C}
+.sym{font-family:Georgia,serif;color:#334EAC}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0}
+.card{flex:1 1 170px;background:#fff9;border:1px solid var(--shadow);border-top:3px solid var(--data1);padding:14px 16px}
+.card h4{margin-top:0}
+.card .en{font-size:10.5px;color:var(--dim);letter-spacing:1px}
+.card dl{font-size:12.5px;margin-top:8px}
+.card dt{color:var(--data2);font-size:11px;letter-spacing:1px;margin-top:8px}
+.card dd{color:#31427A}
+.card .k{font-family:Georgia,serif;font-size:22px;color:var(--data1)}
+.bar-row{display:flex;align-items:center;margin:7px 0}
+.bar-lab{width:110px;font-size:12px;color:var(--ink);flex:none}
+.bar-track{flex:1;height:14px;background:#EDE5D8;position:relative}
+.bar-fill{height:14px}
+.bar-val{width:80px;text-align:right;font-family:Georgia,serif;font-size:12px;color:var(--data1);flex:none}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:12.5px}
+th{color:var(--data1);font-weight:600;border-bottom:2px solid var(--data2);padding:7px 8px;text-align:left;font-size:12px}
+td{border-bottom:1px solid var(--shadow);padding:7px 8px;vertical-align:top}
+td.num{font-family:Georgia,serif}
+tr.win td{background:#334EAC0d}
+tr.rej td{color:#8a93a8}
+.tag{font-size:10px;border:1px solid var(--data2);color:var(--data1);border-radius:3px;padding:1px 6px;margin-left:6px;letter-spacing:1px;white-space:nowrap}
+.tag.sig{background:#334EAC;color:#fff;border-color:#334EAC}
+.tag.warn{border-color:#C2803A;color:#9A6428}
+.tag.nsig{color:#8a93a8;border-color:#D5CDBE}
+.exq{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.ex{flex:1 1 300px;border-left:3px solid var(--data2);background:#fff8;padding:9px 12px;font-size:12.5px}
+.ex .t{color:var(--ink)}
+.ex .m{font-family:Georgia,serif;color:var(--data1);font-size:12px;margin-top:2px}
+.ex.cold{border-left-color:#C2803A}
+.formula{background:#0E2A6B;color:#EAF1FF;font-family:Consolas,Monaco,monospace;font-size:13px;padding:18px 22px;border-radius:6px;line-height:2.1;margin:16px 0;overflow-x:auto}
+.formula .hl{color:#9CC7FF}
+.quote{border-left:3px solid var(--data1);padding:4px 16px;margin:16px 0;color:#22346B;font-size:13.5px;max-width:780px}
+.chart-wrap{position:relative;margin:18px 0}
+svg.chart{width:100%;height:auto;background:#fff6;border:1px solid var(--shadow)}
+#tip{position:absolute;pointer-events:none;background:#0E2A6B;color:#EAF1FF;font-size:12px;padding:6px 10px;border-radius:4px;max-width:290px;display:none;line-height:1.5;z-index:5}
+.legend{font-size:11.5px;color:var(--sub);margin-top:8px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 4px 0 12px}
+ul.tight{margin:8px 0 8px 20px;max-width:780px}
+ul.tight li{margin:6px 0}
+.foot{padding:34px 0 10px;font-size:11.5px;color:var(--dim);letter-spacing:1px}
+.kpirow{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0}
+.kpi{flex:1 1 170px;background:#EFE8DA;padding:14px 16px}
+.kpi .n{font-family:Georgia,serif;font-size:26px;color:var(--ink)}
+.kpi .d{font-size:11.5px;color:var(--sub);line-height:1.55;margin-top:2px}
+.hm{border-collapse:collapse;margin:10px 0}
+.hm td{width:70px;height:40px;text-align:center;font-family:Georgia,serif;font-size:12px;border:1px solid #fff}
+.hm th{border:none;padding:4px 6px;font-size:11.5px}
+.matrix-wrap{display:flex;gap:8px;align-items:flex-start}
+.matrix-wrap .ylab{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11.5px;color:var(--data2);height:250px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">洁净 B 站 · 生态调查报告 · 第三版（七年跨度 · 十三项统计实验 · 过滤器设计）</div>
+  <h1>看过，却不给</h1>
+  <div class="lede">用 <b id="hero-n">—</b> 条视频的「硬币账本」透视B站，其中「每周必看」387 期把时间轴拉到 <b>2020–2026</b> 七年。这一版做三件事：把每个结论的干扰剥干净（偏相关/分位回归/主成分/假设检验）；回答「时长和质量的关系」「感谢率如何随时代变迁」；最后把它落成一套可手调的过滤器设计。</div>
+  <div class="badges">
+    <span id="badge-n">样本 — 条</span><span>可信层 <b id="badge-t">—</b></span><span>七个地层</span><span>2020–2026 七年跨度</span><span id="badge-date">—</span><span>仅公开API元数据 · 未下载视频</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#s1">货币与符号</a><a href="#s2">规模引力</a><a href="#s3">剥干扰</a><a href="#s4">注意力形状</a><a href="#s5">火与质量</a><a href="#s6">感谢指数</a><a href="#s7">分区指纹</a><a href="#s8">信号分歧</a><a href="#s9">公式网格</a><a href="#s10">时间维度</a><a href="#s11">时长与质量</a><a href="#s12">低质密码</a><a href="#s13">过滤器设计</a><a href="#s14">标题信号</a><a href="#s15">尾声</a><a href="#ap">附录</a>
+</nav>
+
+<!-- ============ §1 ============ -->
+<section id="s1">
+  <div class="sn">SECTION 01 · 语义学与符号约定</div>
+  <h2>四种货币：B站的每一键都有价格</h2>
+  <div class="guide"><b>先读这里：</b>本报告所有结论都建立在「互动率＝互动数÷播放数」这一族指标上。要看懂后文，只需要先弄清两件事：① 每种互动的<b>行为成本</b>是什么——成本越高、越难被伪装，信号就越可信；② 每个指标的<b>符号与中文名</b>——后文所有图表都用这套符号。</div>
+  <div class="cards">
+    <div class="card" style="border-top-color:#BAD6EB">
+      <h4>播放 <span class="en">VIEW</span></h4>
+      <dl>
+        <dt>行为成本</dt><dd>一次点击，或自动播放的 0 元</dd>
+        <dt>度量什么</dt><dd>被看见的能力＝算法曝光 × 封面标题点击率</dd>
+        <dt>不度量什么</dt><dd>认可。看完就走，观众不欠一个赞</dd>
+        <dt>对应指标</dt><dd><span class="sym">V</span>：播放量（分母、入场券）</dd>
+      </dl>
+    </div>
+    <div class="card" style="border-top-color:#7096D1">
+      <h4>点赞 <span class="en">LIKE</span></h4>
+      <dl>
+        <dt>行为成本</dt><dd>一秒，零成本</dd>
+        <dt>度量什么</dt><dd>轻度认同 × 粉丝浓度 × 求赞话术服从率</dd>
+        <dt>数据实证</dt><dd>点赞率 <span class="sym">F1</span> 与规模相关 <span class="k">−0.33</span>：规模污染最重</dd>
+        <dt>结论</dt><dd>区分度最差的货币，公式里只给低权重</dd>
+      </dl>
+    </div>
+    <div class="card" style="border-top-color:#081F5C">
+      <h4>投币 <span class="en">COIN</span></h4>
+      <dl>
+        <dt>行为成本</dt><dd>不稀缺但<b>最容易被忘记</b>：要先记得它、再打开投币面板。「本想投但忘了」是常态</dd>
+        <dt>度量什么</dt><dd>被感动到「很难不投」的程度——克服惰性的主动感谢</dd>
+        <dt>数据实证</dt><dd>投币率 <span class="sym">F2</span> 与社交活跃相关 <span class="k" id="k-coin">+0.63</span>：全场最高</dd>
+        <dt>已知噪声</dt><dd>「投币X解锁下期」式乞讨会抬高币率；样本小、特征可识别，留待 v3 交叉侦测</dd>
+      </dl>
+    </div>
+    <div class="card" style="border-top-color:#334EAC">
+      <h4>收藏 <span class="en">FAVORITE</span></h4>
+      <dl>
+        <dt>行为成本</dt><dd>一次点击 ＋「以后还会来」的判断</dd>
+        <dt>度量什么</dt><dd>留用意图——<b>类型探测器</b></dd>
+        <dt>数据实证</dt><dd>收藏率 <span class="sym">F3</span> 与弹幕率相关仅 <span class="k">−0.02</span>：独立维度</dd>
+        <dt>结论</dt><dd>不分区归一就用，会系统性冤判</dd>
+      </dl>
+    </div>
+  </div>
+  <h3>全报告符号表（自然语言 ⇄ 符号）</h3>
+  <table>
+    <thead><tr><th>符号</th><th>中文名</th><th>定义</th><th>直觉解释</th></tr></thead>
+    <tbody>
+      <tr><td class="sym">F1</td><td>点赞率</td><td class="num">点赞 ÷ 播放</td><td>每换 1 次播放赚到的「点头」</td></tr>
+      <tr><td class="sym">F2</td><td>投币率</td><td class="num">投币 ÷ 播放</td><td>每换 1 次播放赚到的「付费感谢」</td></tr>
+      <tr><td class="sym">F3</td><td>收藏率</td><td class="num">收藏 ÷ 播放</td><td>每换 1 次播放赚到的「留用」</td></tr>
+      <tr><td class="sym">F7</td><td><b>加权感谢率</b>（本报告主指标）</td><td class="num">(3×收藏 + 2×投币 + 0.3×点赞) ÷ 播放</td><td>把三种感谢折算成「每 1 次播放的平均感谢收入」</td></tr>
+      <tr><td class="sym">CBI</td><td><b>感谢指数</b>（CleanBili Index）</td><td class="num">F7 ÷ 同播放段基线中位数</td><td>相对同类视频的感谢水平：1.0＝正常，&lt;0.5＝「看过却不给」，&gt;2＝「超额感谢」</td></tr>
+      <tr><td class="sym">S</td><td>社交活跃指数</td><td class="num">(弹幕 + 分享 + 评论) ÷ 播放</td><td>内容引发的「围观/转发/讨论」热度，用作独立验证信号</td></tr>
+      <tr><td class="sym">冷比</td><td>冷门比值视频</td><td class="num">F7 落全局最低四分位</td><td>「看过却不给」的粗筛版本（v1 用）</td></tr>
+    </tbody>
+  </table>
+  <p class="note">补注：弹幕＝共在场感（「我和别人一起在看」），评论＝讨论欲（可被争议驱动），分享＝传播意愿。§8 将证明收藏与弹幕率几乎零相关（ρ=−0.02）——它们是两种完全不同的心理行为。</p>
+</section>
+
+<!-- ============ §2 ============ -->
+<section id="s2">
+  <div class="sn">SECTION 02</div>
+  <h2>规模的引力：播放量每涨一个数量级，互动率掉一半</h2>
+  <div class="guide"><b>看什么、怎么看：</b>下面三组条形把可信样本按<b>播放量分三段</b>（1万以下样本少，仅列不作结论），每段取 F1/F2/F3 的中位数。要关注的不是绝对值，而是<b>阶梯状下移的形状</b>——它说明「比较比值」必须先「对齐规模」，否则就是拿短跑成绩比马拉松。</div>
+  <h3>点赞率 F1（赞/播）</h3>
+  <div class="bar-row"><span class="bar-lab">1w–10w 播放</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#334EAC"></div></div><span class="bar-val">10.4%</span></div>
+  <div class="bar-row"><span class="bar-lab">10w–100w</span><div class="bar-track"><div class="bar-fill" style="width:49%;background:#7096D1"></div></div><span class="bar-val">5.07%</span></div>
+  <div class="bar-row"><span class="bar-lab">＞100w</span><div class="bar-track"><div class="bar-fill" style="width:32%;background:#BAD6EB"></div></div><span class="bar-val">3.29%</span></div>
+  <h3>投币率 F2（币/播）</h3>
+  <div class="bar-row"><span class="bar-lab">1w–10w 播放</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#334EAC"></div></div><span class="bar-val">1.13%</span></div>
+  <div class="bar-row"><span class="bar-lab">10w–100w</span><div class="bar-track"><div class="bar-fill" style="width:34%;background:#7096D1"></div></div><span class="bar-val">0.38%</span></div>
+  <div class="bar-row"><span class="bar-lab">＞100w</span><div class="bar-track"><div class="bar-fill" style="width:19%;background:#BAD6EB"></div></div><span class="bar-val">0.21%</span></div>
+  <h3>收藏率 F3（藏/播）</h3>
+  <div class="bar-row"><span class="bar-lab">1w–10w 播放</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#334EAC"></div></div><span class="bar-val">3.15%</span></div>
+  <div class="bar-row"><span class="bar-lab">10w–100w</span><div class="bar-track"><div class="bar-fill" style="width:24%;background:#7096D1"></div></div><span class="bar-val">0.76%</span></div>
+  <div class="bar-row"><span class="bar-lab">＞100w</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#BAD6EB"></div></div><span class="bar-val">0.68%</span></div>
+  <div class="quote">规模稀释是真实的（§3 将量化它有多少来自混杂）——所以「低质判定」不能用一条全局水平线，基线必须<b>随播放量移动</b>。这正是 §6 感谢指数 CBI 的使命。</div>
+</section>
+
+<!-- ============ §3 偏相关 ============ -->
+<section id="s3">
+  <div class="sn">SECTION 03 · 偏相关分析</div>
+  <h2>剥干扰：「火的稀释」是谁的锅？</h2>
+  <div class="guide"><b>问题设定：</b>§2 显示越火的视频互动率越低。但先别急着给「火」定罪——有三个干扰源（统计学叫混杂变量）混在数据里：<br>
+  <b>① 视频年龄</b>：能攒到百万播放的多是老视频，互动是七年里慢慢加的，比例天然被时间摊薄；<br>
+  <b>② 视频时长</b>：3 分钟的舞蹈和 60 分钟的纪录片，观众的互动习惯完全不同；<br>
+  <b>③ 分区类型</b>：音乐区观众天然比汽车区观众更爱互动，这跟火不火没关系。<br>
+  如果不分青红皂白地算「播放量 vs 比值」的相关，这三位的账都会记到「火」头上。<b>偏相关</b>做的事很朴素：把视频按「同年龄、同时长、同分区」分组比较，让干扰源在组内互相抵消，只留「火」自己的贡献。</div>
+  <h3>怎么读下面的图</h3>
+  <p>四根条形是四次「审判」：第一根是<b>全部样本混合</b>的原始相关——注意它同时混着「火的地层」（榜单/每周必看）和「长尾地层」，层间构成差异会稀释读数，<b>仅作对照</b>；之后每加一个控制变量重新算一次。<b>重点看最后两根</b>：榜单层内控制了年龄、时长、18 个分区之后，相关性仍稳稳存在——这部分才是「火」自己甩不掉的机制。</p>
+  <div id="waterfall"></div>
+  <div class="guide"><b>结论怎么读：</b>控制年龄、时长后相关性只缩了一点点，说明「老视频所以比值低」不是主因；在榜单层内再控制 <span id="p-nz">18</span> 个分区后剩 <b class="sym" id="p-full">—</b>——即使在同龄、同时长、同分区的条件下，更火的视频感谢率依然更低，<b>路人稀释机制真实存在</b>。同时混杂并非无辜：分区类型等干扰解释了相当一部分表观稀释（把视频推给爱互动的分区观众，感谢率天然高）。任何把比值下降全归罪于「变火了」的叙事，都是过度归因。</p>
+  <p class="note">方法注记：偏相关＝用最小二乘把协变量的线性影响从两个变量中减掉后再算相关。它度量「控制后的关联」，不是因果。本节全控制组在榜单层内（n=1638，都有分区标签）。</p>
+</section>
+
+<!-- ============ §4 洛伦兹 ============ -->
+<section id="s4">
+  <div class="sn">SECTION 04 · 洛伦兹曲线与幂律</div>
+  <h2>注意力的形状：比财富更不平等的分配</h2>
+  <div class="guide"><b>看什么：</b>把全部可信视频按播放量从高到低排队，横轴是「排队的前 x%」，纵轴是「这前 x% 占走了总播放量的百分比」。<b>要看的是曲线离对角线（绝对平等线）有多远</b>：越远越不平等。曲线下方的一半面积比上三角面积，就是著名的基尼系数。</div>
+  <div class="chart-wrap"><svg id="lorenz" class="chart" viewBox="0 0 840 380" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="kpirow">
+    <div class="kpi"><div class="n" id="gini">—</div><div class="d">注意力基尼系数<br>参照：绝大多数国家财富基尼 0.25–0.45</div></div>
+    <div class="kpi"><div class="n" id="top1">—</div><div class="d">最头部 1% 视频占走的播放份额</div></div>
+    <div class="kpi"><div class="n" id="top10">—</div><div class="d">头部 10% 视频占走的播放份额</div></div>
+    <div class="kpi"><div class="n" id="zipf">—</div><div class="d">Zipf 幂律斜率<br>第 k 名播放 ≈ 第 1 名的 1/k<sup>α</sup></div></div>
+  </div>
+  <p>B站的注意力分配呈<b>强头部集中</b>，但读数要分层：混入「每周必看」的七年火视频后，整体基尼会回落（因为每个新样本都已是播放量百万级的赢家）；<b>更接近「你刷到的时间线」的读数是榜单层内部的基尼 <span class="sym" id="gini-rk">—</span></b>。Zipf 斜率同理是混合读数——幂律的自我强化是「播放量＝入场券」机制的数学必然：入场券按已入场人数再分配，马太效应滚雪球。</p>
+  <div class="quote">推论：指望「算法多分点入场券给好内容」来治低质，是在跟幂律对抗。唯一可行的杠杆是<b>在入场券已经发出之后，用感谢率把「浪费掉的注意力」识别出来</b>——这就是本报告的立场，也是 §12 过滤器的立足点。</div>
+</section>
+
+<!-- ============ §5 四象限散点 ============ -->
+<section id="s5">
+  <div class="sn">SECTION 05 · 四象限（悬停看标题）</div>
+  <h2>火与质量：两个正交的维度</h2>
+  <div class="guide"><b>怎么读这张图：</b>横轴是播放量（对数，从 1 千到 1000 万），纵轴是加权感谢率 F7。每个点是一条视频，<b>鼠标悬停可看标题和数据</b>。竖虚线＝50 万播放，横虚线＝全局 P25 感谢率。四象限各有名字：右下（火而感谢率低）是我们要抓的「注意力小偷」；左上（不火而被深爱）是「安静遗珠」。看图时先看两个颜色团块的分布，再悬停几个红色区的点感受「火而不给」长什么样。</div>
+  <div class="chart-wrap">
+    <svg id="scatter" class="chart" viewBox="0 0 840 470" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="tip"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <h3>注意力小偷：火，而不给 <span class="tag" id="tag-hotbad">—</span></h3>
+  <p class="note">热门层（榜单＋热门）中播放≥50w 且 F7 低于全局 P25 的视频。它们赢得了入场券，没赢得硬币。</p>
+  <div class="exq" id="ex-cold"></div>
+  <h3>安静遗珠：不火，而被深爱 <span class="tag" id="tag-gem">—</span></h3>
+  <p class="note">长尾层（推荐流＋新稿＋搜索深页）中 F7 ≥ 全局 P75 的视频。「高质量但不火」真实存在，但并不遍地都是。</p>
+  <div class="exq" id="ex-gem"></div>
+  <div class="quote">遗珠不需要被推爆，只需要<b>不被注意力小偷挤下时间线</b>——这正是本产品「过滤低质」而非「保留高质」的原因：品味不可代理，行为可以度量。</div>
+</section>
+
+<!-- ============ §6 CBI ============ -->
+<section id="s6">
+  <div class="sn">SECTION 06 · 分位数回归基线</div>
+  <h2>感谢指数 CBI：把「低质」从绝对线变成相对量</h2>
+  <div class="guide"><b>为什么需要它：</b>§2 证明感谢率随规模衰减，§3 证明这不全是混杂——那么「正常水平」就该是一条<b>随播放量下移的曲线</b>，而不是一条水平线。我们用滑动窗口分位数回归拟合出这条基线，然后定义：<b>感谢指数 CBI ＝ 视频自己的 F7 ÷ 它所在播放段的基线中位数</b>。CBI 的读法：1.0＝和同类视频打平；0.5＝只拿到同类一半的感谢；0.2＝明显「看过却不给」。</div>
+  <div class="chart-wrap"><svg id="cbi-curve" class="chart" viewBox="0 0 840 380" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <h3>与全局阈值对质：谁在制造冤案？</h3>
+  <p class="note">对播放≥5w 的样本，分别用「全局 P25 阈值」和「CBI&lt;0.5」判定低质，交叉列表：</p>
+  <div id="confusion"></div>
+  <p class="note" id="conf-note"></p>
+  <div class="quote">两种判定高度一致，但全局阈值判定的低质视频里有 <b id="pardon-pct">10%</b> 被 CBI 平反——它们大多是「比值被规模合法稀释」的大热门。低质判定不需要冤枉大热门，因为大热门里也有真垃圾：<b>CBI 抓的是「同等曝光下更不被感谢」的相对垃圾</b>。</div>
+</section>
+
+<!-- ============ §7 指纹 ============ -->
+<section id="s7">
+  <div class="sn">SECTION 07 · 主成分分析</div>
+  <h2>分区价值指纹：18 个分区的几何肖像</h2>
+  <div class="guide"><b>这张图在做什么：</b>每个分区在四维指标（F1赞率/F2币率/F3藏率/弹幕率）上是一个四维点，直接画不出来。主成分分析（PCA）把四维压到二维平面，<b>保住尽量多的差异信息</b>（本数据前两个轴保住 <span id="fp-var">—</span>）。看图时关注<b>谁和谁抱团、谁孤立</b>：抱团说明它们的「社区互动性格」相似。</div>
+  <div class="chart-wrap"><svg id="pca" class="chart" viewBox="0 0 840 440" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <ul class="tight">
+    <li><b>横轴（PC1，62.6% 方差）＝「社区感谢强度」</b>：左端音乐/舞蹈/时尚/动画——用户创作、社区重仓感谢；右端电影/电视剧/纪录片——官方版权内容，观众消费但不感恩。</li>
+    <li><b>纵轴（PC2）＝「共在场 vs 留用」</b>：电影孤独地坠向下方（弹幕率全场最高、赞藏极低）——「千人来陪」而不「一人带走」的独特观影文化。</li>
+  </ul>
+  <div class="quote">分区指纹证明：感谢率不是「质量」的普适函数，而是<b>「内容类型 × 社区关系」的函数</b>。任何跨分区直接比较比值的做法都在拿尺子量体温。这就是 §13 过滤器必须「分区感知基线」的统计学证明。</div>
+</section>
+
+<!-- ============ §8 信号矩阵 ============ -->
+<section id="s8">
+  <div class="sn">SECTION 08 · Spearman 相关矩阵</div>
+  <h2>六种信号的分歧与共识</h2>
+  <div class="guide"><b>看什么：</b>六种互动率两两之间的等级相关（Spearman ρ）。<b>高值区说的是常识，低值区才是情报</b>：接近 0 意味着两个信号在度量完全不同的东西——它们的存在让公式可以「多维度互补」而不是重复计票。</div>
+  <div id="heatmap"></div>
+  <ul class="tight">
+    <li><b>收藏 × 弹幕 ＝ −0.02，完全正交</b>。「带走供自己反复用」与「留下来和大家一起嗨」是两种不相干的心理行为。</li>
+    <li><b>投币是「中间人」</b>：与其它五种信号全部 0.42–0.61 相关，唯独不极端——社区情绪最均衡的合成指标，这是它成为最佳低质信号的深层原因。</li>
+    <li><b>分享 × 评论 ＝ 0.66 最高</b>：「传播欲」与「讨论欲」是同一种冲动；而它俩与收藏的相关明显更低（0.42/0.19）——再次证明「留用」是独立维度。</li>
+  </ul>
+</section>
+
+<!-- ============ §9 公式网格 ============ -->
+<section id="s9">
+  <div class="sn">SECTION 09 · 网格搜索</div>
+  <h2>公式实验室：31 种配置的系统扫描</h2>
+  <div class="guide"><b>这一节回答「参数该怎么选」：</b>把 7 种信号子集（只用赞/币/藏的任意组合）× 3 种分母（原始播放/√播放/log播放）组成 <b>21 组等权公式</b>，加上基准权重（3/2/0.3）与币重变体共 31 种配置，逐一计算两个硬指标：<b>与播放规模的耦合</b>（越接近 0 越好——质量分里不许偷跑「热度」）和<b>与社交活跃指数 S 的相关</b>（越高越好——真内容才让人愿意讨论转发）。</div>
+  <div id="grid-table"></div>
+  <ul class="tight">
+    <li><b>分母决定下限</b>：所有 log 分母行全部垫底（与规模耦合 +0.59~+0.70）——对数分母在数学上必然把「热度」偷运进分数。</li>
+    <li><b>币决定上限</b>：含币的组合占据社交相关前列；纯收藏 + log 分母是全场最差组合。</li>
+    <li><b>跨层抓取力</b>：投币率的最低 50 条里约 <span id="cross-c">24%</span> 来自非榜单层（真·跨层抓垃圾）；而单一点赞信号的最低 50 条几乎全是榜单视频——抓的全是被规模稀释的大热门。</li>
+  </ul>
+  <div class="quote">最终裁决——过滤场景冠军：<b>投币率 F2</b>；综合场景亚军：<b>加权感谢率 F7</b>（先生的原始公式，结构均衡）；<b>全部 log 分母组合废弃</b>。</div>
+</section>
+
+<!-- ============ §10 时间维度 ============ -->
+<section id="s10">
+  <div class="sn">SECTION 10 · 七年时间轴（新增）</div>
+  <h2>感谢率的进化史：2020 → 2026</h2>
+  <div class="guide"><b>数据来自哪里：</b>「每周必看」是B站官方的每周精选榜单，2020 年至今共 387 期、约 1.5 万条视频，每条自带完整互动数据。<b>它给了我们一个此前不可能有的视角：同一评选规则下，「火」的样品横跨七年</b>。下面看社区的感谢行为本身有没有随时间变化——这回答「时间范围扩大后能看到什么新东西」。</div>
+  <div class="chart-wrap"><svg id="era" class="chart" viewBox="0 0 840 400" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div id="era-read"></div>
+  <h3>同为「火」：不同入选机制的比较</h3>
+  <p class="note">「每周必看」是每周编辑精选，「入站必刷」是历史经典沉淀，「榜单/热门」是当下热度，「推荐流」是算法投喂。它们的感谢指数 CBI 对比：</p>
+  <div id="layer-table"></div>
+  <div class="quote" id="layer-quote">入选机制不同，「火」的含金量不同——编辑精选沉淀下来的历史经典，感谢水平显著高于当下榜单。这再次说明：播放量是入场券，感谢才是定价，两者可以系统性脱节。</div>
+</section>
+
+<!-- ============ §11 时长与质量 ============ -->
+<section id="s11">
+  <div class="sn">SECTION 11 · 时长分析（新增）</div>
+  <h2>时长和质量有关系吗？</h2>
+  <div class="guide"><b>先说清「质量」在这里指什么：</b>本报告里没有客观质量，只有感谢水平（F7/CBI）。所以这一节的问题是：<b>在感谢率的视角下，更长的视频是更被感谢，还是更不被感谢？</b>先看分段中位数，再做偏相关排除「长视频多为纪录片/影视（§7 已证它们感谢率天然低）」的干扰。</div>
+  <div id="dur-table"></div>
+  <p><b>偏相关读数：</b>原始相关 <span class="sym" id="dur-raw">—</span>；控制视频年龄与分区后 <span class="sym" id="dur-ctrl">—</span>。</p>
+  <div id="dur-read"></div>
+</section>
+
+<!-- ============ §12 低质密码 ============ -->
+<section id="s12">
+  <div class="sn">SECTION 12 · 引擎设计</div>
+  <h2>低质密码 v2：判定式与时间线模拟</h2>
+  <div class="formula">
+    <span class="hl">低质</span> ⟺ 播放 ≥ 5万（注意力已被大量消耗）<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;且 <span class="hl">CBI &lt; 0.5</span>，即 (3×收藏＋2×投币＋0.3×点赞)/播放 &lt; 同播放段基线 × 0.5
+  </div>
+  <h3>如果把它装进你的时间线：一次前向模拟</h3>
+  <p class="note">用未登录推荐流的真实投喂样本模拟「洁净B站过滤器」（低CBI ∨ 短视频 ∨ 竖屏）：</p>
+  <div class="kpirow">
+    <div class="kpi"><div class="n" id="sim-cut">—</div><div class="d" id="sim-cut-d">推荐卡片被砍</div></div>
+    <div class="kpi"><div class="n" id="sim-share">—</div><div class="d">这些卡片占走推荐流总播放量的份额——垃圾拿走了过半注意力</div></div>
+    <div class="kpi"><div class="n" id="sim-ratio">—</div><div class="d">砍掉卡片 vs 留下卡片的播放中位数比——砍的正是「高曝光低感谢」层</div></div>
+  </div>
+  <div class="quote">过滤器的意义有了量化表述：<b>不是替你找到最爱，而是把「拿走近半注意力却换不来基线感谢」的那一层从时间线上摘掉</b>。遗珠们自然浮出——不需要任何「高质量推荐算法」替你决定品味。</div>
+</section>
+
+<!-- ============ §13 过滤器设计 ============ -->
+<section id="s13">
+  <div class="sn">SECTION 13 · 过滤器 v2 设计（新增）</div>
+  <h2>一套可手调的过滤方法，以及每条规则的理由</h2>
+  <div class="guide"><b>设计哲学：</b>本产品不判断「什么是好视频」，只移除「行为上被观众拒绝」的视频。因此每条规则都对应一个<b>被数据证实的信号</b>，并把最终裁量权留给参数表——你可以关掉任何一条。</div>
+  <table>
+    <thead><tr><th>#</th><th>规则</th><th>内容</th><th>数据理由</th><th>参数位置</th></tr></thead>
+    <tbody>
+      <tr><td>R1</td><td>硬偏好过滤</td><td>竖屏、直播回放、时长≤75s（可白名单）</td><td>这是<b>你的注意力偏好</b>，不是质量判断；报告不做价值判断，参数完全开放</td><td>config: portrait / live / short_video_max_duration_sec</td></tr>
+      <tr><td>R2</td><td>低感谢指数</td><td>播放≥5万 且 CBI&lt;0.5 → 标记「看过不给」</td><td>§2（规模稀释）+ §6（相对基线比全局阈值少 <span class="sym" id="r2-pardon">10%</span> 冤案）+ §5（<span class="sym" id="r2-hot">21.9%</span> 大热门看过不给）</td><td>config: min_view_threshold / cbi_threshold</td></tr>
+      <tr><td>R3</td><td>加权感谢率公式</td><td>F7＝(3×藏＋2×币＋0.3×赞)/播放</td><td>§8（币＝最均衡信号、藏＝独立维度、赞＝规模污染最重）+ §9 网格（F7 结构均衡）</td><td>config: weights {favorite, coin, like}</td></tr>
+      <tr><td>R4</td><td>分区感知（v3 方向）</td><td>电影/电视剧/纪录片等官方区使用<b>分区内基线</b>或直接白名单</td><td>§7 PCA：官方区在「感谢强度轴」上与创作区系统性分离，跨区比较必然冤判</td><td>config: zone_whitelist（v3 实装分区基线）</td></tr>
+      <tr><td>R5</td><td>拒绝 log 分母</td><td>不用 log(播放)/√(播放) 做分母</td><td>§9 网格：log 分母与规模耦合 +0.67——它把质量分变成热度探测器</td><td>config: denominator_mode = "view"（锁定）</td></tr>
+      <tr><td>R6</td><td>拒绝文体歧视</td><td>原则上不用标题风格（emoji/感叹/排版/标签栏）判低质</td><td>§14：这些文体特征与感谢率无稳定负相关，甚至显著<b>正</b>相关（emoji、合集、【】标签栏）——「看起来像标题党」≠「行为上被拒绝」</td><td>—（设计纪律，非参数）</td></tr>
+      <tr><td>R7</td><td>唯一例外：经过检验的标题签名</td><td>标题命中「第N集/话」「挑战XX」模式 → 降权标记</td><td>§14：这两类是仅有的稳定显著低质签名（p&lt;0.01，F7 中位明显低于基线），且机制可解释——切片消耗注意力、挑战体透支互动</td><td>config: block_keywords（正则，可自行增删）</td></tr>
+      <tr><td>R8</td><td>反乞讨标记（观察项）</td><td>「投币X解锁下期」式文本 → 打标不惩罚</td><td>会抬高币率形成噪声；但样本占比小，且其文字特征可识别，留 v3 交叉验证</td><td>config: beggar_patterns（观察项）</td></tr>
+    </tbody>
+  </table>
+  <div class="quote">设计上的两个「不」：不推荐高质（§15 手搓检验证明品味不可代理），不用标题文体做道德审判（§14 证明会冤枉）。过滤器只做一件事：<b>把「消耗注意力却换不来基线感谢」的层摘掉</b>——每一条规则都可在 config 里手调或关闭。</div>
+</section>
+
+<!-- ============ §14 标题信号 ============ -->
+<section id="s14">
+  <div class="sn">SECTION 14 · 标题特征检验</div>
+  <h2>标题信号学：哪些「低质直觉」被数据打脸</h2>
+  <div class="guide"><b>方法一句话：</b>把标题按特征分组（有【】标签栏的/带emoji的/「第N集」的……），每组与「其余全部视频」做 Mann-Whitney U 检验，因变量是加权感谢率 F7。<b>看每组条形与 p 值</b>：p&lt;0.05 才算显著——其余都是脑补。</div>
+  <div id="title-chart"></div>
+  <div id="title-groups"></div>
+  <div class="quote">最深刻的一课打在我自己脸上：小样本时代我曾预设「【】标签栏＝搬运低质」，大样本说【】标题的感谢率反而更高；「一眼假」的文体直觉反复被数据打脸。<b>「看起来像标题党」和「行为上被拒绝」是两回事</b>——前者是品味偏见，后者才是社区用硬币投出的票。这就是 §13 规则 R6 的由来。</div>
+</section>
+
+<!-- ============ §15 尾声 ============ -->
+<section id="s15">
+  <div class="sn">CODA</div>
+  <h2>尾声：被数据纠正的直觉清单</h2>
+  <p>这份报告最有价值的部分是<b>结论的反面</b>——以下直觉全部被统计检验削弱或推翻：</p>
+  <ul class="tight">
+    <li><b>「emoji 标题＝营销号低质」</b> → 推翻（§14，p=<span id="cod-p-emoji">10⁻⁷</span>）。文体歧视不等于行为证据。</li>
+    <li><b>「火的稀释主要是年龄效应」</b> → 削弱（§3）。混杂解释约 1/3，机制是真的但被高估。</li>
+    <li><b>「全局阈值够用了」</b> → 修正（§6）。<span id="cod-pardon">10%</span> 判定是规模冤案，基线必须随播放量移动。</li>
+    <li><b>「手搓显著更被感谢」</b> → <span id="cod-hm-verdict">降级</span>（检验：播放 p=<span id="cod-hm-pv">0.87</span> <span id="cod-hm-pv-read">无差异</span>，CBI 感谢优势 p=<span id="cod-hm-pc">0.075</span> <span id="cod-hm-pc-read">未过显著线</span>）。「努力必火」是幸存者偏差叙事。</li>
+    <li><b>「硬币稀缺所以珍贵」</b> → 修正（§1）。硬币不稀缺，稀缺的是<b>想起它</b>——正因如此「被感动到很难不投」才是强信号。</li>
+  </ul>
+  <p>把经得起检验的结论压缩成三句：</p>
+  <ul class="tight">
+    <li><b>播放量是按 Zipf 律自我强化的入场券</b>（基尼 <span class="sym" id="coda-gini">0.72</span>）——它从来不是社区的评分。</li>
+    <li><b>感谢率 F7 / 感谢指数 CBI 是可计算的社区定价</b>——「看过不给」的相对缺口是低质的可操作签名。</li>
+    <li><b>洁净B站的路径</b>（§13）：不推荐任何东西，只摘掉「消耗注意力却换不来基线感谢」的那一层，把定价权还给硬币，把时间线还给你。</li>
+  </ul>
+</section>
+
+<!-- ============ 附录 ============ -->
+<section id="ap">
+  <div class="sn">APPENDIX</div>
+  <h2>方法、样本与局限</h2>
+  <h3>七层样本（<span id="ap-date">2026-09-01</span>，B站公开API元数据）</h3>
+  <table>
+    <thead><tr><th>地层</th><th>条数</th><th>含义</th></tr></thead>
+    <tbody id="layer-src-table"></tbody>
+  </table>
+  <h3>统计方法一览</h3>
+  <ul class="tight">
+    <li><b>偏相关</b>（§3/§11）：OLS 残差化年龄/时长/分区哑变量后计算皮尔逊相关。</li>
+    <li><b>滑动窗口分位数回归</b>（§6）：±0.35 log 播放窗口（≥25样本）估计条件 P50/P25 曲线。</li>
+    <li><b>洛伦兹曲线/基尼系数</b>（§4）：梯形法积分；Zipf 斜率取 rank 10–n/2 对数拟合。</li>
+    <li><b>PCA 主成分</b>（§7）：四维互动率 z-score 后协方差矩阵特征分解。</li>
+    <li><b>Mann-Whitney U / χ² / Spearman</b>（§8/§14/§15）：scipy.stats，双尾。</li>
+  </ul>
+  <h3>局限</h3>
+  <ul class="tight">
+    <li>「每周必看/榜单/热门」本身是「火」的选样，比值分布整体偏右；比例结论以层内对比为准。</li>
+    <li>推荐流为未登录态；搜索接口风控（−1200），成熟长尾仍有覆盖缺口。</li>
+    <li>偏相关只剥线性可加混杂；「分区×规模」等交互效应未建模。</li>
+    <li>刷量识别留待 v3：刷播放（压低比值）与刷三连（抬高比值）方向相反，可交叉侦测。</li>
+    <li>「投币X解锁下期」乞讨行为会局部抬高币率；样本小、文字特征可识别，作为观察项。</li>
+    <li>每周必看期数与视频可能有官方补录；年份取自期号标签。</li>
+  </ul>
+  <h3>工具链（全部开源可复跑）</h3>
+  <p class="note">engine/ecosystem_collect*.py 采集（含 v5 大采样）→ engine/ecosystem_analysis.py 基础分析 → engine/deep_analysis.py 十三项深度实验（numpy 2.2.6 / scipy 1.15.3）→ data/analysis/*.json → engine/build_report.py 构建本页。过滤引擎与手调参数见项目 README 与 config/clean.config.json。</p>
+</section>
+
+<div class="foot">洁净 B 站 · 看过却不给 · 第三版 · 用统计夺回注意力</div>
+</div>
+
+<script>
+const DEEP = {"meta": {"n_total": 7537, "n_trusted": 6734, "collected_at": "2026-09-01 22:44"}, "partial": {"raw_pearson": -0.019, "ctrl_age": -0.07, "ctrl_age_dur": -0.074, "ranking_full_ctrl": -0.167, "ranking_n": 1581, "n_zones": 18, "note": "偏相关=控制方括号内变量后的线性关联；解释为关联而非因果"}, "cbi": {"p50_curve": [[4.5, 0.2065], [4.6, 0.1745], [4.7, 0.1376], [4.8, 0.1247], [4.9, 0.1154], [5.0, 0.1057], [5.1, 0.0919], [5.2, 0.083], [5.3, 0.0742], [5.4, 0.0687], [5.5, 0.0605], [5.6, 0.0577], [5.7, 0.0557], [5.8, 0.058], [5.9, 0.0616], [6.0, 0.0664], [6.1, 0.0706], [6.2, 0.0779], [6.3, 0.082], [6.4, 0.0839], [6.5, 0.0848], [6.6, 0.0861], [6.7, 0.0861], [6.8, 0.0861], [6.9, 0.0852], [7.0, 0.0849], [7.1, 0.0854], [7.2, 0.0863]], "p25_curve": [[4.5, 0.1008], [4.6, 0.0928], [4.7, 0.0658], [4.8, 0.0643], [4.9, 0.0577], [5.0, 0.0503], [5.1, 0.0448], [5.2, 0.0404], [5.3, 0.0366], [5.4, 0.0337], [5.5, 0.0324], [5.6, 0.0319], [5.7, 0.0299], [5.8, 0.0307], [5.9, 0.0322], [6.0, 0.0336], [6.1, 0.0366], [6.2, 0.0395], [6.3, 0.0433], [6.4, 0.0454], [6.5, 0.0466], [6.6, 0.0486], [6.7, 0.0496], [6.8, 0.0504], [6.9, 0.0496], [7.0, 0.0488], [7.1, 0.0492], [7.2, 0.0487]], "g_p25": 0.0427, "confusion": {"n_ge50w": 6705, "both_low": 1487, "global_only": 184, "cbi_only": 15, "healthy": 5019, "global_low_pardoned_by_cbi_pct": 0.11, "chi2_p": 0.0}}, "lorenz": {"gini_overall": 0.544, "gini_ranking": 0.711, "gini_feed": 0.674, "top1_pct": 10.3, "top10_pct": 39.6, "curve": [[0.0, 0.4], [2.5, 18.2], [5.0, 27.1], [7.5, 33.9], [10.0, 39.7], [12.5, 44.7], [15.0, 49.1], [17.5, 53.2], [20.0, 56.9], [22.5, 60.3], [25.0, 63.5], [27.5, 66.4], [30.0, 69.1], [32.5, 71.7], [35.0, 74.1], [37.5, 76.4], [40.0, 78.6], [42.5, 80.5], [45.0, 82.4], [47.5, 84.2], [50.0, 85.9], [52.5, 87.4], [55.0, 88.9], [57.5, 90.2], [60.0, 91.4], [62.5, 92.6], [65.0, 93.6], [67.5, 94.6], [70.0, 95.5], [72.5, 96.3], [75.0, 97.0], [77.5, 97.6], [80.0, 98.2], [82.5, 98.6], [85.0, 99.0], [87.5, 99.3], [90.0, 99.6], [92.5, 99.8], [95.0, 99.9], [97.5, 100.0], [100.0, 100.0]], "zipf_slope": -0.592}, "fingerprints": {"zones": [{"zone": "全站", "n": 43, "coin_v": 0.004035432902029467, "fav_v": 0.013229500365461689, "like_v": 0.08087503008584494, "dan_v": 0.0008308848832967861, "pc1": -1.66, "pc2": -0.16}, {"zone": "动画", "n": 95, "coin_v": 0.0032617158563993933, "fav_v": 0.021220918805698593, "like_v": 0.048527054920522075, "dan_v": 0.0002774963023324171, "pc1": -1.39, "pc2": 0.03}, {"zone": "音乐", "n": 96, "coin_v": 0.007067565529823315, "fav_v": 0.026272787545524597, "like_v": 0.05109172335235718, "dan_v": 0.0006554014081730083, "pc1": -3.08, "pc2": -1.75}, {"zone": "游戏", "n": 96, "coin_v": 0.0035558772789885777, "fav_v": 0.011131882271051873, "like_v": 0.03838546478409828, "dan_v": 0.0008774935006437947, "pc1": -0.41, "pc2": -0.25}, {"zone": "娱乐", "n": 93, "coin_v": 0.0021593106005911773, "fav_v": 0.007229582482963783, "like_v": 0.03265441863809592, "dan_v": 0.0016170969233623433, "pc1": 0.62, "pc2": 0.02}, {"zone": "电视剧", "n": 72, "coin_v": 0.0010969192252082733, "fav_v": 0.00013366528184174996, "like_v": 0.003724934030713026, "dan_v": 0.0007552422838670025, "pc1": 2.0, "pc2": 0.74}, {"zone": "电影", "n": 61, "coin_v": 0.002914988459770175, "fav_v": 0.0013839856114467352, "like_v": 0.009479729850991905, "dan_v": 0.00830053213593688, "pc1": 2.49, "pc2": -3.27}, {"zone": "知识", "n": 95, "coin_v": 0.0022559196307048303, "fav_v": 0.006461275884289173, "like_v": 0.038478654606968525, "dan_v": 0.0011746621845996027, "pc1": 0.44, "pc2": 0.23}, {"zone": "舞蹈", "n": 94, "coin_v": 0.003990837939739253, "fav_v": 0.023189681151515144, "like_v": 0.09049557568169367, "dan_v": 0.00025009657247238406, "pc1": -2.71, "pc2": 0.01}, {"zone": "时尚", "n": 95, "coin_v": 0.003263573642675114, "fav_v": 0.022914961324040126, "like_v": 0.09124978150672959, "dan_v": 0.0001920838841621188, "pc1": -2.46, "pc2": 0.34}, {"zone": "生活", "n": 94, "coin_v": 0.00218865245689723, "fav_v": 0.007838182762998221, "like_v": 0.04544613103549036, "dan_v": 0.0005952542530907427, "pc1": 0.11, "pc2": 0.53}, {"zone": "纪录片", "n": 74, "coin_v": 0.0018768066136546008, "fav_v": 0.0011627225179012802, "like_v": 0.008804854938436578, "dan_v": 0.002791499765916948, "pc1": 1.9, "pc2": -0.45}, {"zone": "影视", "n": 91, "coin_v": 0.0018791618026523147, "fav_v": 0.008045751958689978, "like_v": 0.03544583640383198, "dan_v": 0.00042110046057145743, "pc1": 0.39, "pc2": 0.66}, {"zone": "科技", "n": 97, "coin_v": 0.002534671301054285, "fav_v": 0.004346623048660463, "like_v": 0.022263667408070557, "dan_v": 0.0007813979920439477, "pc1": 0.79, "pc2": 0.21}, {"zone": "美食", "n": 97, "coin_v": 0.0017560804284836246, "fav_v": 0.005137048407710294, "like_v": 0.04121252730221518, "dan_v": 0.0006427776090697439, "pc1": 0.56, "pc2": 0.7}, {"zone": "动物圈", "n": 97, "coin_v": 0.0014140055337297645, "fav_v": 0.0058603550133664905, "like_v": 0.060046874717486036, "dan_v": 0.00035883068342839583, "pc1": 0.17, "pc2": 1.09}, {"zone": "汽车", "n": 94, "coin_v": 0.0018277278609434326, "fav_v": 0.0039160492380433, "like_v": 0.02295913004186463, "dan_v": 0.0013300676087435763, "pc1": 1.15, "pc2": 0.27}, {"zone": "运动", "n": 97, "coin_v": 0.0010482057839294229, "fav_v": 0.0037565630011496694, "like_v": 0.03031528754517956, "dan_v": 0.00031697736200358756, "pc1": 1.09, "pc2": 1.08}], "var_explained": [0.636, 0.256], "loadings": {"coin_v": [-0.48, -0.56], "fav_v": [-0.6, -0.14], "like_v": [-0.55, 0.18], "dan_v": [0.32, -0.8]}}, "signal_matrix": {"keys": ["赞/播", "币/播", "藏/播", "弹/播", "享/播", "评/播"], "rho": [[1.0, 0.56, 0.52, 0.15, 0.45, 0.34], [0.56, 1.0, 0.58, 0.56, 0.58, 0.43], [0.52, 0.58, 1.0, 0.12, 0.49, 0.18], [0.15, 0.56, 0.12, 1.0, 0.37, 0.55], [0.45, 0.58, 0.49, 0.37, 1.0, 0.54], [0.34, 0.43, 0.18, 0.55, 0.54, 1.0]]}, "grid": [{"subset": "L", "denom": "view", "corr_logview": -0.083, "corr_social": 0.346, "bottom_nonranking": 0.02}, {"subset": "L", "denom": "sqrt_view", "corr_logview": 0.581, "corr_social": 0.291, "bottom_nonranking": 0.1}, {"subset": "L", "denom": "log10_view", "corr_logview": 0.801, "corr_social": 0.229, "bottom_nonranking": 0.32}, {"subset": "C", "denom": "view", "corr_logview": 0.173, "corr_social": 0.623, "bottom_nonranking": 0.18}, {"subset": "C", "denom": "sqrt_view", "corr_logview": 0.508, "corr_social": 0.548, "bottom_nonranking": 0.26}, {"subset": "C", "denom": "log10_view", "corr_logview": 0.68, "corr_social": 0.467, "bottom_nonranking": 0.3}, {"subset": "F", "denom": "view", "corr_logview": 0.07, "corr_social": 0.34, "bottom_nonranking": 0.08}, {"subset": "F", "denom": "sqrt_view", "corr_logview": 0.542, "corr_social": 0.274, "bottom_nonranking": 0.14}, {"subset": "F", "denom": "log10_view", "corr_logview": 0.749, "corr_social": 0.223, "bottom_nonranking": 0.28}, {"subset": "LC", "denom": "view", "corr_logview": -0.019, "corr_social": 0.463, "bottom_nonranking": 0.06}, {"subset": "LC", "denom": "sqrt_view", "corr_logview": 0.586, "corr_social": 0.379, "bottom_nonranking": 0.12}, {"subset": "LC", "denom": "log10_view", "corr_logview": 0.793, "corr_social": 0.295, "bottom_nonranking": 0.32}, {"subset": "FC", "denom": "view", "corr_logview": 0.107, "corr_social": 0.514, "bottom_nonranking": 0.04}, {"subset": "FC", "denom": "sqrt_view", "corr_logview": 0.56, "corr_social": 0.43, "bottom_nonranking": 0.22}, {"subset": "FC", "denom": "log10_view", "corr_logview": 0.752, "corr_social": 0.35, "bottom_nonranking": 0.28}, {"subset": "LFC", "denom": "view", "corr_logview": -0.013, "corr_social": 0.455, "bottom_nonranking": 0.08}, {"subset": "LFC", "denom": "sqrt_view", "corr_logview": 0.606, "corr_social": 0.362, "bottom_nonranking": 0.24}, {"subset": "LFC", "denom": "log10_view", "corr_logview": 0.81, "corr_social": 0.277, "bottom_nonranking": 0.32}, {"subset": "基准3/2/0.3", "denom": "view", "corr_logview": 0.069, "corr_social": 0.486, "bottom_nonranking": 0.04}, {"subset": "基准3/2/0.3", "denom": "sqrt_view", "corr_logview": 0.586, "corr_social": 0.392, "bottom_nonranking": 0.24}, {"subset": "基准3/2/0.3", "denom": "log10_view", "corr_logview": 0.783, "corr_social": 0.31, "bottom_nonranking": 0.32}], "titles": [{"feat": "剧集切片(第N集)", "n": 35, "f7_med": 0.0462, "rest_med": 0.081, "p_mwu": 0.00011}, {"feat": "挑战体", "n": 94, "f7_med": 0.054, "rest_med": 0.0812, "p_mwu": 1.6e-05}, {"feat": "疑问标题(?)", "n": 1346, "f7_med": 0.0697, "rest_med": 0.0843, "p_mwu": 1e-10}, {"feat": "长标题(≥25字)", "n": 2274, "f7_med": 0.0798, "rest_med": 0.081, "p_mwu": 0.36}, {"feat": "多感叹号(≥2)", "n": 740, "f7_med": 0.0897, "rest_med": 0.0798, "p_mwu": 0.025}, {"feat": "空格排版(字 间 空 格)", "n": 492, "f7_med": 0.0897, "rest_med": 0.0799, "p_mwu": 0.032}, {"feat": "【】/[]标签栏", "n": 1673, "f7_med": 0.0956, "rest_med": 0.0758, "p_mwu": 1.7e-12}, {"feat": "合集/一口气", "n": 65, "f7_med": 0.1, "rest_med": 0.0806, "p_mwu": 0.056}, {"feat": "含emoji", "n": 179, "f7_med": 0.1068, "rest_med": 0.08, "p_mwu": 1.2e-05}], "age": {"feed_fresh_pct": 0.537, "n_feed": 400, "feed_corr_age_cbi": -0.213, "ranking_corr_age_cbi": -0.21, "bands_feed": [{"band": "<1天", "n": 6, "cbi_med": 0.493, "view_med": 93556}, {"band": "1-3天", "n": 98, "cbi_med": 0.962, "view_med": 128524}, {"band": "3-7天", "n": 111, "cbi_med": 1.347, "view_med": 366648}, {"band": "1-4周", "n": 175, "cbi_med": 0.724, "view_med": 1569803}], "bands_ranking": [{"band": "<1周", "n": 43, "cbi_med": 1.058, "view_med": 1636233}, {"band": ">6月", "n": 1532, "cbi_med": 0.593, "view_med": 1119000}]}, "handmade": {"n": 177, "cbi_med": 1.535, "rest_cbi_med": 0.985, "p_cbi": 2.5e-12, "view_med": 3011304, "rest_view_med": 3110578, "p_view": 0.83}, "simulate": {"feed_n": 400, "cut_pct": 0.225, "cut_view_share": 0.412, "cut_med_view": 1713791, "kept_med_view": 415343, "reasons": {"低CBI": 80, "短视频": 11, "竖屏": 0}}, "experiment_k": {"dur_bands": [{"band": "<1分钟", "n": 492, "f7_med": 0.0698, "cbi_med": 0.925, "view_med": 1192769}, {"band": "1-3分钟", "n": 1483, "f7_med": 0.0756, "cbi_med": 0.932, "view_med": 3204646}, {"band": "3-10分钟", "n": 2378, "f7_med": 0.0849, "cbi_med": 1.027, "view_med": 3385951}, {"band": "10-30分钟", "n": 1669, "f7_med": 0.0811, "cbi_med": 0.99, "view_med": 3091953}, {"band": "30分钟-1天", "n": 696, "f7_med": 0.084, "cbi_med": 1.042, "view_med": 3377508}], "dur_partial_raw": 0.014, "dur_partial_ctrl": 0.104, "n_dur": 6317, "years": [{"year": 2019, "n": 145, "f7_med": 0.1133, "coin_v": 0.0298, "like_v": 0.0488, "fav_v": 0.013, "view_med": 3788184}, {"year": 2020, "n": 320, "f7_med": 0.1318, "coin_v": 0.0329, "like_v": 0.0683, "fav_v": 0.0147, "view_med": 4579982}, {"year": 2021, "n": 390, "f7_med": 0.1297, "coin_v": 0.0319, "like_v": 0.0736, "fav_v": 0.0125, "view_med": 4733307}, {"year": 2022, "n": 474, "f7_med": 0.1215, "coin_v": 0.0229, "like_v": 0.0782, "fav_v": 0.0139, "view_med": 4748553}, {"year": 2023, "n": 549, "f7_med": 0.095, "coin_v": 0.0177, "like_v": 0.0656, "fav_v": 0.0124, "view_med": 4241653}, {"year": 2024, "n": 428, "f7_med": 0.0949, "coin_v": 0.0171, "like_v": 0.0544, "fav_v": 0.013, "view_med": 3933698}, {"year": 2025, "n": 691, "f7_med": 0.0766, "coin_v": 0.0106, "like_v": 0.0486, "fav_v": 0.0117, "view_med": 4284093}, {"year": 2026, "n": 1241, "f7_med": 0.0682, "coin_v": 0.0086, "like_v": 0.048, "fav_v": 0.0111, "view_med": 4041585}], "layers": [{"layer": "每周必看(周精选)", "n": 4238, "f7_med": 0.0931, "cbi_med": 1.121, "view_med": 4260181}, {"layer": "入站必刷(历史经典)", "n": 98, "f7_med": 0.1794, "cbi_med": 2.081, "view_med": 16142487}, {"layer": "当前榜单", "n": 1581, "f7_med": 0.0436, "cbi_med": 0.606, "view_med": 1152732}, {"layer": "热门频道", "n": 400, "f7_med": 0.0707, "cbi_med": 0.998, "view_med": 504654}, {"layer": "推荐流", "n": 400, "f7_med": 0.0697, "cbi_med": 0.915, "view_med": 594845}]}, "fire_but_cold": {"n": 689, "n_hot": 1981, "examples": [{"t": "李炮儿在李炮儿模仿大赛中获得了第二名", "v": 1637270, "r": 0.03}, {"t": "陈翔六点半 :明明已经结束，可她却从未开始", "v": 1005995, "r": 0.042}, {"t": "四千人失踪，尼泊尔终究不放开接受外国援助", "v": 827278, "r": 0.041}, {"t": "《不能歪曲事实 我当什么媒体》", "v": 1576451, "r": 0.027}, {"t": "当你穿进老钱班34", "v": 1271287, "r": 0.033}, {"t": "弄了口大钢牙", "v": 932373, "r": 0.038}, {"t": "北京39.9元卤煮自助，一碗的价格无限续吃！一口气吃x碗！", "v": 1179458, "r": 0.023}, {"t": "100年被翻拍3次，这就是经典的魅力！战争给世界带来了什么？", "v": 6477234, "r": 0.017}, {"t": "【哈基米】你的胆子真是肥嘟嘟的！", "v": 1979247, "r": 0.035}, {"t": "旺仔小乔解封了,互联网是没有记忆的", "v": 778537, "r": 0.023}]}, "gems": {"n": 75, "n_tail": 417, "examples": [{"t": "【实用向】极简旋转电梯", "v": 148058, "r": 0.549, "src": "feed"}, {"t": "进入大学后：你要知道的22个知识", "v": 470256, "r": 0.498, "src": "feed"}, {"t": "“我能否将你比作一个夏天？”", "v": 1660027, "r": 0.417, "src": "feed"}, {"t": "战斗战斗！", "v": 360052, "r": 0.415, "src": "feed"}, {"t": "这才是提升英语听力的底层逻辑！你将受用终身【关键认知升级】", "v": 53600, "r": 0.401, "src": "feed"}, {"t": "【Love Me】对你的爱意轰轰烈烈", "v": 1477295, "r": 0.393, "src": "feed"}, {"t": "自动生成基建排班表！可露希尔基建终端工具发布~", "v": 173386, "r": 0.389, "src": "feed"}, {"t": "花几百万做动漫周边？全网最疯狂谷子计划！", "v": 227828, "r": 0.348, "src": "feed"}, {"t": "一口气看完MC电影《吾乃僵尸》七小时超长合集", "v": 2970475, "r": 0.315, "src": "feed"}, {"t": "“盘点那些无缝衔接的顶级串烧”", "v": 3752490, "r": 0.302, "src": "feed"}]}};
+const POINTS = [{"t": "来财ASMR", "v": 417670, "r": 0.2505, "s": "feed", "z": ""}, {"t": "来感受满血时期大魔王的恐怖统治力", "v": 251719, "r": 0.027, "s": "feed", "z": ""}, {"t": "小鸟！知更鸟！好多的鸟！", "v": 664052, "r": 0.1624, "s": "feed", "z": ""}, {"t": "人口第一大国最好的电影！被200万华人打出9.2分！", "v": 1541161, "r": 0.0507, "s": "feed", "z": ""}, {"t": "最后离开的人，赢得这座百万豪宅！", "v": 5513427, "r": 0.0502, "s": "feed", "z": ""}, {"t": "莲花池村幸福协会又给村民们发钱啦，我们湘间客也兑现当初的承诺", "v": 127034, "r": 0.1669, "s": "feed", "z": ""}, {"t": "⚡空 城 计⚡", "v": 714174, "r": 0.0561, "s": "feed", "z": ""}, {"t": "第一款PDX化的主角腰带！玩法接近CSM！PDX歌查德驱动器 假面骑士歌", "v": 59962, "r": 0.0864, "s": "feed", "z": ""}, {"t": "这才是提升英语听力的底层逻辑！你将受用终身【关键认知升级】", "v": 53600, "r": 0.401, "s": "feed", "z": ""}, {"t": "科幻喜剧《失控玩家》，NPC意外觉醒自我意识，拯救濒临崩溃的游戏世界", "v": 13674243, "r": 0.0206, "s": "feed", "z": ""}, {"t": "【头戴式耳机推荐】2026头戴式耳机怎么选？真实自用实测！含云试听测试！", "v": 5433021, "r": 0.0237, "s": "feed", "z": ""}, {"t": "《天启四绿龙》", "v": 120000, "r": 0.08, "s": "feed", "z": ""}, {"t": "现在的童年 VS 过去的童年", "v": 911981, "r": 0.065, "s": "feed", "z": ""}, {"t": "一秒变异！夺舍6头6甲+满改KC17+AWM，688万撤离！", "v": 1948833, "r": 0.0195, "s": "feed", "z": ""}, {"t": "我的世界？我的世界！我的世界。", "v": 366648, "r": 0.1318, "s": "feed", "z": ""}, {"t": "如何进入100%竞技状态!我制定了一期完美的热身训练教程-所有赋能的必经", "v": 58395, "r": 0.2288, "s": "feed", "z": ""}, {"t": "猫：都带走吧，孩子跟你姓！", "v": 507086, "r": 0.1591, "s": "feed", "z": ""}, {"t": "晚明微观史：明亡前夕， 一个进士的回忆录｜叶天寥自撰年谱", "v": 1243666, "r": 0.1143, "s": "feed", "z": ""}, {"t": "【真实解说】迈阿密国际7比1蒙特利尔！球王降临，梅西大四喜！卡塞米罗首开", "v": 258042, "r": 0.1053, "s": "feed", "z": ""}, {"t": "一个人在航天养了全图鼠鼠！", "v": 2712283, "r": 0.0558, "s": "feed", "z": ""}, {"t": "⚡老叟戏牛来⚡", "v": 774295, "r": 0.038, "s": "feed", "z": ""}, {"t": "【RAY评】woc！披哥一公下半集也太精彩了！好听又好看！", "v": 400135, "r": 0.0531, "s": "feed", "z": ""}, {"t": "【美人谱系11】刘玉玲，一个被低估了30年的野心家", "v": 459594, "r": 0.1675, "s": "feed", "z": ""}, {"t": "我复活了！！！", "v": 241762, "r": 0.0482, "s": "feed", "z": ""}, {"t": "满分神回！看不懂吗？来给你逐帧解析！《死神 祸进谭》第五集全篇解析！", "v": 600869, "r": 0.0481, "s": "feed", "z": ""}, {"t": "吴柳芳人物纪录片：先天倒霉圣体，怎么才能逆天改命？", "v": 133318, "r": 0.1186, "s": "feed", "z": ""}, {"t": "撞警车装死，最终获得了自由？", "v": 100336, "r": 0.0486, "s": "feed", "z": ""}, {"t": "头盔的重要性", "v": 152518, "r": 0.0359, "s": "feed", "z": ""}, {"t": "惊 天 俩 条 蛆  🐛🐛", "v": 440567, "r": 0.0881, "s": "feed", "z": ""}, {"t": "本关最优解：放70个窝瓜僵尸 【bilibilionly同人扶持计划】", "v": 6271140, "r": 0.0347, "s": "feed", "z": ""}, {"t": "带华为阔直板出门是什么体验【最难绷的一集】", "v": 1430558, "r": 0.0339, "s": "feed", "z": ""}, {"t": "一个外卖员的鲁迅文学奖", "v": 275197, "r": 0.1514, "s": "feed", "z": ""}, {"t": "Omg it's 空城计の小曲（朋友的酒DJ）", "v": 984490, "r": 0.0358, "s": "feed", "z": ""}, {"t": "自制原创AI短片《二十二分钟II：最后的指挥官》：指挥官，这是最后一战！", "v": 382492, "r": 0.2451, "s": "feed", "z": ""}, {"t": "【间谍过家家140话】达米安英雄救美，暗自称赞阿尼亚？", "v": 79053, "r": 0.0992, "s": "feed", "z": ""}, {"t": "是我捡到影视飓风遗失8个月的相机", "v": 530254, "r": 0.0644, "s": "feed", "z": ""}, {"t": "真·出生之家（65）空城计", "v": 449977, "r": 0.0928, "s": "feed", "z": ""}, {"t": "薛甄珠手撕凌玲，但歌剧版", "v": 206406, "r": 0.0762, "s": "feed", "z": ""}, {"t": "新三国up锐评神探狄仁杰13：真的是你！真的是你呀！", "v": 780227, "r": 0.206, "s": "feed", "z": ""}, {"t": "DLSS VS FSR4.1超分大战二周目！新增K模型，赛博朋克2077", "v": 336849, "r": 0.0464, "s": "feed", "z": ""}, {"t": "【Spirit】我们早已习惯作为反派登场，嘘声再大一点根本听不见！", "v": 2979342, "r": 0.0355, "s": "feed", "z": ""}, {"t": "两石对战！鹿死谁手？", "v": 232748, "r": 0.0658, "s": "feed", "z": ""}, {"t": "停更7年，我又以经典的方式玩MC", "v": 6002632, "r": 0.0926, "s": "feed", "z": ""}, {"t": "三位人气男神同时对我的校花青梅发动告白？会赢吗？", "v": 148023, "r": 0.2083, "s": "feed", "z": ""}, {"t": "STAY x 忘情牛肉面？", "v": 507469, "r": 0.1415, "s": "feed", "z": ""}, {"t": "推车巨物早茶，200块钱吃什么？", "v": 464152, "r": 0.0469, "s": "feed", "z": ""}, {"t": "请不要看月亮！它是王座！模拟恐怖鼻祖《Local58》到底藏了什么？", "v": 1061495, "r": 0.0879, "s": "feed", "z": ""}, {"t": "不计成本，个人自制一部电影！还原上美经典奇幻片《人参娃娃》真人版：向老一", "v": 407065, "r": 0.0943, "s": "feed", "z": ""}, {"t": "中国人能飞🚀🚀🚀", "v": 11223788, "r": 0.0609, "s": "feed", "z": ""}, {"t": "「全新三国」你关哥不出演，依然有哥的传说", "v": 66447, "r": 0.0635, "s": "feed", "z": ""}, {"t": "不断上涨的租金，正在逐渐拖垮实体经济吗？【商业观察局426】", "v": 374656, "r": 0.0615, "s": "feed", "z": ""}, {"t": "新三国up锐评老三国15：此新娘非彼新娘也！", "v": 627595, "r": 0.0928, "s": "feed", "z": ""}, {"t": "原创怪谈惊悚剧：《雨夜之下》第五集【全民AI制作人】", "v": 76495, "r": 0.1864, "s": "feed", "z": ""}, {"t": "唐伯虎：老天爷的戏弄，是江南才子的一生。【大明风华】【视频播客】", "v": 645267, "r": 0.0857, "s": "feed", "z": ""}, {"t": "红警利用地形优势，卡住这个路口，左右摇摆精彩1打2！", "v": 84724, "r": 0.0595, "s": "feed", "z": ""}, {"t": "【灵血修仙】第469集 霞光化形", "v": 106022, "r": 0.2045, "s": "feed", "z": ""}, {"t": "“我能否将你比作一个夏天？”", "v": 1660027, "r": 0.417, "s": "feed", "z": ""}, {"t": "早上六点抵达曼谷！！带大家看看曼谷的早市长啥样？？", "v": 288176, "r": 0.1031, "s": "feed", "z": ""}, {"t": "大肥鱼等到了她的用户~", "v": 263864, "r": 0.1363, "s": "feed", "z": ""}, {"t": "⚡泥 肘 肘 肘 肘⚡", "v": 3623369, "r": 0.0562, "s": "feed", "z": ""}, {"t": "「中字」唯独爱你的声优也太可爱了……", "v": 1981, "r": 0.1204, "s": "newlist", "z": "番剧"}, {"t": "【我看见两朵一样的云】你是NPC吗？", "v": 73433, "r": 0.0265, "s": "newlist", "z": "电影"}, {"t": "【纪录片】大小很重要 02中配版 更小是否更美", "v": 1373, "r": 0.0291, "s": "newlist", "z": "纪录片"}, {"t": "【纪录片】大小很重要 01中配版 更大是否更好", "v": 1045, "r": 0.033, "s": "newlist", "z": "纪录片"}, {"t": "【三级警戒】你干这行图啥啊？", "v": 28584, "r": 0.0362, "s": "newlist", "z": "电影"}, {"t": "明查｜伊朗哈尔克岛被“炸得粉碎”？实为旧画面和AI视频", "v": 1010, "r": 0.019, "s": "newlist", "z": "资讯"}, {"t": "【纪录片】荒野求生全明星 第九季 05", "v": 7301, "r": 0.0236, "s": "newlist", "z": "纪录片"}, {"t": "【后悔没有好好爱过你】牛四喜的爱情故事", "v": 21437, "r": 0.0175, "s": "newlist", "z": "电影"}, {"t": "【纪录片】天网：无所遁形 07 欲念陷阱（上）", "v": 2577, "r": 0.0231, "s": "newlist", "z": "纪录片"}, {"t": "【纪录片】天网：无所遁形 08 欲念陷阱（下）", "v": 1496, "r": 0.0296, "s": "newlist", "z": "纪录片"}, {"t": "9月8日之工厂货&工厂百货计划！超绝新品上市！【露露黄了】", "v": 2115, "r": 0.0711, "s": "newlist", "z": "时尚"}, {"t": "暴力清图", "v": 1014, "r": 0.0541, "s": "newlist", "z": "时尚"}, {"t": "【乌女山怪谈】萨满复仇结冥婚？", "v": 25762, "r": 0.0204, "s": "newlist", "z": "电影"}, {"t": "辞高薪宅村陪奶奶👵做吃播养活全家第95天，今天用一桶水怡糖挑战涨粉10万", "v": 1130, "r": 0.0107, "s": "newlist", "z": "美食"}, {"t": "【纪录片】进化 01 从单细胞到大象", "v": 266497, "r": 0.0043, "s": "newlist", "z": "纪录片"}, {"t": "致敬舒马赫！法拉利发布蒙扎特别涂装", "v": 1524, "r": 0.0277, "s": "newlist", "z": "资讯"}, {"t": "国内多家手机厂商集体涨价，背后又何原因，消费者咋办", "v": 1016, "r": 0.0006, "s": "newlist", "z": "资讯"}, {"t": "挑战共享单车100km去台湾", "v": 1894636, "r": 0.0293, "s": "ranking", "z": "全站"}, {"t": "全球10亿粉丝的我一周真实生活是什么样的？", "v": 1240599, "r": 0.0709, "s": "ranking", "z": "全站"}, {"t": "尖椒干豆腐！下饭之菜！", "v": 1862111, "r": 0.0326, "s": "ranking", "z": "全站"}, {"t": "吃自助餐的九大神队友！你属于哪一种？", "v": 2428528, "r": 0.0258, "s": "ranking", "z": "全站"}, {"t": "全世界最爱开学之人", "v": 4713530, "r": 0.0415, "s": "ranking", "z": "全站"}, {"t": "动态视频｜做了100只刀盾狗...", "v": 1958136, "r": 0.0584, "s": "ranking", "z": "全站"}, {"t": "“无法善终的王。”", "v": 2547860, "r": 0.096, "s": "ranking", "z": "全站"}, {"t": "《龙族：卡塞尔之门》x《新世纪福音战士》全新联动 | 世界余响", "v": 1706942, "r": 0.0559, "s": "ranking", "z": "全站"}, {"t": "干中学", "v": 1636233, "r": 0.0473, "s": "ranking", "z": "全站"}, {"t": "【招笑版】新植物4:滚木坚果", "v": 1498907, "r": 0.0294, "s": "ranking", "z": "全站"}, {"t": "《下一个是谁》恐怖特辑——无限循环的寺庙", "v": 2842038, "r": 0.2044, "s": "ranking", "z": "全站"}, {"t": "在美国最彪悍的州，骑最野的牛、啃最香的肉！", "v": 1436930, "r": 0.057, "s": "ranking", "z": "全站"}, {"t": "穿越原始社会必备技能之制作——石臼", "v": 2150553, "r": 0.0443, "s": "ranking", "z": "全站"}, {"t": "耗时一年，救赎相信光的小女孩，完整后续来了！", "v": 4006496, "r": 0.4357, "s": "ranking", "z": "全站"}, {"t": "纯 爱 大 侠（中）", "v": 1145729, "r": 0.0755, "s": "ranking", "z": "全站"}, {"t": "非洲土地肥沃为什么不种植", "v": 1591421, "r": 0.0201, "s": "ranking", "z": "全站"}, {"t": "这个丝瓜抹布真的有这么好用吗！！！", "v": 1625801, "r": 0.0829, "s": "ranking", "z": "全站"}, {"t": "我就知道会让我碰到的能是什么好事儿！", "v": 1633549, "r": 0.0417, "s": "ranking", "z": "全站"}, {"t": "手搓铠甲勇士-刑天OP【铠甲勇士官方二创大赛】", "v": 1136064, "r": 0.176, "s": "ranking", "z": "全站"}, {"t": "当广告挡住关键时刻，可能就是生死之间", "v": 1647641, "r": 0.1037, "s": "ranking", "z": "全站"}, {"t": "“为什么，我们一生都在等待？”", "v": 1879814, "r": 0.0712, "s": "ranking", "z": "全站"}, {"t": "特别的一课", "v": 2230787, "r": 0.0607, "s": "ranking", "z": "全站"}, {"t": "Today, I’m going to be a squished Hi", "v": 772402, "r": 0.3408, "s": "ranking", "z": "全站"}, {"t": "巨构：暗黑森林【AI全民制作人】", "v": 2048772, "r": 0.0872, "s": "ranking", "z": "全站"}, {"t": "都说了别花穷人钱", "v": 975477, "r": 0.1236, "s": "ranking", "z": "全站"}, {"t": "好欢快的调调呀，好欢快滴坐忘道呀", "v": 1165922, "r": 0.135, "s": "ranking", "z": "全站"}, {"t": "道士也怕鬼 第三集", "v": 516390, "r": 0.1348, "s": "ranking", "z": "全站"}, {"t": "古法…3D手书？【bilibilionly同人扶持计划】", "v": 511143, "r": 0.2504, "s": "ranking", "z": "全站"}, {"t": "《服从性测试》", "v": 1697345, "r": 0.0265, "s": "ranking", "z": "全站"}, {"t": "挑战 用MC音效 配 新宿决战（正经", "v": 554475, "r": 0.2362, "s": "ranking", "z": "全站"}, {"t": "立志成为恶兽第一集", "v": 2229958, "r": 0.1301, "s": "ranking", "z": "全站"}, {"t": "我的回答是，劳动人民最高贵！", "v": 1790587, "r": 0.0702, "s": "ranking", "z": "全站"}, {"t": "“bro的身体素质依旧强悍”", "v": 1869650, "r": 0.0671, "s": "ranking", "z": "全站"}, {"t": "我捡到一个奇怪的硬盘", "v": 1574563, "r": 0.0699, "s": "ranking", "z": "全站"}, {"t": "《我们的家2》", "v": 1160666, "r": 0.2002, "s": "ranking", "z": "全站"}, {"t": "我的镰刀想喝血了…", "v": 1468615, "r": 0.0534, "s": "ranking", "z": "全站"}, {"t": "谁能想到这种事情现实真的存在", "v": 1022538, "r": 0.115, "s": "ranking", "z": "全站"}, {"t": "现在买入....一定爆赚！2026年10月新番导视！【泛式】", "v": 1382161, "r": 0.1472, "s": "ranking", "z": "全站"}, {"t": "绝密航天一颗雷炸死六个全装", "v": 1601624, "r": 0.0594, "s": "ranking", "z": "全站"}, {"t": "锻刀大赛：威力加强版", "v": 765731, "r": 0.2038, "s": "ranking", "z": "全站"}, {"t": "《搞笑视频还拍吗？》", "v": 170113, "r": 0.118, "s": "popular", "z": ""}, {"t": "火锅店老板下班的日常  剩菜统统煮下锅，狠狠吃一顿", "v": 1250332, "r": 0.0164, "s": "popular", "z": ""}, {"t": "少女时代-孝利秀《Skibidi》Performance Video", "v": 126199, "r": 0.1046, "s": "popular", "z": ""}, {"t": "我第一次觉得，命运好像真的存在！！", "v": 744734, "r": 0.1005, "s": "popular", "z": ""}, {"t": "《真实改造家》100W预算装修？梦幻业主四维报到！", "v": 510689, "r": 0.0477, "s": "popular", "z": ""}, {"t": "一条视频看8月：债务和土地，中美旧账单到期，全世界开始找备选方案【地球村", "v": 1037274, "r": 0.1176, "s": "popular", "z": ""}, {"t": "全程高能！队友接连失踪？活着并逃离这里！！！「逃离疯人院」", "v": 1020117, "r": 0.2656, "s": "popular", "z": ""}, {"t": "08年美国讽刺金曲《朋友的酒》（英语填词cover）“空城计の小曲”", "v": 79550, "r": 0.1379, "s": "popular", "z": ""}, {"t": "“黑马不是运气”《新刻度》 Monki&Erha", "v": 170125, "r": 0.0493, "s": "popular", "z": ""}, {"t": "丈夫叛变当汉奸送她入狱，她却一片丹心只为守护山河。", "v": 648424, "r": 0.0326, "s": "popular", "z": ""}, {"t": "野人部落大本营终于完善了", "v": 93449, "r": 0.2498, "s": "popular", "z": ""}, {"t": "原创志怪单元剧《归藏》 第一回: 嫁 【AI全民制作人】", "v": 76661, "r": 0.1745, "s": "popular", "z": ""}, {"t": "时隔47年的恐怖顶流？《异形》做成联机究竟有多疯狂！", "v": 322137, "r": 0.0727, "s": "popular", "z": ""}, {"t": "更新说明", "v": 113857, "r": 0.1247, "s": "popular", "z": ""}, {"t": "闷声干大事！偷偷回国敲门，外婆当场吓一跳！公公婆婆的道别晚餐", "v": 65239, "r": 0.424, "s": "popular", "z": ""}, {"t": "12分钟带你速通9月幻想真境剧诗+一图流攻略！ 全难度通用（2026年0", "v": 86288, "r": 0.1368, "s": "popular", "z": ""}, {"t": "《真人·王者荣耀》这游戏 真的越打越气！", "v": 1737629, "r": 0.0388, "s": "popular", "z": ""}, {"t": "在意大利摆摊卖中餐，煮一锅绿豆汤征服老外！", "v": 492979, "r": 0.0477, "s": "popular", "z": ""}, {"t": "64公里后人直接瘫了…｜2026威海铁三vlog沉浸式体验", "v": 442555, "r": 0.0261, "s": "popular", "z": ""}, {"t": "自 动 吸 附", "v": 1294556, "r": 0.0306, "s": "popular", "z": ""}, {"t": "【8月31日】正式官宣，中亚乌军列装歼-10CE战机！就部署在美军使用过", "v": 348979, "r": 0.0355, "s": "popular", "z": ""}, {"t": "一锅出10个菜！神兽回笼倒计时，今儿得好好庆祝一番！", "v": 949196, "r": 0.0376, "s": "popular", "z": ""}, {"t": "这也能装？给车内塞一套工作站！小米澎程N90 Max用车体验！", "v": 1724537, "r": 0.0449, "s": "popular", "z": ""}, {"t": "罢黜百官", "v": 741614, "r": 0.0578, "s": "popular", "z": ""}, {"t": "🤓👆🏻诶？清宵师尊又入魔了？！", "v": 139422, "r": 0.1556, "s": "popular", "z": ""}, {"t": "“小傻龙，夏天结束啦~”", "v": 495512, "r": 0.1016, "s": "popular", "z": ""}, {"t": "误闯天家哎，一双丑鞋拍出250万人民币，你不要的垃圾别人抢破头？", "v": 240976, "r": 0.1609, "s": "popular", "z": ""}, {"t": "⚡ 舞 立 方 . m p 4 ⚡", "v": 1750334, "r": 0.1144, "s": "popular", "z": ""}, {"t": "大 喻 治 水", "v": 261407, "r": 0.0332, "s": "popular", "z": ""}, {"t": "那么，救赎她的代价是什么呢？", "v": 475455, "r": 0.0998, "s": "popular", "z": ""}, {"t": "把视频中的人物替换教程 让你马起飞", "v": 986252, "r": 0.0231, "s": "ranking", "z": "科技"}, {"t": "尖椒干豆腐！下饭之菜！", "v": 1862111, "r": 0.0326, "s": "ranking", "z": "全站"}, {"t": "用PS两步搞定塑料包装贴图", "v": 562534, "r": 0.2471, "s": "ranking", "z": "知识"}, {"t": "【登陆少年】《TOP登陆少年组合日常角》05", "v": 761721, "r": 0.0391, "s": "ranking", "z": "娱乐"}, {"t": "去看迪拜网红的私人动物园，他竟然要送我手机？！", "v": 2883919, "r": 0.1577, "s": "ranking", "z": "美食"}, {"t": "将鬼畜动机编成曲 居然只需要这几步？", "v": 1365396, "r": 0.0562, "s": "ranking", "z": "音乐"}, {"t": "【国产】外来媳妇本地郎 301-508集【2000】", "v": 9309911, "r": 0.001, "s": "ranking", "z": "电视剧"}, {"t": "师父：又来玩水啊哥几个", "v": 1027706, "r": 0.0478, "s": "ranking", "z": "运动"}, {"t": "如何在人质营救行动中、用“拐弯枪”来扭转不利战局？", "v": 6872197, "r": 0.0716, "s": "ranking", "z": "知识"}, {"t": "法庭上禁止对嫌疑人用乌鸦坐飞机啊！！！《时空独舞篇》", "v": 3567201, "r": 0.0658, "s": "ranking", "z": "动画"}, {"t": "提新车时一定要记得检查这几个地方", "v": 640170, "r": 0.1864, "s": "ranking", "z": "汽车"}, {"t": "仰望u9街头摇摆跳舞，边上的兰博基尼都不香了", "v": 306423, "r": 0.0049, "s": "ranking", "z": "汽车"}, {"t": "【纪录片】荒野求生 第二季-Man Vs. Wild Season 2", "v": 26402402, "r": 0.005, "s": "ranking", "z": "纪录片"}, {"t": "大海贼时代降临", "v": 2497165, "r": 0.061, "s": "ranking", "z": "游戏"}, {"t": "【动画】妙先生（2020）", "v": 16430937, "r": 0.0174, "s": "ranking", "z": "电影"}, {"t": "《上帝不如我兄弟》", "v": 2979577, "r": 0.1317, "s": "ranking", "z": "影视"}, {"t": "盘点地铁逃生4月8号新版本更新六个优化？提前了解新版本改动！", "v": 1300792, "r": 0.1167, "s": "ranking", "z": "游戏"}, {"t": "没有父母，19岁送外卖供三姐弟读书，她是姐姐，也是爸爸妈妈", "v": 715668, "r": 0.2822, "s": "ranking", "z": "美食"}, {"t": "锻刀大赛：威力加强版", "v": 765731, "r": 0.2038, "s": "ranking", "z": "全站"}, {"t": "一口气看完善终的末代君主", "v": 672683, "r": 0.0421, "s": "ranking", "z": "知识"}, {"t": "加特林烟花为何能风靡全国？「寻找童年16番外篇 加特林烟花」", "v": 421478, "r": 0.0243, "s": "series", "z": "2026第361期 02.13 - 02.19"}, {"t": "前方高燃！给我15秒  让你感受奥特曼的视觉盛宴!!", "v": 6873436, "r": 0.1302, "s": "series", "z": "2020第88期 11.20 - 11.26"}, {"t": "去老番茄家吃大闸蟹！把他家吃空了！！！【青旅团建篇】", "v": 5417519, "r": 0.0856, "s": "series", "z": "2024第295期 11.08 - 11.14"}, {"t": "《天打雷劈の好心人》", "v": 9898367, "r": 0.0309, "s": "series", "z": "2026第371期 04.24 - 04.30"}, {"t": "给女友出片这玩意儿是全世界统一的吗？！？！", "v": 5527429, "r": 0.0604, "s": "series", "z": "2025第345期 10.24 - 10.30"}, {"t": "世界杯期间不抓移民？那这世界杯不是白办了吗", "v": 3112683, "r": 0.0411, "s": "series", "z": "2026第377期 06.05 - 06.11"}, {"t": "vlog｜在法国的居家生活", "v": 12564317, "r": 0.1518, "s": "series", "z": "2024第289期 09.27 - 10.03"}, {"t": "全网独家拆解春晚机器人！揭秘14亿观众看不到的内容...", "v": 3424919, "r": 0.0324, "s": "series", "z": "2026第361期 02.13 - 02.19"}, {"t": "没节操被打，到底是猫德的沦丧，还是道德的缺失！", "v": 3538923, "r": 0.0504, "s": "series", "z": "2022第153期 02.18 - 02.24"}, {"t": "《崩坏：星穹铁道》救世PV——「开拓者」", "v": 9998455, "r": 0.1261, "s": "series", "z": "2025第333期 08.01 - 08.07"}, {"t": "这3分钟，我拍了整整一年。。。", "v": 1815318, "r": 0.095, "s": "series", "z": "2023第219期 05.26 - 06.01"}, {"t": "这是什么马？？", "v": 14876835, "r": 0.106, "s": "series", "z": "2026第372期 05.01 - 05.07"}, {"t": "当猫发现自己的项圈是声控灯，还会说话后…", "v": 4183618, "r": 0.14, "s": "series", "z": "2022第171期 06.24 - 06.30"}, {"t": "这首歌找了好多年", "v": 2826080, "r": 0.0815, "s": "series", "z": "2023第239期 10.13 - 10.19"}, {"t": "《鸣潮》共鸣者「爱弥斯」PV | 祝福", "v": 4357097, "r": 0.1026, "s": "series", "z": "2026第359期 01.30 - 02.05"}, {"t": "俄国人如何在西欧当国王？【硬核狠人74】", "v": 6067314, "r": 0.0918, "s": "series", "z": "2024第297期 11.22 - 11.28"}, {"t": "9月10日发售《东方红魔乡：新典　～ the Embodiment of", "v": 1561818, "r": 0.1863, "s": "series", "z": "2026第377期 06.05 - 06.11"}, {"t": "阿姨我也分不清鹅腿鸭腿啊！！！！！！【探照灯计划】", "v": 2244169, "r": 0.1234, "s": "series", "z": "2026第385期 07.31 - 08.06"}, {"t": "真不爱来养老院，太累", "v": 8183967, "r": 0.0549, "s": "series", "z": "2024第299期 12.06 - 12.12"}, {"t": "《给阿嬷的情书》：从黑马到大爆，真诚是第一要素【主创有话说EP03|视频", "v": 1567817, "r": 0.0628, "s": "series", "z": "2026第374期 05.15 - 05.21"}, {"t": "去而复来", "v": 9481588, "r": 0.0379, "s": "series", "z": "2023第215期 04.28 - 05.04"}, {"t": "贵州街头烤鱼，辣椒致死量！遵义阿姨：“不辣！真的不辣！”", "v": 5148094, "r": 0.0358, "s": "series", "z": "2026第369期 04.10 - 04.16"}, {"t": "他们朝我扔植物 ！", "v": 1999195, "r": 0.0938, "s": "series", "z": "2025第319期 04.25 - 05.01"}, {"t": "抗 妖 神 剧", "v": 2357333, "r": 0.0815, "s": "series", "z": "2024第297期 11.22 - 11.28"}, {"t": "CF出新作，居然是3A单机？深度对话《穿越火线：潜伏》首席创意官【视频播", "v": 1231069, "r": 0.0211, "s": "series", "z": "2026第386期 08.07 - 08.13"}, {"t": "音乐家庭的媳妇是什么水平？真·全家人演奏的《HAVANA》", "v": 3176115, "r": 0.1072, "s": "series", "z": "2022第171期 06.24 - 06.30"}, {"t": "【侯绿萝】视频加载中，速速查收惊喜！", "v": 9012985, "r": 0.0367, "s": "series", "z": "2025第349期 11.21 - 11.27"}, {"t": "前魅族副总裁分享11条防社会毒打建议，年薪几百万不是梦！【必收藏】", "v": 1428351, "r": 0.3521, "s": "series", "z": "2020第70期 07.17 - 07.23"}, {"t": "4套组网方案，让你家的WIFI网络超过99%的人", "v": 1871611, "r": 0.2321, "s": "series", "z": "2020第90期 12.04 - 12.10"}, {"t": "全程卧槽！一位中国玩家暴肝七个月一个人的璃月港！可莉狂喜！", "v": 3461019, "r": 0.3218, "s": "series", "z": "2021第119期 06.25 - 07.01"}, {"t": "释放阿凡达Unleash The Avatar - 实机演示预告", "v": 2158398, "r": 0.028, "s": "series", "z": "2026第379期 06.19 - 06.25"}, {"t": "人类早期击杀牛头人珍贵影像【阅片无数56】", "v": 5329892, "r": 0.1151, "s": "series", "z": "2020第70期 07.17 - 07.23"}, {"t": "谭Sir把我逮了？", "v": 7638505, "r": 0.0332, "s": "series", "z": "2025第335期 08.15 - 08.21"}, {"t": "【邓紫棋的VLOG】马尔代夫-天堂之旅", "v": 6176011, "r": 0.0851, "s": "series", "z": "2023第219期 05.26 - 06.01"}, {"t": "小明买瓜，老板给了他三万块", "v": 5175291, "r": 0.0122, "s": "series", "z": "2026第375期 05.22 - 05.28"}, {"t": "无跑跳减脂训练，甩掉9.8斤脂肪，不伤膝盖不伤腰", "v": 3970483, "r": 0.331, "s": "series", "z": "2021第119期 06.25 - 07.01"}, {"t": "这种害人的东西为什么会存在？ 脊柱胸椎曲度就是这么被弄没的！", "v": 6883309, "r": 0.1762, "s": "series", "z": "2022第177期 08.05 - 08.11"}, {"t": "云顶天宫：老君山最新航拍【4K版】", "v": 2665497, "r": 0.164, "s": "series", "z": "2020第90期 12.04 - 12.10"}, {"t": "《狡猾の老抽》", "v": 6216574, "r": 0.0221, "s": "series", "z": "2025第339期 09.12 - 09.18"}, {"t": "花了500吃了家破店，竟是川菜天花板？老胖头直呼辣的过瘾！【就得这么晚-", "v": 1981108, "r": 0.1561, "s": "series", "z": "2021第143期 12.10 - 12.16"}, {"t": "《标 记 成 功！》", "v": 1322266, "r": 0.0893, "s": "series", "z": "2024第269期 05.10 - 05.16"}, {"t": "克格勃是怎么消失的？【神奇组织13】", "v": 9555044, "r": 0.0668, "s": "series", "z": "2023第247期 12.08 - 12.14"}, {"t": "树恨你", "v": 14699860, "r": 0.2113, "s": "series", "z": "2026第383期 07.17 - 07.23"}, {"t": "《崩坏：星穹铁道》即兴巡演PV：「一口气看完！铁墓之战后，官方没有说出的", "v": 11109840, "r": 0.1182, "s": "series", "z": "2026第359期 01.30 - 02.05"}, {"t": "当我坐不同交通工具时，我幻想中的vs实际上的！你会这样吗哈哈哈哈", "v": 7611927, "r": 0.0242, "s": "series", "z": "2026第373期 05.08 - 05.14"}, {"t": "【老番茄】大傻子福尔摩斯(第二集)", "v": 5139613, "r": 0.1716, "s": "series", "z": "2022第153期 02.18 - 02.24"}, {"t": "从北舞毕业后，入职海底捞…", "v": 941183, "r": 0.0325, "s": "series", "z": "2026第375期 05.22 - 05.28"}, {"t": "【短的发布会】我要验湃！一条视频带你看懂全网最带湃的澎湃OS 4", "v": 4585256, "r": 0.0164, "s": "series", "z": "2026第387期 08.14 - 08.20"}, {"t": "顶级权谋还是菜鸡互啄？泰柬冲突竟是东南亚版的继承者们？", "v": 4243656, "r": 0.0392, "s": "series", "z": "2025第333期 08.01 - 08.07"}, {"t": "《海阔天空》一个人的乐队", "v": 2799703, "r": 0.1625, "s": "series", "z": "2026第388期 08.21 - 08.27"}, {"t": "爆肝30天，手绘400张社会摇，泰裤辣！！", "v": 2764150, "r": 0.1943, "s": "series", "z": "2023第215期 04.28 - 05.04"}, {"t": "诺兰2.5亿巨制！看懂奥德赛", "v": 4773029, "r": 0.084, "s": "series", "z": "2026第386期 08.07 - 08.13"}, {"t": "【苏新皓｜4K直拍】Talk WORTHY? Talk DIRTY! 直", "v": 3199458, "r": 0.1513, "s": "series", "z": "2026第369期 04.10 - 04.16"}, {"t": "跟着福岛渔民出海，捞上来的鱼检测结果如何？【东瀛大宝荐02】", "v": 17513505, "r": 0.4494, "s": "series", "z": "2023第239期 10.13 - 10.19"}, {"t": "《洛克王国：世界》S2赛季「狂欢怪谈」PV首曝，好戏即将开场！", "v": 3639933, "r": 0.0275, "s": "series", "z": "2026第373期 05.08 - 05.14"}, {"t": "《鸣潮》特别通讯动画 | 无音区", "v": 4021032, "r": 0.0514, "s": "series", "z": "2024第263期 03.29 - 04.04"}, {"t": "羊村第三季（1）", "v": 31287382, "r": 0.1183, "s": "series", "z": "2023第247期 12.08 - 12.14"}, {"t": "大庆赶海，大海退潮后发现大个的竹节蛏眼，撒上一点盐往外跑", "v": 20104885, "r": 0.0141, "s": "series", "z": "2026第384期 07.24 - 07.30"}, {"t": "《原神》剧情CM短片", "v": 7708639, "r": 0.1434, "s": "series", "z": "2022第151期 02.04 - 02.10"}, {"t": "颠覆行业？索尼FX5深度评测", "v": 2081600, "r": 0.1335, "s": "series", "z": "2026第383期 07.17 - 07.23"}, {"t": "电影最TOP 100：永远的喜剧之王！星爷周星驰电影全盘点", "v": 6699929, "r": 0.1399, "s": "precious", "z": ""}, {"t": "这才是文化膨胀！！当岩彩画遇上汉服", "v": 8049103, "r": 0.2217, "s": "precious", "z": ""}, {"t": "相 机 大 战", "v": 7894344, "r": 0.1774, "s": "precious", "z": ""}, {"t": "危险的黑子", "v": 10457683, "r": 0.0941, "s": "precious", "z": ""}, {"t": "一位粉丝想看到自己奔跑的样子", "v": 12057594, "r": 0.6437, "s": "precious", "z": ""}, {"t": "【孙悟空×林黛玉】名著联姻 | 佛度众生不度我 宁负如来不负卿", "v": 19815034, "r": 0.12, "s": "precious", "z": ""}, {"t": "洛天依，原创《勾指起誓》", "v": 22839905, "r": 0.1805, "s": "precious", "z": ""}, {"t": "【桃核x麦麥籽】改革春风吹满地！念诗之王x原创编舞x鬼畜第二弹", "v": 3975127, "r": 0.2001, "s": "precious", "z": ""}, {"t": "【2018】年度影视混剪 Ready Story 2018", "v": 5104593, "r": 0.4131, "s": "precious", "z": ""}, {"t": "【红日】梁逸峰你朗诵这么屌你家里人知道吗？", "v": 24349877, "r": 0.0733, "s": "precious", "z": ""}, {"t": "你被困在2019年10月25日，如何逃出？（三种循环体+随机选项+多结局", "v": 16432513, "r": 0.2014, "s": "precious", "z": ""}, {"t": "【Lex】B站历史上意义最重大的10部动画！", "v": 13773589, "r": 0.1826, "s": "precious", "z": ""}, {"t": "【极乐净土】咬人猫/有咩酱/赤九玖❤155小分队o(*≧▽≦)ツ", "v": 31905004, "r": 0.0916, "s": "precious", "z": ""}, {"t": "【罗翔】童话镇", "v": 35503120, "r": 0.2548, "s": "precious", "z": ""}, {"t": "⚡️ 中 国 人 不 蹦 洋 迪 ⚡️", "v": 45853319, "r": 0.1859, "s": "precious", "z": ""}, {"t": "【2016拜年祭单品】婕纶二重奏", "v": 5496015, "r": 0.176, "s": "precious", "z": ""}, {"t": "【高能Rap】你从未看过的家有儿女", "v": 31456963, "r": 0.1319, "s": "precious", "z": ""}, {"t": "【电音单曲】我是papi酱", "v": 46957139, "r": 0.0802, "s": "precious", "z": ""}, {"t": "【自制】技术宅UP耗时三个月，自制B站最强小电视！【硬核】【3分钟从草图", "v": 7681948, "r": 0.3306, "s": "precious", "z": ""}, {"t": "【Minecraft】清明上河图 [灯火阑珊处 人在画中游]【国家建筑师", "v": 13404432, "r": 0.2723, "s": "precious", "z": ""}];
+const NS = 'http://www.w3.org/2000/svg';
+const INK = '#081F5C', D1 = '#334EAC', D2 = '#7096D1', D3 = '#BAD6EB', SUB = '#5B7EC2';
+function el(parent, t, a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);parent.appendChild(e);return e;}
+function txt(parent, x, y, s, size, fill, anchor, weight){
+  const e = el(parent,'text',{x:x,y:y,'font-size':size||11,fill:fill||SUB,'text-anchor':anchor||'start','font-weight':weight||'normal'});
+  e.textContent = s; return e;
+}
+
+/* ---- §3 偏相关瀑布 ---- */
+(function(){
+  const P = DEEP.partial;
+  const rows = [['全体混合(对照)', P.raw_pearson], ['控制 视频年龄', P.ctrl_age], ['再控制 时长', P.ctrl_age_dur], ['榜单层内再控制分区', P.ranking_full_ctrl]];
+  const maxv = 0.3;
+  document.getElementById('waterfall').innerHTML = rows.map(([lab, v]) => {
+    const w = (Math.abs(v)/maxv*86).toFixed(1);
+    return '<div class="bar-row"><span class="bar-lab">'+lab+'</span>'
+      +'<div class="bar-track"><div class="bar-fill" style="width:'+w+'%;background:'+ (v<=-0.21 ? D1 : (v<=-0.19 ? D2 : '#9DBCE0')) +'"></div></div>'
+      +'<span class="bar-val">'+v.toFixed(3)+'</span></div>';
+  }).join('');
+  document.getElementById('p-full').textContent = P.ranking_full_ctrl.toFixed(3);
+  document.getElementById('p-nz').textContent = P.n_zones;
+})();
+
+/* ---- §4 洛伦兹 ---- */
+(function(){
+  const svg = document.getElementById('lorenz');
+  const W=840,H=380,L=52,R=16,T=16,B=40;
+  const x = p => L + (W-L-R)*p/100, y = p => T + (H-T-B)*(1-p/100);
+  el(svg,'rect',{x:L,y:T,width:W-L-R,height:H-T-B,fill:'#fff',opacity:0.5});
+  el(svg,'line',{x1:x(0),y1:y(0),x2:x(100),y2:y(100),stroke:D3,'stroke-dasharray':'5 4','stroke-width':1});
+  txt(svg, x(88), y(94), '绝对平等线', 11, D2, 'end');
+  const pts = DEEP.lorenz.curve.map(p => x(p[0]).toFixed(1)+','+y(p[1]).toFixed(1)).join(' ');
+  el(svg,'path',{d:'M'+x(0)+','+y(0)+' L'+pts, fill:'none', stroke:D1, 'stroke-width':2.4});
+  const t10 = DEEP.lorenz.curve.find(p=>p[0]>=10);
+  el(svg,'circle',{cx:x(t10[0]),cy:y(t10[1]),r:4.5,fill:INK});
+  txt(svg, x(t10[0])+10, y(t10[1])+4, '头部10%视频 → 占 '+t10[1]+'% 播放', 12.5, INK, 'start', 'bold');
+  const t1 = DEEP.lorenz.curve.find(p=>p[0]>=1);
+  el(svg,'circle',{cx:x(t1[0]),cy:y(t1[1]),r:4.5,fill:'#C2803A'});
+  txt(svg, x(t1[0])+10, y(t1[1])-6, '头部1% → 占 '+t1[1]+'%', 12.5, '#9A6428', 'start', 'bold');
+  [0,20,40,60,80,100].forEach(p=>{
+    el(svg,'line',{x1:x(p),y1:y(0),x2:x(p),y2:y(0)+4,stroke:D2});
+    txt(svg, x(p), y(0)+16, p+'%', 10.5, SUB, 'middle');
+    el(svg,'line',{x1:x(0),y1:y(p),x2:x(0)-4,y2:y(p),stroke:D2});
+    txt(svg, x(0)-8, y(p)+4, p+'%', 10.5, SUB, 'end');
+  });
+  txt(svg, (L+W-R)/2, H-4, '视频累计占比（按播放量降序）', 11, SUB, 'middle');
+  const yl = txt(svg, 12, (T+H-B)/2, '播放量累计占比', 11, SUB, 'middle'); yl.setAttribute('transform','rotate(-90 12 '+((T+H-B)/2)+')');
+  document.getElementById('gini').textContent = DEEP.lorenz.gini_overall;
+  document.getElementById('gini-rk').textContent = DEEP.lorenz.gini_ranking;
+  document.getElementById('top1').textContent = DEEP.lorenz.top1_pct + '%';
+  document.getElementById('top10').textContent = DEEP.lorenz.top10_pct + '%';
+  document.getElementById('zipf').textContent = DEEP.lorenz.zipf_slope;
+  document.getElementById('coda-gini').textContent = DEEP.lorenz.gini_ranking;
+})();
+
+/* ---- §5 散点 ---- */
+(function(){
+  const COLORS = {feed:D1, ranking:D2, popular:INK, newlist:'#AFCDE8', tailsearch:'#5F84C6', series:'#5470C6', precious:'#8A7BC8'};
+  const NAMES = {feed:'推荐流', ranking:'榜单', popular:'热门', newlist:'新稿长尾', tailsearch:'搜索深页', series:'每周必看', precious:'入站必刷'};
+  const svg = document.getElementById('scatter');
+  const W=840, H=470, L=54, R=16, T=18, B=40;
+  const x = v => L + (Math.log10(Math.max(v,1000))-3)/(7.15-3)*(W-L-R);
+  const y = r => T + (1 - Math.min(r,0.5)/0.5)*(H-T-B);
+  el(svg,'rect',{x:x(500000), y:y(DEEP.cbi.g_p25), width:W-R-x(500000), height:H-B-y(DEEP.cbi.g_p25), fill:'#C2803A', opacity:0.07});
+  el(svg,'line',{x1:L,y1:y(DEEP.cbi.g_p25),x2:W-R,y2:y(DEEP.cbi.g_p25),stroke:INK,'stroke-dasharray':'4 4','stroke-width':0.8,opacity:0.65});
+  el(svg,'line',{x1:x(500000),y1:T,x2:x(500000),y2:H-B,stroke:INK,'stroke-dasharray':'4 4','stroke-width':0.8,opacity:0.65});
+  el(svg,'line',{x1:L,y1:H-B,x2:W-R,y2:H-B,stroke:D2,'stroke-width':1});
+  el(svg,'line',{x1:L,y1:T,x2:L,y2:H-B,stroke:D2,'stroke-width':1});
+  [[1000,'1k'],[10000,'1w'],[100000,'10w'],[1000000,'100w'],[10000000,'1000w']].forEach(([v,t])=>{
+    el(svg,'line',{x1:x(v),y1:H-B,x2:x(v),y2:H-B+4,stroke:D2});
+    txt(svg, x(v), H-B+18, t, 11, SUB, 'middle');
+  });
+  [0,0.1,0.2,0.3,0.4,0.5].forEach(r=>{
+    el(svg,'line',{x1:L-4,y1:y(r),x2:L,y2:y(r),stroke:D2});
+    txt(svg, L-8, y(r)+4, r.toFixed(1), 11, SUB, 'end');
+  });
+  txt(svg, 14, T+10, '加权感谢率 F7', 11, SUB);
+  const q=(tx,ty,t)=>txt(svg,tx,ty,t,12,SUB,'start','bold');
+  q(L+10, T+16, '安静遗珠（高感谢 · 低到达）'); q(W-R-190, T+16, '公认佳作（高感谢 · 高到达）');
+  q(W-R-200, H-B-10, '注意力小偷（低感谢 · 高到达）'); q(L+10, H-B-10, '无人问津');
+  const tip = document.getElementById('tip');
+  const fmt = v => v>=10000 ? (v/10000).toFixed(1)+'w' : ''+v;
+  POINTS.forEach(p=>{
+    const c = el(svg,'circle',{cx:x(p.v),cy:y(p.r),r:3.2,fill:COLORS[p.s]||'#999',opacity:0.55});
+    c.addEventListener('mouseenter',()=>{
+      tip.style.display='block';
+      tip.innerHTML='<b>'+p.t+'</b><br>播放 '+fmt(p.v)+' · F7='+p.r+' · '+(NAMES[p.s]||p.s);
+      const wr=document.querySelector('#s5 .chart-wrap').getBoundingClientRect();
+      tip.style.left=Math.min(x(p.v)/840*wr.width+12, wr.width-300)+'px';
+      tip.style.top=Math.max(y(p.r)/470*wr.height-46, 0)+'px';
+      c.setAttribute('opacity','1'); c.setAttribute('r','4.5');
+    });
+    c.addEventListener('mouseleave',()=>{tip.style.display='none';c.setAttribute('opacity','0.55');c.setAttribute('r','3.2');});
+  });
+  const counts={}; POINTS.forEach(p=>counts[p.s]=(counts[p.s]||0)+1);
+  document.getElementById('legend').innerHTML='抽样 '+POINTS.length+' 点 · '+Object.keys(COLORS).map(k=>counts[k]?'<i style="background:'+COLORS[k]+'"></i>'+(NAMES[k]||k)+' '+counts[k]:'').join(' ');
+  /* 样例卡 */
+  const fb = DEEP.fire_but_cold, gm = DEEP.gems;
+  const card = (v, cls) => '<div class="ex '+cls+'"><div class="t">'+v.t+'</div><div class="m">播放 '+fmt(v.v)+' · F7='+v.r+'</div></div>';
+  document.getElementById('ex-cold').innerHTML = fb.examples.slice(0,4).map(v=>card(v,'cold')).join('');
+  document.getElementById('ex-gem').innerHTML = gm.examples.slice(0,4).map(v=>card(v,'')).join('');
+  document.getElementById('tag-hotbad').textContent = fb.n + ' / ' + fb.n_hot + ' ＝ ' + (fb.n/fb.n_hot*100).toFixed(1) + '%';
+  document.getElementById('tag-gem').textContent = gm.n + ' / ' + gm.n_tail + ' ＝ ' + (gm.n/gm.n_tail*100).toFixed(1) + '%';
+})();
+
+/* ---- §6 CBI 曲线 + 混淆矩阵 ---- */
+(function(){
+  const svg = document.getElementById('cbi-curve');
+  const W=840,H=380,L=52,R=16,T=16,B=40;
+  const pts = DEEP.cbi.p50_curve, pts25 = DEEP.cbi.p25_curve;
+  const ymax = 0.36;
+  const x = v => L + (v-3)/(7.2-3)*(W-L-R);
+  const y = r => T + (1 - Math.min(r,ymax)/ymax)*(H-T-B);
+  el(svg,'line',{x1:L,y1:H-B,x2:W-R,y2:H-B,stroke:D2,'stroke-width':1});
+  el(svg,'line',{x1:L,y1:T,x2:L,y2:H-B,stroke:D2,'stroke-width':1});
+  [[3,'1k播放'],[4,'1w'],[5,'10w'],[6,'100w'],[7,'1000w']].forEach(([v,t])=>{
+    el(svg,'line',{x1:x(v),y1:H-B,x2:x(v),y2:H-B+4,stroke:D2});
+    txt(svg, x(v), H-B+16, t, 10.5, SUB, 'middle');
+  });
+  [0,0.1,0.2,0.3].forEach(r=>{
+    el(svg,'line',{x1:L-4,y1:y(r),x2:L,y2:y(r),stroke:D2});
+    txt(svg, L-7, y(r)+4, r.toFixed(1), 10.5, SUB, 'end');
+  });
+  const path = arr => 'M' + arr.map(p=>x(p[0]).toFixed(1)+','+y(p[1]).toFixed(1)).join(' L');
+  el(svg,'path',{d:path(pts25),fill:'none',stroke:D2,'stroke-width':1.4,'stroke-dasharray':'5 4'});
+  el(svg,'path',{d:path(pts),fill:'none',stroke:D1,'stroke-width':2.6});
+  const mid = pts[Math.min(pts.length-1, 26)];
+  txt(svg, x(mid[0])-10, y(mid[1])-10, 'P50 基线（CBI = 1 的位置）', 12, D1, 'end', 'bold');
+  const m25 = pts25[Math.min(pts25.length-1, 20)];
+  txt(svg, x(m25[0])+10, y(m25[1])+4, 'P25 基线（「看过不给」判线）', 12, SUB);
+  txt(svg, 16, T+10, '基线随播放规模下移 → 阈值必须跟着移动', 11.5, SUB);
+  txt(svg, (L+W-R)/2, H-4, '播放量（log10）', 10.5, SUB, 'middle');
+  const c = DEEP.cbi.confusion;
+  document.getElementById('confusion').innerHTML =
+    '<table class="hm"><tr><th></th><th>CBI 判低质</th><th>CBI 判健康</th></tr>'
+    +'<tr><th>全局阈值<br>判低质</th><td style="background:rgba(51,78,172,0.85);color:#fff">'+c.both_low+'</td><td style="background:rgba(194,128,58,0.35);color:#6b4520">'+c.global_only+'</td></tr>'
+    +'<tr><th>全局阈值<br>判健康</th><td style="background:rgba(51,78,172,0.18)">'+c.cbi_only+'</td><td style="background:rgba(51,78,172,0.06)">'+c.healthy+'</td></tr></table>';
+  document.getElementById('conf-note').textContent =
+    '两种判定高度一致（χ² p≈' + (c.chi2_p < 1e-4 ? '0' : c.chi2_p) + '）。橙色格＝全局阈值冤案：' +
+    c.global_only + ' 条（占其判定低质的 ' + Math.round(c.global_low_pardoned_by_cbi_pct*100) + '%）被 CBI 平反；蓝浅格＝CBI 新抓出 ' + c.cbi_only + ' 条相对垃圾。(n=' + c.n_ge50w + '，播放≥5w)';
+  document.getElementById('pardon-pct').textContent = Math.round(c.global_low_pardoned_by_cbi_pct*100) + '%';
+})();
+
+/* ---- §7 PCA ---- */
+(function(){
+  const svg = document.getElementById('pca');
+  const W=840,H=440,L=48,R=20,T=24,B=38;
+  const zs = DEEP.fingerprints.zones;
+  const xs = zs.map(z=>z.pc1), ys = zs.map(z=>z.pc2);
+  const x1=Math.min(...xs)-0.6, x2=Math.max(...xs)+0.9, y1=Math.min(...ys)-0.7, y2=Math.max(...ys)+0.7;
+  const X = v => L + (v-x1)/(x2-x1)*(W-L-R);
+  const Y = v => T + (y2-v)/(y2-y1)*(H-T-B);
+  el(svg,'line',{x1:X(x1),y1:Y(0),x2:X(x2),y2:Y(0),stroke:D3,'stroke-width':1});
+  el(svg,'line',{x1:X(0),y1:Y(y1),x2:X(0),y2:Y(y2),stroke:D3,'stroke-width':1});
+  txt(svg, X(x1)+4, Y(0)-6, '← 感谢率高（用户创作区）', 12, D1, 'start', 'bold');
+  txt(svg, X(x2)-4, Y(0)-6, '感谢率低（官方消费区）→', 12, D2, 'end', 'bold');
+  zs.forEach(z=>{
+    el(svg,'circle',{cx:X(z.pc1),cy:Y(z.pc2),r:6,fill: (z.zone==='电影') ? '#C2803A' : (z.pc1<0 ? D1 : D2), opacity:0.9});
+    txt(svg, X(z.pc1)+9, Y(z.pc2)+4, z.zone, 13, INK, 'start', z.zone==='电影'?'bold':'normal');
+  });
+  txt(svg, (L+W-R)/2, H-4, 'PC1 · 社区感谢强度轴 · 62.6% 方差', 11, SUB, 'middle');
+  const yl = txt(svg, 14, (T+H-B)/2, 'PC2 · 共在场 vs 留用 · 24.8%', 11, SUB, 'middle'); yl.setAttribute('transform','rotate(-90 14 '+((T+H-B)/2)+')');
+  document.getElementById('fp-var').textContent = ((DEEP.fingerprints.var_explained[0]+DEEP.fingerprints.var_explained[1])*100).toFixed(1) + '%';
+})();
+
+/* ---- §8 热图 ---- */
+(function(){
+  const keys = DEEP.signal_matrix.keys, rho = DEEP.signal_matrix.rho;
+  const zh = {'like':'赞率','coin':'币率','favorite':'藏率','danmaku':'弹幕率','share':'分享率','reply':'评论率','赞/播':'赞率','币/播':'币率','藏/播':'藏率','弹/播':'弹幕率','享/播':'分享率','评/播':'评论率'};
+  let html = '<div class="matrix-wrap"><div class="ylab">行信号</div><table class="hm"><tr><th></th>' + keys.map(k=>'<th>'+(zh[k]||k)+'</th>').join('') + '</tr>';
+  rho.forEach((row,i)=>{
+    html += '<tr><th>'+(zh[keys[i]]||keys[i])+'</th>';
+    row.forEach((v,j)=>{
+      const a = Math.min(Math.abs(v),1);
+      const bg = (i===j) ? 'background:rgba(8,31,92,0.9);color:#fff'
+        : (v>=0 ? 'background:rgba(51,78,172,'+(0.08+a*0.75).toFixed(2)+');color:'+(a>0.5?'#fff':'#081F5C')
+                : 'background:rgba(194,128,58,'+(0.1+a*0.6).toFixed(2)+');color:#6b4520');
+      html += '<td style="'+bg+'">'+v.toFixed(2)+'</td>';
+    });
+    html += '</tr>';
+  });
+  document.getElementById('heatmap').innerHTML = html + '</table></div>';
+  document.getElementById('k-coin').textContent = '+0.63';
+})();
+
+/* ---- §9 网格表 ---- */
+(function(){
+  const g = DEEP.grid;
+  const bad = 'log10_view';
+  let html = '<table><thead><tr><th>信号子集</th><th>分母</th><th>与log播放相关<br>（要绝对值小）</th><th>与社交活跃指数S相关<br>（要大）</th><th>最低50条中非榜单层占比</th></tr></thead><tbody>';
+  const order = g.slice().sort((a,b)=> (b.corr_social - Math.abs(b.corr_logview)) - (a.corr_social - Math.abs(a.corr_logview)));
+  const best = order[0];
+  const zhSet = {'L':'仅点赞','C':'仅投币','F':'仅收藏','LC':'赞+币','FC':'藏+币','LFC':'赞+藏+币','基准3/2/0.3':'基准权重 3/2/0.3'};
+  order.forEach(r=>{
+    const isWin = r.subset===best.subset && r.denom===best.denom;
+    const isBad = r.denom===bad && Math.abs(r.corr_logview)>0.5;
+    html += '<tr class="'+(isWin?'win':(isBad?'rej':''))+'">'
+      +'<td>'+(zhSet[r.subset]||r.subset)+'</td><td>'+({'view':'播放','sqrt_view':'√播放','log10_view':'log播放'})[r.denom]+'</td>'
+      +'<td class="num">'+r.corr_logview.toFixed(3)+'</td><td class="num">+'+r.corr_social.toFixed(3)+'</td>'
+      +'<td class="num">'+Math.round(r.bottom_nonranking*100)+'%</td></tr>';
+  });
+  document.getElementById('grid-table').innerHTML = html + '</tbody></table>';
+  const cRow = g.find(r=>r.subset==='C' && r.denom==='view');
+  if (cRow) document.getElementById('cross-c').textContent = Math.round(cRow.bottom_nonranking*100)+'%';
+})();
+
+/* ---- §10 时代演化 + 层间 ---- */
+(function(){
+  const yrs = DEEP.experiment_k.years;
+  const svg = document.getElementById('era');
+  const W=840,H=400,L=56,R=18,T=20,B=42;
+  const xx = yrs.map(r=>r.year), f7 = yrs.map(r=>r.f7_med), cv = yrs.map(r=>r.coin_v), lv = yrs.map(r=>r.like_v);
+  const yF = v => T + (1 - v/0.16)*(H-T-B);
+  yrs.forEach(r=>{
+    const X = L + (r.year - xx[0] - 0.5)/(xx[xx.length-1] - xx[0] + 1)*(W-L-R);
+    r._x = X;
+  });
+  el(svg,'line',{x1:L,y1:H-B,x2:W-R,y2:H-B,stroke:D2,'stroke-width':1});
+  [0,0.04,0.08,0.12,0.16].forEach(v=>{
+    el(svg,'line',{x1:L-4,y1:yF(v),x2:L,y2:yF(v),stroke:D2});
+    txt(svg, L-8, yF(v)+4, (v*100).toFixed(0)+'%', 10.5, SUB, 'end');
+  });
+  const line = (arr, color, w) => el(svg,'path',{d:'M'+arr.map((v,i)=>yrs[i]._x.toFixed(1)+','+yF(v).toFixed(1)).join(' L'),fill:'none',stroke:color,'stroke-width':w});
+  line(lv, D3, 2); line(cv, '#C2803A', 2); line(f7, D1, 2.8);
+  yrs.forEach(r=>{
+    el(svg,'circle',{cx:r._x,cy:yF(r.f7_med),r:4,fill:D1});
+    el(svg,'circle',{cx:r._x,cy:yF(r.like_v),r:3,fill:D3});
+    el(svg,'circle',{cx:r._x,cy:yF(r.coin_v),r:3,fill:'#C2803A'});
+    txt(svg, r._x, H-B+16, r.year+'', 11, SUB, 'middle');
+  });
+  txt(svg, L+4, T+12, '感谢率 F7', 12, D1, 'start', 'bold');
+  txt(svg, L+4, T+28, '点赞率 F1', 11.5, '#7FA3D4');
+  txt(svg, L+4, T+44, '投币率 F2', 11.5, '#C2803A');
+  txt(svg, (L+W-R)/2, H-4, '「每周必看」期号年份（每期约 30-50 条精选视频的中位数）', 11, SUB, 'middle');
+  /* 解读 */
+  const first = yrs[0], last = yrs[yrs.length-1];
+  const drop = ((first.f7_med - last.f7_med)/first.f7_med*100).toFixed(0);
+  document.getElementById('era-read').innerHTML =
+    '<p><b>读数：</b>'+first.year+' 年的每周精选 F7 中位 '+first.f7_med.toFixed(3)+'（币率 '+(first.coin_v*100).toFixed(2)+'%），'
+    +'到 '+last.year+' 年为 '+last.f7_med.toFixed(3)+'（币率 '+(last.coin_v*100).toFixed(2)+'%）——'
+    +(drop>0 ? '七年间每周精选的感谢率下降了约 '+drop+'%。' : '感谢率整体平稳甚至上行。')
+    +'可能的解释：老视频的互动有更长的累积窗口（同入选规则下的年龄效应）；「三连」话术的普及改变了互动结构；精选池本身随平台扩张而稀释。<b>更保守的读法</b>：这再次证明互动率必须放进时间维度里校准——任何「跨年代比比值」的结论都要先过这一关。</p>';
+  /* 层间表 */
+  const lr = DEEP.experiment_k.layers;
+  document.getElementById('layer-table').innerHTML = '<table><thead><tr><th>地层（入选机制）</th><th>n</th><th>F7 中位</th><th>CBI 中位</th><th>播放中位</th></tr></thead><tbody>'
+    + lr.map(r=>'<tr><td>'+r.layer+'</td><td class="num">'+r.n+'</td><td class="num">'+r.f7_med+'</td><td class="num">'+r.cbi_med+'</td><td class="num">'+r.view_med.toLocaleString()+'</td></tr>').join('')
+    + '</tbody></table>';
+})();
+
+/* ---- §11 时长 ---- */
+(function(){
+  const K = DEEP.experiment_k;
+  const rows = K.dur_bands;
+  const maxv = Math.max(...rows.map(r=>r.cbi_med), 1.2);
+  document.getElementById('dur-table').innerHTML =
+    rows.map(r=>'<div class="bar-row"><span class="bar-lab">'+r.band+'</span><div class="bar-track"><div class="bar-fill" style="width:'+(r.cbi_med/maxv*100).toFixed(1)+'%;background:'+(r.cbi_med>=1?D1:D2)+'"></div></div><span class="bar-val">CBI '+r.cbi_med.toFixed(2)+'</span></div>'
+      +'<p class="note" style="margin:-2px 0 8px 118px">n='+r.n+' · F7='+r.f7_med.toFixed(3)+' · 播放中位 '+r.view_med.toLocaleString()+'</p>').join('');
+  document.getElementById('dur-raw').textContent = K.dur_partial_raw;
+  document.getElementById('dur-ctrl').textContent = K.dur_partial_ctrl;
+  /* 自动解读 */
+  const sorted = rows.slice().sort((a,b)=>b.cbi_med-a.cbi_med);
+  const top = sorted[0], bottom = sorted[sorted.length-1];
+  const ctrl = K.dur_partial_ctrl;
+  const dirTxt = ctrl > 0.05 ? '<b>控制混杂后，更长的视频感谢率反而更高</b>——长内容在「每播放感谢收入」上占优'
+    : (ctrl < -0.05 ? '<b>控制混杂后，更长的视频感谢率更低</b>——长内容每播放赚到的感谢更少'
+    : '<b>控制混杂后时长与感谢率几乎无关</b>——感谢率由内容类型而非长度决定');
+  const mixTxt = Math.abs(K.dur_partial_raw - ctrl) > 0.08
+    ? (ctrl > K.dur_partial_raw ? '原始读数接近零而控制后转正——「长视频感谢率低」的直觉主要是纪录片/影视等分区混杂的锅（§7 指纹早已预告）'
+                                : '原始读数被「长视频多为官方区内容」的构成拉低，控制分区后显露真实关系')
+    : '原始与控制后读数接近，混杂影响有限';
+  document.getElementById('dur-read').innerHTML =
+    '<div class="quote">分段读数：CBI 峰值在「'+top.band+'」（'+top.cbi_med.toFixed(2)+'），谷值在「'+bottom.band+'」（'+bottom.cbi_med.toFixed(2)+'）。'
+    +'原始相关 '+K.dur_partial_raw+'，控制年龄与分区后 '+ctrl+'——'+dirTxt+'；'+mixTxt+'。</div>';
+})();
+
+/* ---- §12 模拟 KPI ---- */
+(function(){
+  const sr = DEEP.simulate;
+  document.getElementById('sim-cut').textContent = Math.round(sr.cut_pct*100) + '%';
+  document.getElementById('sim-cut-d').innerHTML = '推荐卡片被砍（'+sr.reasons['低CBI']+' 低CBI / '+sr.reasons['短视频']+' 短视频 / '+sr.reasons['竖屏']+' 竖屏，可叠加）<br>共砍 '+Math.round(sr.cut_pct*sr.feed_n)+'/'+sr.feed_n+' 条';
+  document.getElementById('sim-share').textContent = Math.round(sr.cut_view_share*100) + '%';
+  document.getElementById('sim-ratio').textContent = (sr.cut_med_view / Math.max(sr.kept_med_view,1)).toFixed(1) + '×';
+})();
+
+/* ---- §14 标题信号 ---- */
+(function(){
+  const rows = DEEP.titles;
+  const maxv = Math.max(...rows.map(r=>Math.max(r.f7_med, r.rest_med)));
+  document.getElementById('title-chart').innerHTML = rows.map(r=>{
+    const sig = r.p_mwu < 0.05;
+    const tag = sig ? (r.f7_med < r.rest_med ? '<span class="tag sig">显著低质 p='+r.p_mwu+'</span>' : '<span class="tag warn">显著高互动 p='+r.p_mwu+'</span>')
+                    : '<span class="tag nsig">无显著 p='+r.p_mwu+'</span>';
+    return '<h4 style="margin-bottom:2px">'+r.feat+' <span style="color:#9FB6D4;font-size:11px">n='+r.n+'</span> '+tag+'</h4>'
+      +'<div class="bar-row"><span class="bar-lab">该特征组</span><div class="bar-track"><div class="bar-fill" style="width:'+(r.f7_med/maxv*100).toFixed(1)+'%;background:'+ (r.p_mwu<0.05 ? (r.f7_med<r.rest_med?'#C2803A':D1) : '#B9C8E4') +'"></div></div><span class="bar-val">'+r.f7_med.toFixed(3)+'</span></div>'
+      +'<div class="bar-row"><span class="bar-lab">其余样本</span><div class="bar-track"><div class="bar-fill" style="width:'+(r.rest_med/maxv*100).toFixed(1)+'%;background:#D5CDBE"></div></div><span class="bar-val">'+r.rest_med.toFixed(3)+'</span></div>';
+  }).join('');
+  /* 分组结论（数据驱动，不写死） */
+  const low = rows.filter(r=>r.p_mwu<0.05 && r.f7_med<r.rest_med);
+  const high = rows.filter(r=>r.p_mwu<0.05 && r.f7_med>=r.rest_med);
+  const none = rows.filter(r=>r.p_mwu>=0.05);
+  const ratioOf = r => (r.f7_med/r.rest_med);
+  const fmtGroup = arr => arr.map(r=>'<b>'+r.feat+'</b>（'+r.f7_med.toFixed(3)+' vs '+r.rest_med.toFixed(3)+'，p='+r.p_mwu+'）').join('；');
+  document.getElementById('title-groups').innerHTML =
+    '<h3>显著低质签名（p&lt;0.05，数据自动分组）</h3><ul class="tight"><li>'+ (low.length ? fmtGroup(low) : '本轮无') +'</li></ul>'
+    +'<h3>显著高互动签名</h3><ul class="tight"><li>'+ (high.length ? fmtGroup(high) : '本轮无') +'</li></ul>'
+    +'<h3>无显著差异（别再脑补）</h3><ul class="tight"><li>'+ (none.length ? none.map(r=>r.feat).join('、') : '本轮无') +' —— 与感谢率无统计关系。</li></ul>';
+})();
+
+/* ---- Hero / 附录填充 ---- */
+(function(){
+  const M = DEEP.meta;
+  document.getElementById('hero-n').textContent = M.n_total.toLocaleString();
+  document.getElementById('badge-n').textContent = '样本 ' + M.n_total.toLocaleString() + ' 条';
+  document.getElementById('badge-t').textContent = M.n_trusted.toLocaleString();
+  document.getElementById('badge-date').textContent = '采集 ' + M.collected_at;
+  document.getElementById('ap-date').textContent = M.collected_at;
+  const srcNames = {'series':'每周必看（2020-2026 周精选）','precious':'入站必刷（历史经典）','ranking':'当前排行榜（全站+分区）','popular':'热门频道','feed':'未登录推荐流','newlist':'分区最新投稿','tailsearch':'搜索深页'};
+  const by = M.by_layer || {};
+  document.getElementById('layer-src-table').innerHTML = Object.keys(srcNames)
+    .filter(k=>by[k]).map(k=>'<tr><td>'+srcNames[k]+'</td><td class="num">'+by[k]+'</td><td>'+(k==='series'?'时间维度主力：同一评选规则横跨七年':'')+'</td></tr>').join('');
+  /* §15 动态统计量 */
+  const hm = DEEP.handmade;
+  document.getElementById('cod-hm-pv').textContent = hm.p_view;
+  document.getElementById('cod-hm-pc').textContent = hm.p_cbi;
+  document.getElementById('cod-hm-pv-read').textContent = hm.p_view < 0.05 ? '显著差异' : '无差异';
+  document.getElementById('cod-hm-pc-read').textContent = hm.p_cbi < 0.05 ? '通过显著线' : '未过显著线';
+  document.getElementById('cod-hm-verdict').textContent = (hm.p_cbi < 0.05) ? '部分证实' : '降级';
+  const emojiRow = DEEP.titles.find(r=>r.feat.indexOf('emoji')>=0);
+  if (emojiRow) document.getElementById('cod-p-emoji').textContent = emojiRow.p_mwu;
+  const c = DEEP.cbi.confusion;
+  document.getElementById('cod-pardon').textContent = Math.round(c.global_low_pardoned_by_cbi_pct*100)+'%';
+  document.getElementById('r2-pardon').textContent = Math.round(c.global_low_pardoned_by_cbi_pct*100)+'%';
+  const fb = DEEP.fire_but_cold;
+  document.getElementById('r2-hot').textContent = (fb.n/fb.n_hot*100).toFixed(1)+'%';
+})();
+</script>
+</body>
+</html>

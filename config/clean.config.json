@@ -1,0 +1,66 @@
+{
+  "_说明": "洁净B站 总配置 —— 所有权重/阈值都在这里手调。评分公式：score = (收藏×w_fav + 投币×w_coin + 点赞×w_like) / 分母。改完配置重跑 engine/scoring.py 即生效；userscript 里的 CONFIG 需手动同步（见 README 手调指南）。",
+  "config_version": 2,
+
+  "scoring": {
+    "weights": {
+      "favorite": 3.0,
+      "coin": 2.0,
+      "like": 0.3
+    },
+    "weights_doc": "v2 依据报告§8/§9：币=最均衡信号(主权重2)、藏=独立维度(3)、赞=规模污染最重(0.3)。全部可手调",
+    "denominator_mode": "view",
+    "denominator_modes_doc": {
+      "view": "原始播放量（唯一推荐：§9 证明 log/√ 分母会把质量分变成热度探测器）",
+      "sqrt_view": "√(播放)（已废弃）",
+      "log10_view": "log10(播放)（已废弃）"
+    },
+    "min_view_threshold": 3000,
+    "min_view_threshold_doc": "播放量低于此值 → 比率不可信 → 直接判为 unproven（不参与高中低分级）",
+    "below_min_view_tier": "unproven",
+    "tiers": {
+      "high": 0.107,
+      "normal": 0.064,
+      "low": 0.042
+    },
+    "tiers_doc": "v1 全局阈值（v2 方向：逐步被下方 cbi 相对基线取代，见 cbi 段）"
+  },
+
+  "cbi": {
+    "_doc": "感谢指数 CBI = F7 ÷ 同播放段基线中位数。依据报告§6：相对基线比全局阈值少约10%规模冤案。enabled=true 时优先于 tiers 判定",
+    "enabled": true,
+    "min_view": 50000,
+    "min_view_doc": "播放≥此值才做 CBI 判定（注意力已被大量消耗的门槛）",
+    "threshold": 0.5,
+    "threshold_doc": "CBI 低于此值 → 判定「看过不给」→ tier=junk",
+    "baseline_curve": "data/analysis/cbi_baseline.json（由 deep_analysis.py 拟合的 P50 曲线）"
+  },
+
+  "filters": {
+    "short_video_max_duration_sec": 75,
+    "portrait": {
+      "enabled": true,
+      "wh_ratio_min": 0.9
+    },
+    "wh_ratio_min_doc": "有效宽/高 < 此值判为竖屏（1.0=正方形，横屏一般>1.3）",
+    "live": true,
+    "min_views": 1000,
+    "min_views_doc": "总播放低于此值直接过滤（与 min_view_threshold 不同：这个是硬过滤开关）",
+    "block_keywords": [],
+    "block_keywords_doc": "关键词黑名单（§13 R7：仅放经过大样本检验的签名，推荐正则：第[0-9一二三四五六七八九十百]+[集话] 等；不要放 emoji/感叹等文体特征，§14 证明无效甚至反向）",
+    "zone_whitelist": [],
+    "zone_whitelist_doc": "§13 R4：官方版权分区（电影/电视剧/纪录片）感谢率天然垫底，建议整体加白名单（v3 将实现分区内基线）",
+    "beggar_patterns": ["投币.*更新", "三连.*更新", "点赞过.*更新"],
+    "beggar_patterns_doc": "§13 R8 观察项：乞讨互动文本打标不惩罚",
+    "hide_tiers": ["low", "junk"],
+    "hide_tiers_doc": "评分落在这些等级的推荐卡片直接隐藏；unproven 默认显示并打标，想隐藏就把它加进来",
+    "hide_unproven": false
+  },
+
+  "collector": {
+    "request_interval_sec": 0.4,
+    "max_videos_per_source": 40,
+    "sources": ["ranking", "popular", "feed"],
+    "sources_doc": "ranking=排行榜 popular=热门 feed=首页推荐流(未登录态)；feed 最接近真实刷到的分布"
+  }
+}

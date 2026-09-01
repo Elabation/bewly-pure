@@ -1,0 +1,10 @@
+# 中间采样版本（只保留 v4 基线与 v5_fix 终版）
+data/samples/ecosystem_20260901_1910.json
+data/samples/ecosystem_20260901_1910_v2.json
+data/samples/ecosystem_20260901_1910_v3.json
+data/samples/ecosystem_v5_20260901_2050.json
+
+# 临时与调试
+*.pyc
+__pycache__/
+probe_apis*.py
