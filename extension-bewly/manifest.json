@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "BewlyBewly · 洁净B站版",
   "version": "0.41.1",
-  "version_name": "0.41.1-cb3",
+  "version_name": "0.41.1-cb4",
   "description": "基于 BewlyBewly (MIT, hakadao) 的增量版：保留其全部 UI 与交互，新增 CBI 感谢指数过滤算法——低质推荐卡片不渲染，设置面板可调参。见仓库 THIRD_PARTY_NOTICES.md。",
   "homepage_url": "https://github.com/hakadao/BewlyBewly",
   "background": {
