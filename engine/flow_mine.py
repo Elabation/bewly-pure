@@ -63,6 +63,11 @@ def main():
     ap.add_argument("--min-inflow", type=int, default=2, help="汇流度门槛")
     ap.add_argument("--top-cbi-fill", type=int, default=0,
                     help="汇流不足 max-gods 时，用 CBI 最高的神作补足 N 个（稀疏采样下汇流被低估）")
+    ap.add_argument("--fill", default="cbi", choices=["cbi", "random"],
+                    help="种子补足方式：cbi=CBI top（浓缩，工程策略）/ random=随机（无偏统计链）")
+    ap.add_argument("--draw", default="strength", choices=["strength", "random"],
+                    help="候选截断方式：strength=CBI 浓度排序（工程剪枝）/ "
+                         "random=简单随机抽样（无偏统计链——跳间神作率可比的前提）")
     ap.add_argument("--flowmap-out", default="", help="种子→用户映射旁证文件（.flowmap.json 键）")
     args = ap.parse_args()
 
@@ -78,12 +83,19 @@ def main():
                   key=lambda x: -x[1])[:args.max_gods]
     if args.top_cbi_fill and len(gods) < args.max_gods:
         have = {b for b, _ in gods}
-        by_cbi = sorted(((v["bvid"], round(v.get("cbi", 0), 2)) for v in src.get("videos") or []
-                         if (v.get("view") or 0) >= 3000 and v.get("tier") == "high"
-                         and v["bvid"] not in have),
-                        key=lambda x: -x[1])
-        gods += by_cbi[:args.max_gods - len(gods)]
-        print(f"[hop{args.hop}] 汇流不足，CBI 补足 {min(args.max_gods - len(gods), len(by_cbi))} 个")
+        pool = [(v["bvid"], round(v.get("cbi", 0), 2)) for v in src.get("videos") or []
+                if (v.get("view") or 0) >= 3000 and v.get("tier") == "high"
+                and v["bvid"] not in have]
+        need = args.max_gods - len(gods)
+        if args.fill == "cbi":
+            pool.sort(key=lambda x: -x[1])
+            fill = pool[:need]
+            print(f"[hop{args.hop}] 汇流不足，CBI top 补足 {min(need, len(pool))} 个（浓缩策略）")
+        else:
+            random.shuffle(pool)
+            fill = pool[:need]
+            print(f"[hop{args.hop}] 汇流不足，随机补足 {min(need, len(pool))} 个（无偏统计链）")
+        gods += fill
     print(f"[hop{args.hop}] 种子神作 {len(gods)} 个: {[(b, n) for b, n in gods[:5]]}...")
 
     cli_anon = BiliClient(interval=args.interval)
@@ -143,13 +155,19 @@ def main():
             continue
         strength = sum(god_cbi.get(b, 3.0) for b in srcs)
         candidates.append((mid, round(strength, 2)))
-    candidates.sort(key=lambda x: -x[1])
-    mids = candidates[:args.max_users]
-    if candidates:
-        ss = sorted(s for _, s in candidates)
-        print(f"[prune] 新用户 {len(candidates)}，流强度分布 min={ss[0]} 中位={ss[len(ss)//2]} "
-              f"max={ss[-1]}；实挖 top {len(mids)}（强度 {mids[0][1]}~{mids[-1][1]}）"
-              f"——真剪枝：砍 {len(candidates)-len(mids)} 个低浓度候选")
+    if args.draw == "random":
+        random.shuffle(candidates)
+        mids = candidates[:args.max_users]
+        print(f"[draw] 简单随机抽样 {len(mids)}/{len(candidates)} 候选（无偏统计链——"
+              f"本跳神作率为候选总体的无偏估计，跳间可比）")
+    else:
+        candidates.sort(key=lambda x: -x[1])
+        mids = candidates[:args.max_users]
+        if candidates:
+            ss = sorted(s for _, s in candidates)
+            print(f"[prune] 新用户 {len(candidates)}，流强度分布 min={ss[0]} 中位={ss[len(ss)//2]} "
+                  f"max={ss[-1]}；实挖 top {len(mids)}（强度 {mids[0][1]}~{mids[-1][1]}）"
+                  f"——真剪枝：砍 {len(candidates)-len(mids)} 个低浓度候选")
 
     # ── 5) 匿名挖收藏夹（复用 mine() 的二跳逻辑 + 请求计数 + 发现顺序）──
     users, videos = [], []
