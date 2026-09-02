@@ -1,0 +1,532 @@
+{
+  "meta": {
+    "mined_at": "2026-09-02 19:08:15",
+    "users": 48,
+    "n": 645
+  },
+  "overall": {
+    "n": 645,
+    "high": 235,
+    "high_rate": 0.364,
+    "good_rate": 0.442,
+    "avg_cbi": 1.235
+  },
+  "control": {
+    "n": 166,
+    "high_rate": 0.494,
+    "good_rate": 0.566,
+    "avg_cbi": 1.58,
+    "year_dist": {
+      "2026": 166
+    },
+    "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"
+  },
+  "old_vs_new": {
+    "cutoff": "5 年",
+    "old": {
+      "n": 205,
+      "high_rate": 0.302,
+      "good_rate": 0.4,
+      "avg_cbi": 0.998
+    },
+    "new": {
+      "n": 440,
+      "high_rate": 0.393,
+      "good_rate": 0.461,
+      "avg_cbi": 1.346
+    }
+  },
+  "by_year": [
+    {
+      "year": "2011",
+      "n": 1,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.852
+    },
+    {
+      "year": "2015",
+      "n": 2,
+      "high": 1,
+      "high_rate": 0.5,
+      "good": 1,
+      "good_rate": 0.5,
+      "avg_cbi": 1.074
+    },
+    {
+      "year": "2016",
+      "n": 3,
+      "high": 2,
+      "high_rate": 0.667,
+      "good": 2,
+      "good_rate": 0.667,
+      "avg_cbi": 1.529
+    },
+    {
+      "year": "2017",
+      "n": 7,
+      "high": 1,
+      "high_rate": 0.143,
+      "good": 3,
+      "good_rate": 0.429,
+      "avg_cbi": 1.114
+    },
+    {
+      "year": "2018",
+      "n": 13,
+      "high": 2,
+      "high_rate": 0.154,
+      "good": 4,
+      "good_rate": 0.308,
+      "avg_cbi": 0.807
+    },
+    {
+      "year": "2019",
+      "n": 84,
+      "high": 31,
+      "high_rate": 0.369,
+      "good": 41,
+      "good_rate": 0.488,
+      "avg_cbi": 1.106
+    },
+    {
+      "year": "2020",
+      "n": 48,
+      "high": 16,
+      "high_rate": 0.333,
+      "good": 20,
+      "good_rate": 0.417,
+      "avg_cbi": 0.942
+    },
+    {
+      "year": "2021",
+      "n": 68,
+      "high": 12,
+      "high_rate": 0.176,
+      "good": 15,
+      "good_rate": 0.221,
+      "avg_cbi": 0.8
+    },
+    {
+      "year": "2022",
+      "n": 44,
+      "high": 6,
+      "high_rate": 0.136,
+      "good": 8,
+      "good_rate": 0.182,
+      "avg_cbi": 0.641
+    },
+    {
+      "year": "2023",
+      "n": 65,
+      "high": 27,
+      "high_rate": 0.415,
+      "good": 32,
+      "good_rate": 0.492,
+      "avg_cbi": 1.35
+    },
+    {
+      "year": "2024",
+      "n": 63,
+      "high": 25,
+      "high_rate": 0.397,
+      "good": 30,
+      "good_rate": 0.476,
+      "avg_cbi": 1.36
+    },
+    {
+      "year": "2025",
+      "n": 128,
+      "high": 57,
+      "high_rate": 0.445,
+      "good": 66,
+      "good_rate": 0.516,
+      "avg_cbi": 1.427
+    },
+    {
+      "year": "2026",
+      "n": 119,
+      "high": 55,
+      "high_rate": 0.462,
+      "good": 63,
+      "good_rate": 0.529,
+      "avg_cbi": 1.631
+    }
+  ],
+  "folders": [
+    {
+      "user_hash": "5184b2c44f",
+      "n": 27,
+      "good_rate": 0.963,
+      "avg_cbi": 2.026
+    },
+    {
+      "user_hash": "ae6f971cfb",
+      "n": 31,
+      "good_rate": 0.903,
+      "avg_cbi": 2.022
+    },
+    {
+      "user_hash": "2d96cdbcbb",
+      "n": 46,
+      "good_rate": 0.696,
+      "avg_cbi": 1.352
+    },
+    {
+      "user_hash": "543a86dc6c",
+      "n": 42,
+      "good_rate": 0.667,
+      "avg_cbi": 1.657
+    },
+    {
+      "user_hash": "5687d6d605",
+      "n": 46,
+      "good_rate": 0.565,
+      "avg_cbi": 1.536
+    },
+    {
+      "user_hash": "c8a221e803",
+      "n": 45,
+      "good_rate": 0.533,
+      "avg_cbi": 2.313
+    },
+    {
+      "user_hash": "567e8a121e",
+      "n": 8,
+      "good_rate": 0.5,
+      "avg_cbi": 1.041
+    },
+    {
+      "user_hash": "812949a3be",
+      "n": 47,
+      "good_rate": 0.489,
+      "avg_cbi": 1.043
+    },
+    {
+      "user_hash": "16b4a8aa1b",
+      "n": 9,
+      "good_rate": 0.444,
+      "avg_cbi": 1.247
+    },
+    {
+      "user_hash": "e8996ae1af",
+      "n": 36,
+      "good_rate": 0.444,
+      "avg_cbi": 1.139
+    },
+    {
+      "user_hash": "12fdfc0813",
+      "n": 46,
+      "good_rate": 0.391,
+      "avg_cbi": 1.343
+    },
+    {
+      "user_hash": "73dfb167a8",
+      "n": 46,
+      "good_rate": 0.391,
+      "avg_cbi": 1.205
+    },
+    {
+      "user_hash": "f589022900",
+      "n": 16,
+      "good_rate": 0.375,
+      "avg_cbi": 0.799
+    },
+    {
+      "user_hash": "d6df88f929",
+      "n": 26,
+      "good_rate": 0.346,
+      "avg_cbi": 1.009
+    },
+    {
+      "user_hash": "9c248d4a24",
+      "n": 3,
+      "good_rate": 0.333,
+      "avg_cbi": 0.491
+    }
+  ],
+  "stars": [
+    {
+      "bvid": "BV1LxEK6sEAi",
+      "title": "“一场等待八千年的爱恋”",
+      "tname": "—",
+      "pubdate": 1780885445,
+      "year": "2026",
+      "view": 290173,
+      "f7": 0.9188,
+      "cbi": 14.455,
+      "tier": "high",
+      "duration": 22,
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    },
+    {
+      "bvid": "BV1uKQwBUEcG",
+      "title": "所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は",
+      "tname": "—",
+      "pubdate": 1775824160,
+      "year": "2026",
+      "view": 367274,
+      "f7": 0.656,
+      "cbi": 11.18,
+      "tier": "high",
+      "duration": 169,
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1Cy411Y7E4",
+      "title": "【静止画MAD】不可幸力",
+      "tname": "—",
+      "pubdate": 1715918400,
+      "year": "2024",
+      "view": 655434,
+      "f7": 0.3717,
+      "cbi": 6.344,
+      "tier": "high",
+      "duration": 261,
+      "from_user": "ae6f971cfb",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1jV4y1D7pE",
+      "title": "Aaron Blaise大师手绘课：如何绘制犬科动物（犬、土狼、狐等）【中英字幕】",
+      "tname": "—",
+      "pubdate": 1680575732,
+      "year": "2023",
+      "view": 63563,
+      "f7": 0.6964,
+      "cbi": 5.598,
+      "tier": "high",
+      "duration": 66524,
+      "from_user": "73dfb167a8",
+      "folder": "艺术"
+    },
+    {
+      "bvid": "BV1hu4m1N74H",
+      "title": "香蕉♂机长【1—7集】",
+      "tname": "—",
+      "pubdate": 1707477931,
+      "year": "2024",
+      "view": 543816,
+      "f7": 0.3018,
+      "cbi": 5.341,
+      "tier": "high",
+      "duration": 1346,
+      "from_user": "5687d6d605",
+      "folder": "笑死我了"
+    },
+    {
+      "bvid": "BV1pHZaBrEqW",
+      "title": "【Blender插件】二次元一键渲染助手插件公开配布！任何模型任何渲染都可以适配！轻松解决二创入门问题",
+      "tname": "—",
+      "pubdate": 1771491600,
+      "year": "2026",
+      "view": 73882,
+      "f7": 0.6029,
+      "cbi": 5.096,
+      "tier": "high",
+      "duration": 530,
+      "from_user": "543a86dc6c",
+      "folder": "blender"
+    },
+    {
+      "bvid": "BV1Ve8jzFEA1",
+      "title": "你可以支持一下小地球吗",
+      "tname": "—",
+      "pubdate": 1753693818,
+      "year": "2025",
+      "view": 816064,
+      "f7": 0.3124,
+      "cbi": 5.026,
+      "tier": "high",
+      "duration": 66,
+      "from_user": "7d554dae4f",
+      "folder": "GPT声音克隆"
+    },
+    {
+      "bvid": "BV1Htp3zVEXy",
+      "title": "【新人必看】如何快速提升b站等级",
+      "tname": "—",
+      "pubdate": 1757675695,
+      "year": "2025",
+      "view": 261174,
+      "f7": 0.3307,
+      "cbi": 4.914,
+      "tier": "high",
+      "duration": 94,
+      "from_user": "16b4a8aa1b",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1MStP6YEsz",
+      "title": "“这是最后一舞了……”",
+      "tname": "—",
+      "pubdate": 1787931838,
+      "year": "2026",
+      "view": 59162,
+      "f7": 0.63,
+      "cbi": 4.91,
+      "tier": "high",
+      "duration": 34,
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1H666BUEu9",
+      "title": "“致明天，亦或是八千年后的你.”",
+      "tname": "—",
+      "pubdate": 1769826600,
+      "year": "2026",
+      "view": 155274,
+      "f7": 0.3985,
+      "cbi": 4.756,
+      "tier": "high",
+      "duration": 13,
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    },
+    {
+      "bvid": "BV1iH4y1c7qA",
+      "title": "鬼畜大电影【生化危鸡】耗时两年半！一口气看爽！全程高燃！10小时整部剧完结！",
+      "tname": "—",
+      "pubdate": 1721965500,
+      "year": "2024",
+      "view": 1347715,
+      "f7": 0.3414,
+      "cbi": 4.692,
+      "tier": "high",
+      "duration": 36000,
+      "from_user": "12fdfc0813",
+      "folder": "支持用"
+    },
+    {
+      "bvid": "BV1kDLWz8E4F",
+      "title": "“可惜惊艳我整个青春的人始终没有回头看我一眼”",
+      "tname": "—",
+      "pubdate": 1745382600,
+      "year": "2025",
+      "view": 137492,
+      "f7": 0.4104,
+      "cbi": 4.638,
+      "tier": "high",
+      "duration": 158,
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    },
+    {
+      "bvid": "BV1Px411o72K",
+      "title": "在B站怎样才能快速升6级？【读评论08】",
+      "tname": "—",
+      "pubdate": 1561722010,
+      "year": "2019",
+      "view": 191900,
+      "f7": 0.3417,
+      "cbi": 4.515,
+      "tier": "high",
+      "duration": 321,
+      "from_user": "2d96cdbcbb",
+      "folder": "读评论"
+    },
+    {
+      "bvid": "BV1Ha3T69E5X",
+      "title": "爱丽丝正在看着你",
+      "tname": "—",
+      "pubdate": 1784940526,
+      "year": "2026",
+      "view": 188726,
+      "f7": 0.3275,
+      "cbi": 4.29,
+      "tier": "high",
+      "duration": 19,
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1zJ9wYjE6b",
+      "title": "小明剑魔二创教程/AI鬼畜换声全网最详细教程指南（成品在2P）",
+      "tname": "—",
+      "pubdate": 1740637939,
+      "year": "2025",
+      "view": 180881,
+      "f7": 0.3335,
+      "cbi": 4.278,
+      "tier": "high",
+      "duration": 419,
+      "from_user": "12fdfc0813",
+      "folder": "素材"
+    },
+    {
+      "bvid": "BV11bAUzBEqG",
+      "title": "决战！我要夺冠！！！《下一个是谁6》06",
+      "tname": "—",
+      "pubdate": 1772192118,
+      "year": "2026",
+      "view": 11307458,
+      "f7": 0.3469,
+      "cbi": 4.073,
+      "tier": "high",
+      "duration": 6629,
+      "from_user": "5184b2c44f",
+      "folder": "《下一个是谁》第六季"
+    },
+    {
+      "bvid": "BV1FL411i7fb",
+      "title": "鬼畜界《天下第一下饭会》1 —— 无规则擂台格斗进阶赛",
+      "tname": "—",
+      "pubdate": 1685930400,
+      "year": "2023",
+      "view": 372624,
+      "f7": 0.2342,
+      "cbi": 4.004,
+      "tier": "high",
+      "duration": 396,
+      "from_user": "12fdfc0813",
+      "folder": "学学人家"
+    },
+    {
+      "bvid": "BV17Ux4zREpN",
+      "title": "我是真的在你家装了监控",
+      "tname": "—",
+      "pubdate": 1759580378,
+      "year": "2025",
+      "view": 136869,
+      "f7": 0.3452,
+      "cbi": 3.893,
+      "tier": "high",
+      "duration": 18,
+      "from_user": "7d554dae4f",
+      "folder": "blender"
+    },
+    {
+      "bvid": "BV1Swuu6NED1",
+      "title": "【5个月爆肝240分钟】自制《轩辕剑:天之痕》动画大长篇-总集篇 AI制作同人作品",
+      "tname": "—",
+      "pubdate": 1786154400,
+      "year": "2026",
+      "view": 494344,
+      "f7": 0.2131,
+      "cbi": 3.818,
+      "tier": "high",
+      "duration": 15090,
+      "from_user": "12fdfc0813",
+      "folder": "支持用"
+    },
+    {
+      "bvid": "BV19xcYzqEzh",
+      "title": "别划走",
+      "tname": "—",
+      "pubdate": 1770877657,
+      "year": "2026",
+      "view": 228968,
+      "f7": 0.2604,
+      "cbi": 3.672,
+      "tier": "high",
+      "duration": 32,
+      "from_user": "7d554dae4f",
+      "folder": "GPT声音克隆"
+    }
+  ]
+}
