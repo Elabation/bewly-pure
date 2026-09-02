@@ -3,6 +3,7 @@
 ![report](https://img.shields.io/badge/调查报告-在线阅读-334EAC) ![extension](https://img.shields.io/badge/扩展-Edge·Chrome-081F5C) ![samples](https://img.shields.io/badge/样本-7,537条·2019--2026-7096D1) ![license](https://img.shields.io/badge/立场-过滤低质·不封神-7096D1)
 
 > **📖 调查报告《看过，却不给》在线阅读 → https://elabation.github.io/bewly-pure/web/ecosystem-report.html**
+> **🕰️ 姊妹报告《给过，却不再被看见》（收藏夹考古 NOSTALGIA 01）→ https://elabation.github.io/bewly-pure/web/nostalgia-report.html**
 >
 > **⚡ 浏览器扩展安装（2 分钟）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
 
@@ -67,12 +68,15 @@ bilibili-clean/
 │   ├── ecosystem_analysis.py     # 生态分析（公式扫描/分位段/四象限/分区画像）
 │   ├── deep_analysis.py          # 深度统计实验：偏相关/CBI基线/洛伦兹/PCA/检验/时代演化/时长分析
 │   ├── simulate_userscript.py    # 判定逻辑离线模拟器（上线前验证过滤率）
-│   └── build_report.py           # 报告网页构建（幂等注入数据）
+│   ├── fav_miner.py              # 收藏夹考古挖掘器（公开收藏夹→CBI打分→匿名入库）
+│   └── build_nostalgia.py        # 怀旧报告构建（幂等注入数据）
 ├── data/
 │   ├── samples/                  # 采集样本（v5 约2万条，2020-2026 跨度）+ 校准报告
+│   ├── fav_mine/                 # 收藏夹考古数据（匿名化：身份入库即 SHA-1）
 │   └── analysis/                 # 生态分析 + 深度分析结果 JSON
 ├── web/
-│   └── ecosystem-report.html     # 《看过，却不给》调查报告 v3（单文件可分享，15章节）
+│   ├── ecosystem-report.html     # 《看过，却不给》调查报告 v3（单文件可分享，15章节）
+│   └── nostalgia-report.html     # 《给过，却不再被看见》收藏夹考古报告 N01（单文件可分享）
 ├── userscript/
 │   └── bilibili-clean-mobile.user.js  # 手机端脚本（m.bilibili.com 三股流过滤）
 └── docs/
@@ -129,9 +133,10 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 | 2.5 | 生态调查《看过，却不给》 | ✅✅ **第三版：十三项统计实验**（偏相关/分位回归/洛伦兹/PCA/χ²/MWU/**时代演化 2020-2026**/**时长×质量**/**层间对比**），单栏可读性重写，报告 web/ecosystem-report.html |
 | 3 | 过滤验证：真实页面验证规则 | ✅ **扩展 v1.0 真机全链路实测**（wbi 签名直连 code 0、网格 17 卡 CBI 角标全亮、砍 3 条）；判定逻辑离线模拟 feed 层砍 32% 卡片收回 54% 播放份额 |
 | 3.5 | 引擎 v2：CBI 相对基线取代全局阈值 | ✅ 设计+参数落地：config 新增 `cbi` 段（threshold 0.5 / min_view 5w）+ 8 条过滤器规则（报告§13），扩展判定核心同步 |
-| 4 | 手机端方案（免 root） | 🚧 **尚未完成**：userscript 机制验证过（m.bilibili.com 三股流过滤原型），但未达发布标准；方案评估见 docs/mobile-plan.md |
+| 4 | 手机端方案（免 root） | 🚧 **现役路线 A**：Firefox Android + BewlyBewly(Firefox 版) + 本仓库增量（`extension-bewly-firefox.zip` 已构建），真机验证中；方案与路线取舍见 docs/mobile-plan.md |
 | 5 | 成果发布 | ✅ GitHub 公开仓库 + Pages 报告 + 扩展教程齐备 |
 | 6 | **BewlyBewly 增量版扩展** | ✅ **现役 PC 版（cb17）**：CBI×F7 双重判定、评分角标、四档性能（并行/闪滑/标准/极速）、判定缓存、过滤比率胶囊、熔断可视+一键解除、设置面板全参数手调；预构建产物 `extension-bewly/`（每版归档 `releases/cbN`） |
+| 7 | **收藏夹考古（怀旧方向）** | ✅ **NOSTALGIA 01 完成**：fav_miner 挖掘 48 匿名用户公开收藏夹 645 条视频（2011-2026），同尺 CBI 对照分析；老视频 n=205 中神作 62 条；报告 web/nostalgia-report.html |
 
 ## 现成方案对比（为什么自己写）
 
