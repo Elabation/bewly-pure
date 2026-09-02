@@ -110,34 +110,35 @@ def load_seed_bvids(limit: int) -> list:
 
 
 def seeds_from_comments(cli: BiliClient, n: int) -> list:
-    """从样本里最老视频的评论区抓真实观众 mid（怀旧用户聚集地）。"""
+    """从样本视频的评论区抓真实观众 mid（未登录态每视频仅返回~3条，用全量视频补足）。"""
     sdir = os.path.join(ROOT, "data", "samples")
-    olds = []
+    vids = []
     for fn in sorted(os.listdir(sdir)):
         if fn.startswith("sample_") and fn.endswith(".json"):
             try:
                 with open(os.path.join(sdir, fn), encoding="utf-8") as f:
-                    for v in (json.load(f).get("videos") or []):
-                        if v.get("aid") and v.get("pubdate"):
-                            olds.append(v)
+                    vids.extend(v for v in (json.load(f).get("videos") or []) if v.get("aid"))
             except Exception:
                 continue
-    olds.sort(key=lambda v: v.get("pubdate") or 0)
+    random.shuffle(vids)
     mids, seen = [], set()
-    for v in olds[:12]:
+    for v in vids:
         if len(mids) >= n:
             break
         try:
             d = cli.get_json("https://api.bilibili.com/x/v2/reply",
-                             {"type": 1, "oid": v["aid"], "ps": 30, "pn": 1}) or {}
+                             {"type": 1, "oid": v["aid"], "ps": 20, "pn": 1, "sort": 1}) or {}
+            got = 0
             for r in (d.get("replies") or []):
                 m = (r.get("member") or {}).get("mid")
                 if m and m not in seen:
                     seen.add(m)
                     mids.append(m)
+                    got += 1
                     if len(mids) >= n:
                         break
-            print(f"[comment-seed] {v.get('bvid')} ({time.strftime('%Y', time.localtime(v['pubdate']))}) +{len(mids)} mids")
+            if got:
+                print(f"[comment-seed] {v.get('bvid')} +{got} (total {len(mids)})")
         except Exception as e:
             print(f"[comment-seed] {v.get('bvid')} failed: {e}")
     return mids
@@ -147,7 +148,25 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
     seeds = load_seed_bvids(n_users * 2)
     print(f"[seed] {len(seeds)} candidate seed videos")
 
-    # 1) 种子 → 用户 mid：uploader（重度用户）+ 老视频评论区观众（怀旧用户）
+    # 已挖用户（本地映射，不入仓）——重复挖无增量价值
+    map_path = os.path.join(out_dir, ".mid2hash.json")
+    mid2hash = {}
+    if os.path.exists(map_path):
+        try:
+            mid2hash = json.load(open(map_path, encoding="utf-8"))
+        except Exception:
+            mid2hash = {}
+    mined_hashes = set()
+    for fn in os.listdir(out_dir):
+        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn:
+            try:
+                for u in (json.load(open(os.path.join(out_dir, fn), encoding="utf-8")).get("users") or []):
+                    mined_hashes.add(u["user_hash"])
+            except Exception:
+                pass
+    print(f"[dedupe] {len(mined_hashes)} users already mined -> will skip")
+
+    # 1) 种子 → 用户 mid：uploader（重度用户）+ 评论区观众（真实用户）
     mids, seen_mid = [], set()
     if comment_seed_count:
         for mid in seeds_from_comments(cli, comment_seed_count):
@@ -162,20 +181,29 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
             v = cli.fetch_view(bv)
             mid = (v.get("owner") or {}).get("mid") if isinstance(v.get("owner"), dict) else None
             if not mid:
-                # fetch_view 只存了 name，需要原始 mid——重新取（view 接口 owner.mid）
                 data = cli.get_json("https://api.bilibili.com/x/web-interface/view", {"bvid": bv})
                 mid = (data.get("owner") or {}).get("mid")
             if mid and mid not in seen_mid:
                 seen_mid.add(mid)
                 mids.append(mid)
-                print(f"[seed {i}] uploader mid={mid} ok ({len(mids)}/{n_users})")
-        except Exception as e:
-            print(f"[seed {i}] {bv} failed: {e}")
+        except Exception:
+            continue
+    # 过滤已挖
+    fresh = []
+    for mid in mids:
+        h = mid2hash.get(str(mid))
+        if h and h in mined_hashes:
+            continue
+        fresh.append(mid)
+    print(f"[dedupe] fresh mids {len(fresh)}/{len(mids)}")
+    mids = fresh
 
     # 2) 每用户：收藏夹列表 → 挑夹 → 条目 → 抽样补 view
     users, videos = [], []
     for ui, mid in enumerate(mids, 1):
-        anon = anon_mid(mid)
+        h = mid2hash.get(str(mid))
+        anon = h or anon_mid(mid)
+        mid2hash[str(mid)] = anon
         try:
             fd = cli.get_json("https://api.bilibili.com/x/v3/fav/folder/created/list-all",
                               {"up_mid": mid, "type": 2, "rid": 0}) or {}
@@ -238,6 +266,8 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                     "view": view, "f7": round(f7, 4), "cbi": round(cbi, 3),
                     "tier": tier_of(cbi, view),
                     "duration": v.get("duration"),
+                    "stat": {k: stat.get(k) for k in
+                             ("view", "danmaku", "reply", "favorite", "coin", "share", "like")},
                     "from_user": anon, "folder": title,
                 })
                 enriched += 1
@@ -264,11 +294,40 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    os.makedirs(out_dir, exist_ok=True)
+    json.dump(mid2hash, open(map_path, "w", encoding="utf-8"), ensure_ascii=False)
     print(f"[done] users={len(users)} videos={len(videos)} -> {path}")
     return path
 
 
+def load_merged_mine(out_dir):
+    """合并目录下全部挖掘文件，bvid 去重（后文件覆盖前文件）。"""
+    merged = {"meta": {"users": 0, "mined_at": ""}, "videos": [], "_user_hashes": set()}
+    seen = {}
+    for fn in sorted(os.listdir(out_dir)):
+        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn:
+            try:
+                p = json.load(open(os.path.join(out_dir, fn), encoding="utf-8"))
+            except Exception:
+                continue
+            merged["meta"]["mined_at"] = p["meta"].get("mined_at", merged["meta"]["mined_at"])
+            for u in (p.get("users") or []):
+                merged["_user_hashes"].add(u["user_hash"])
+            for v in (p.get("videos") or []):
+                seen[v["bvid"]] = v
+    merged["videos"] = list(seen.values())
+    merged["meta"]["users"] = len(merged["_user_hashes"])
+    merged.pop("_user_hashes")
+    return merged
+
+
 def analyze(path: str, out=None):
+    if path in (None, "ALL"):
+        merged = load_merged_mine(os.path.join(ROOT, "data", "fav_mine"))
+        stamp = time.strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(ROOT, "data", "fav_mine", f"favmine_merged_{stamp}.json")
+        json.dump(merged, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        print(f"[merge] videos={len(merged['videos'])} users={merged['meta']['users']} -> {path}")
     with open(path, encoding="utf-8") as f:
         payload = json.load(f)
     videos = payload["videos"]
@@ -389,11 +448,15 @@ def main():
     ap.add_argument("--sample-ratio", type=float, default=0.6, help="条目里补 view 详情的比例")
     ap.add_argument("--interval", type=float, default=0.45, help="请求间隔秒")
     ap.add_argument("--out", default=os.path.join(ROOT, "data", "fav_mine"))
-    ap.add_argument("--analyze", default=None, help="只分析已挖掘的 json")
+    ap.add_argument("--analyze", default=None, help="只分析已挖掘的 json（ALL=合并全目录）")
     args = ap.parse_args()
 
+    # 登录态（可选）：data/fav_mine/.sessdata 放 SESSDATA cookie 值即启用。
+    # 该文件是本机私密凭据：永不打印、永不上传、永不入仓库。
+    sess_path = os.path.join(args.out, ".sessdata")
+
     if args.analyze:
-        analyze(args.analyze)
+        analyze(args.analyze if args.analyze != "ALL" else None)
         return
 
     cli = BiliClient(interval=args.interval)
@@ -408,6 +471,16 @@ def main():
                     cli.cookies[m.group(1)] = m.group(2)
     except Exception:
         pass
+
+    if os.path.exists(sess_path):
+        val = open(sess_path, encoding="utf-8").read().strip()
+        if val:
+            cli.cookies["SESSDATA"] = val
+            print("[auth] SESSDATA loaded from local file (never printed/committed)")
+        else:
+            print("[auth] .sessdata 为空，按未登录继续")
+    else:
+        print("[auth] 无 .sessdata，未登录模式（评论区受限每页~3条）")
 
     path = mine(cli, args.users + args.comment_seeds, args.per_folder, args.sample_ratio, args.out,
                 comment_seed_count=args.comment_seeds)
