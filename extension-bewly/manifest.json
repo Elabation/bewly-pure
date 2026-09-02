@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "BewlyBewly · 洁净B站版",
-  "version": "0.41.1-cb1",
-  "description": "基于 BewlyBewly (MIT, hakadao) 的增量版：保留其全部 UI 与交互，新增 CBI 感谢指数过滤算法（洁净B站项目）——低质推荐卡片不渲染。见仓库 THIRD_PARTY_NOTICES.md。",
+  "version": "0.41.1-cb2",
+  "description": "Just make a few small changes to your Bilibili homepage.",
   "homepage_url": "https://github.com/hakadao/BewlyBewly",
   "background": {
     "service_worker": "./dist/background/index.js"
