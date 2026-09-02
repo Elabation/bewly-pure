@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>给过，却不再被看见 —— 收藏夹考古：用 CBI 找回被时间线掩埋的好视频（第一轮）</title>
+<style>
+:root{--ink:#081F5C;--data1:#334EAC;--data2:#7096D1;--data3:#BAD6EB;--paper:#F7F2EB;--shadow:#E3DACB;--sub:#5B7EC2;--dim:#9FB6D4;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:14px/1.9 -apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 80px}
+header.hero{padding:76px 0 30px;border-bottom:1px solid var(--shadow)}
+.kicker{font-size:11px;letter-spacing:4px;color:var(--data1);border:1px dashed var(--data2);display:inline-block;padding:4px 14px;border-radius:999px;margin-bottom:22px}
+h1{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:40px;font-weight:900;letter-spacing:2px;line-height:1.3}
+.hero .lede{font-size:15.5px;color:var(--sub);margin-top:14px;max-width:700px}
+.badges{margin-top:22px;font-size:11.5px;color:var(--data1);letter-spacing:.5px}
+.badges span{border:1px solid var(--data3);border-radius:4px;padding:2px 9px;margin-right:8px;display:inline-block;margin-bottom:6px;background:#fff8}
+.install-row{margin-top:18px}
+.install-btn{display:inline-block;background:var(--ink);color:#EAF1FF;text-decoration:none;font-size:13px;font-weight:700;padding:9px 18px;border-radius:6px;letter-spacing:1px;margin-right:12px}
+.install-btn:hover{background:#334EAC}
+.install-doc{font-size:12px;color:var(--data1);margin-right:14px}
+nav{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--shadow);z-index:9;font-size:12px;padding:9px 0}
+nav a{color:var(--sub);text-decoration:none;margin-right:11px}
+nav a:hover{color:var(--ink)}
+section{padding:50px 0 10px;border-bottom:1px solid var(--shadow)}
+.sn{font-size:11px;letter-spacing:3px;color:var(--data2)}
+h2{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:25px;margin:6px 0 10px}
+h3{font-size:15px;color:var(--data1);margin:26px 0 8px}
+h4{font-size:13.5px;color:var(--ink);margin:14px 0 4px}
+p{margin:10px 0;max-width:780px}
+p.note{font-size:12.5px;color:var(--sub)}
+.guide{background:#EFE8DA;border-left:4px solid var(--data1);padding:12px 18px;margin:14px 0;font-size:13.5px;color:#22346B;max-width:780px}
+.guide b{color:#081F5C}
+.sym{font-family:Georgia,serif;color:#334EAC}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0}
+.card{flex:1 1 170px;background:#fff9;border:1px solid var(--shadow);border-top:3px solid var(--data1);padding:14px 16px}
+.card h4{margin-top:0}
+.card .en{font-size:10.5px;color:var(--dim);letter-spacing:1px}
+.card dl{font-size:12.5px;margin-top:8px}
+.card dt{color:var(--data2);font-size:11px;letter-spacing:1px;margin-top:8px}
+.card dd{color:#31427A}
+.card .k{font-family:Georgia,serif;font-size:22px;color:var(--data1)}
+.bar-row{display:flex;align-items:center;margin:7px 0}
+.bar-lab{width:110px;font-size:12px;color:var(--ink);flex:none}
+.bar-track{flex:1;height:14px;background:#EDE5D8;position:relative}
+.bar-fill{height:14px}
+.bar-val{width:80px;text-align:right;font-family:Georgia,serif;font-size:12px;color:var(--data1);flex:none}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:12.5px}
+th{color:var(--data1);font-weight:600;border-bottom:2px solid var(--data2);padding:7px 8px;text-align:left;font-size:12px}
+td{border-bottom:1px solid var(--shadow);padding:7px 8px;vertical-align:top}
+td.num{font-family:Georgia,serif}
+.formula{background:#0B1B3D;color:#D9E6FF;padding:14px 18px;border-radius:8px;font-family:Georgia,serif;font-size:14px;margin:14px 0;overflow-x:auto}
+.formula .op{color:#8FA8DC}
+.privacy{background:#FFF8E8;border:1px solid #E4D5A8;border-radius:8px;padding:12px 16px;font-size:12.5px;margin:14px 0;max-width:780px}
+.privacy b{color:#7A5C12}
+footer{padding:30px 0;color:var(--dim);font-size:11.5px;letter-spacing:1px}
+.big-num{font-family:Georgia,serif;font-size:34px;color:var(--data1);line-height:1.2}
+.duo{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0}
+.duo .side{flex:1 1 300px;border:1px solid var(--shadow);border-radius:8px;padding:16px 18px;background:#fff9}
+.duo .side h4{margin-top:0;font-size:14px}
+.duo .side.mine{border-top:4px solid #2E7D32}
+.duo .side.ctrl{border-top:4px solid var(--data2)}
+.duo .row{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--shadow)}
+.duo .row:last-child{border-bottom:none}
+.duo .row b{font-family:Georgia,serif;color:var(--data1)}
+.stars td a{color:var(--data1);text-decoration:none}
+.stars td a:hover{text-decoration:underline}
+@media (max-width:640px){h1{font-size:30px}.wrap{padding:0 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">洁净B站 · 姊妹报告 NOSTALGIA 01</div>
+  <h1>给过，却不再被看见</h1>
+  <p class="lede">《看过，却不给》回答的是「什么值得被推到你面前」；这一份回答的是它的反面——<b>曾经被成千上万人真心给过硬币和收藏的好视频，为什么今天的时间线里再也见不到了？</b>我们做了第一轮「收藏夹考古」：把真实用户的公开收藏夹当作时间胶囊挖掘出来，用同一把 CBI 的尺子丈量，看看被时间线单向性掩埋的东西到底有多少、有多好。</p>
+  <div class="badges" id="badges"></div>
+  <div class="install-row">
+    <a class="install-btn" href="https://github.com/Elabation/bewly-pure">插件仓库</a>
+    <a class="install-btn" href="https://elabation.github.io/bewly-pure/web/ecosystem-report.html">前作 · 看过，却不给</a>
+    <span class="install-doc">挖掘器：<code>engine/fav_miner.py</code> · 数据 <code>data/fav_mine/</code></span>
+  </div>
+</header>
+<nav>
+  <a href="#s1">硬币两面</a><a href="#s2">尺子</a><a href="#s3">方法学</a><a href="#s4">总览</a><a href="#s5">年代</a><a href="#s6">老与新</a><a href="#s7">夹的签名</a><a href="#s8">神作名录</a><a href="#s9">局限</a><a href="#s10">尾声</a>
+</nav>
+
+<!-- ============ §1 ============ -->
+<section id="s1">
+  <div class="sn">SECTION 01 · 一枚硬币的两面</div>
+  <h2>过滤是防守，考古是进攻</h2>
+  <p>前一份报告的结论浓缩成一句话：<b>B 站的推荐流把大量「播放量巨大、感谢稀薄」的视频塞给你，我们把它们过滤掉。</b>那是防守——守住你的首页。</p>
+  <p>但过滤只能挡住坏的东西，它不会把好的东西送回来。B 站的时间线是单向的：一个 2015 年被投出十万硬币的神作，和昨天发布的低创视频相比，在今天的推荐流里几乎是<b>同等不存在</b>的。算法只认识「新」和「热」，不认识「好」。</p>
+  <p>有一个地方例外——<b>收藏夹</b>。收藏是观众用行为投票留下的策展记录：一个人把什么视频郑重地放进「我的收藏」，往往比他点过多少赞更能说明这个视频值得被记住。每一个公开收藏夹，都是一个普通人为互联网做的迷你博物馆。它们加起来，就是一条<b>被时间线单向性掩埋的平行时间线</b>。</p>
+  <div class="guide"><b>本次调查的问题：</b>如果我们把这条平行时间线挖出来、用同一把 CBI 的尺子丈量，①它里面「神作级内容」（CBI ≥ 1.2）的比例有多高？②它能覆盖多早的年代？③收藏夹本身是不是一种可靠的「质量签名」？</div>
+</section>
+
+<!-- ============ §2 ============ -->
+<section id="s2">
+  <div class="sn">SECTION 02 · 尺子：同一把，不多不少</div>
+  <h2>F7 与 CBI：从前作全文照搬</h2>
+  <p>为了保证与前作可比，本报告不发明任何新指标，公式与基线曲线<b>逐字段同源</b>于《看过，却不给》与扩展 core.ts：</p>
+  <div class="formula">F7 <span class="op">=</span> (3.0×收藏 + 2.0×投币 + 0.3×点赞) ÷ 播放</div>
+  <div class="formula">CBI <span class="op">=</span> F7 ÷ baseline(log₁₀ 播放) <span class="op">——</span> 基线：n=6734 条样本拟合的 28 点中位数曲线（2026-09 拟合，与扩展内置曲线完全一致）</div>
+  <p>CBI 的语义：<b>1.0 = 与同播放段的典型视频感谢水平持平</b>；≥ 1.2（超出基线两成）我们称为<b>神作线</b>；≥ 1.0 称为优秀线；< 0.5 为「看过不给」区。分级线与前作一致，保证两张报告的数字可以直接对读。</p>
+  <p class="note">为什么坚持「相对基线」而不是绝对阈值：不同播放量段的感谢率天然不同（万播视频与千万播视频的感谢率可以差 3 倍），只有除以基线，2013 年的神作和 2026 年的爆款才能放在同一把尺子上。</p>
+</section>
+
+<!-- ============ §3 ============ -->
+<section id="s3">
+  <div class="sn">SECTION 03 · 挖掘方法学</div>
+  <h2>如何诚实地挖一座矿</h2>
+  <div class="privacy"><b>隐私声明（先于一切结论）：</b>本调查只访问 B 站公开接口与<b>公开收藏夹</b>（私有夹在接口层即不可见，属性位逐夹校验）；用户身份在入库瞬间做 SHA-1 短哈希匿名化，报告与数据集<b>只出现视频、永不出现人</b>——不排名、不点名、不构建任何用户画像。全程仅 API 元数据，无登录态、无写入。</div>
+  <h3>挖掘管线四步</h3>
+  <p><b>① 种子用户</b>：从前作样本库随机抽取视频，反查其 uploader 作为种子——uploader 是重度 B 站使用者，收藏夹的「策展性」强。<b>② 夹筛选</b>：对每个用户拉取其创建的收藏夹列表，只保留公开（attr 私有位=0）且条目数 > 3 的夹，每用户最多挖 3 个；无自建公开夹的用户回退考察其收藏的他人公开夹。<b>③ 条目抽取</b>：每夹取最近收藏的 20 条（收藏夹接口自带发布时间/播放/收藏数），对其中约 80% 补查 view 详情获取投币与点赞。<b>④ 打分入库</b>：F7/CBI 按前作公式计算，与基线比对定级。</p>
+  <h3>对照组</h3>
+  <p>对照数据来自前作的采集流（排行榜 / 热门 / 推荐流，2026-09 采集，n 见下节），用<b>完全相同的公式与基线</b>重新打分。它代表「今天的时间线愿意主动给你看的东西」的质量水位——这正是我们要超越的基准线。</p>
+</section>
+
+<!-- ============ §4 ============ -->
+<section id="s4">
+  <div class="sn">SECTION 04 · 总览</div>
+  <h2>两条时间线的质量水位</h2>
+  <div class="duo" id="kpi-duo"></div>
+  <div class="cards" id="kpi-cards"></div>
+  <div id="verdict-text"></div>
+</section>
+
+<!-- ============ §5 ============ -->
+<section id="s5">
+  <div class="sn">SECTION 05 · 年代分布</div>
+  <h2>这条平行时间线能挖多深</h2>
+  <p>挖掘组覆盖的发布年代（样本量过小的年份仅供参考）：</p>
+  <div id="year-table"></div>
+  <div id="year-bars"></div>
+  <div id="year-text"></div>
+</section>
+
+<!-- ============ §6 ============ -->
+<section id="s6">
+  <div class="sn">SECTION 06 · 老与新</div>
+  <h2>五年之界：被掩埋的是不是更好的</h2>
+  <div class="duo" id="oldnew"></div>
+  <div id="oldnew-text"></div>
+</section>
+
+<!-- ============ §7 ============ -->
+<section id="s7">
+  <div class="sn">SECTION 07 · 收藏夹是质量签名吗</div>
+  <h2>夹与夹之间的方差，比夹内大得多</h2>
+  <p>如果「收藏行为」普遍代表质量，那么任意两个收藏夹的质量分布应该相近。数据给出的答案更有趣：<b>夹与夹之间差异巨大</b>——有的夹优秀率超过九成，有的夹不足两成。收藏不是质量的名片，<b>策展人的品味才是</b>。</p>
+  <div id="folder-table"></div>
+  <div class="guide"><b>产品含义：</b>这正说明「按用户排名」是错误的产品形态，而「按视频入库」是对的——我们要吸收的是好夹里的好视频，而不是给任何用户贴标签。全体用户在报告中一律匿名。</div>
+</section>
+
+<!-- ============ §8 ============ -->
+<section id="s8">
+  <div class="sn">SECTION 08 · 神作名录</div>
+  <h2>这一轮考古挖出的 CBI 峰值</h2>
+  <p>神作线（CBI ≥ 1.2）以上、按 CBI 排序的前 20 条。点击直达 B 站播放页——它们值得你今天的一个硬币。</p>
+  <div id="stars-table"></div>
+</section>
+
+<!-- ============ §9 ============ -->
+<section id="s9">
+  <div class="sn">SECTION 09 · 方法学与局限</div>
+  <h2>这份报告不能告诉你什么</h2>
+  <p><b>① 选择偏差（最重要）</b>：种子来自 uploader（重度用户），且回退夹多为「收藏的他人公开夹」——挖掘组天然偏向「策展活跃者」的视野，它<b>不能代表全体 B 站用户</b>的收藏水位。② <b>对照组口径差</b>：对照组是排行榜/热门/推荐流的当期样本（幸存者偏差极强——它们是已经赢了曝光竞赛的视频），挖掘组是个体收藏（无曝光竞赛）。两者的对比回答的是「平行时间线 vs 曝光竞赛」的水位差，不回答「收藏是否比随机推荐好」。③ <b>样本量</b>：第一轮 n 见 KPI，部分年份条目极少（n<5 不进入趋势推断）。④ <b>CBI 曲线的年代外推</b>：基线由 2020-2026 样本拟合，用于 2013-2019 年视频时假设「感谢行为的心理成本跨年代稳定」——这是本报告最大的假设，无法自证。⑤ <b>每夹截取最近 20 条</b>：收藏时间接近，近似「同一时期的一次策展」，不代表夹主全部历史。</p>
+  <p>上述局限没有一条可以轻率略过。这份报告的价值在于<b>建立了管线与可复核的口径</b>，让后续每一轮扩挖都能在同一把尺子上累加证据。</p>
+</section>
+
+<!-- ============ §10 ============ -->
+<section id="s10">
+  <div class="sn">SECTION 10 · 尾声</div>
+  <h2>下一站：时间机器</h2>
+  <p>过滤（《看过，却不给》）与考古（本报告）合在一起，才是完整的回答：把坏的东西挡在门外，把好的东西从过去捞回来。下一阶段是「怀旧频道」页面——按年代滑动浏览全站高分视频的时间机器原型，以及更大规模的第二轮挖掘（评论区种子、多轮滚雪球、分年配额）。</p>
+  <p class="note">复现：<code>python engine/fav_miner.py --users N --comment-seeds M</code> → 分析 JSON 随数据集入仓（data/fav_mine/）。所有数字可由仓库内脚本与原始数据逐步复核。</p>
+</section>
+
+<footer>洁净B站 Clean Bilibili · NOSTALGIA 01 · 数据经匿名化处理 · 与《看过，却不给》同尺可比</footer>
+</div>
+<script>
+const MINE = {"meta": {"mined_at": "2026-09-02 19:08:15", "users": 48, "n": 645}, "overall": {"n": 645, "high": 235, "high_rate": 0.364, "good_rate": 0.442, "avg_cbi": 1.235}, "control": {"n": 166, "high_rate": 0.494, "good_rate": 0.566, "avg_cbi": 1.58, "year_dist": {"2026": 166}, "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"}, "old_vs_new": {"cutoff": "5 年", "old": {"n": 205, "high_rate": 0.302, "good_rate": 0.4, "avg_cbi": 0.998}, "new": {"n": 440, "high_rate": 0.393, "good_rate": 0.461, "avg_cbi": 1.346}}, "by_year": [{"year": "2011", "n": 1, "high": 0, "high_rate": 0.0, "good": 0, "good_rate": 0.0, "avg_cbi": 0.852}, {"year": "2015", "n": 2, "high": 1, "high_rate": 0.5, "good": 1, "good_rate": 0.5, "avg_cbi": 1.074}, {"year": "2016", "n": 3, "high": 2, "high_rate": 0.667, "good": 2, "good_rate": 0.667, "avg_cbi": 1.529}, {"year": "2017", "n": 7, "high": 1, "high_rate": 0.143, "good": 3, "good_rate": 0.429, "avg_cbi": 1.114}, {"year": "2018", "n": 13, "high": 2, "high_rate": 0.154, "good": 4, "good_rate": 0.308, "avg_cbi": 0.807}, {"year": "2019", "n": 84, "high": 31, "high_rate": 0.369, "good": 41, "good_rate": 0.488, "avg_cbi": 1.106}, {"year": "2020", "n": 48, "high": 16, "high_rate": 0.333, "good": 20, "good_rate": 0.417, "avg_cbi": 0.942}, {"year": "2021", "n": 68, "high": 12, "high_rate": 0.176, "good": 15, "good_rate": 0.221, "avg_cbi": 0.8}, {"year": "2022", "n": 44, "high": 6, "high_rate": 0.136, "good": 8, "good_rate": 0.182, "avg_cbi": 0.641}, {"year": "2023", "n": 65, "high": 27, "high_rate": 0.415, "good": 32, "good_rate": 0.492, "avg_cbi": 1.35}, {"year": "2024", "n": 63, "high": 25, "high_rate": 0.397, "good": 30, "good_rate": 0.476, "avg_cbi": 1.36}, {"year": "2025", "n": 128, "high": 57, "high_rate": 0.445, "good": 66, "good_rate": 0.516, "avg_cbi": 1.427}, {"year": "2026", "n": 119, "high": 55, "high_rate": 0.462, "good": 63, "good_rate": 0.529, "avg_cbi": 1.631}], "folders": [{"user_hash": "5184b2c44f", "n": 27, "good_rate": 0.963, "avg_cbi": 2.026}, {"user_hash": "ae6f971cfb", "n": 31, "good_rate": 0.903, "avg_cbi": 2.022}, {"user_hash": "2d96cdbcbb", "n": 46, "good_rate": 0.696, "avg_cbi": 1.352}, {"user_hash": "543a86dc6c", "n": 42, "good_rate": 0.667, "avg_cbi": 1.657}, {"user_hash": "5687d6d605", "n": 46, "good_rate": 0.565, "avg_cbi": 1.536}, {"user_hash": "c8a221e803", "n": 45, "good_rate": 0.533, "avg_cbi": 2.313}, {"user_hash": "567e8a121e", "n": 8, "good_rate": 0.5, "avg_cbi": 1.041}, {"user_hash": "812949a3be", "n": 47, "good_rate": 0.489, "avg_cbi": 1.043}, {"user_hash": "16b4a8aa1b", "n": 9, "good_rate": 0.444, "avg_cbi": 1.247}, {"user_hash": "e8996ae1af", "n": 36, "good_rate": 0.444, "avg_cbi": 1.139}, {"user_hash": "12fdfc0813", "n": 46, "good_rate": 0.391, "avg_cbi": 1.343}, {"user_hash": "73dfb167a8", "n": 46, "good_rate": 0.391, "avg_cbi": 1.205}, {"user_hash": "f589022900", "n": 16, "good_rate": 0.375, "avg_cbi": 0.799}, {"user_hash": "d6df88f929", "n": 26, "good_rate": 0.346, "avg_cbi": 1.009}, {"user_hash": "9c248d4a24", "n": 3, "good_rate": 0.333, "avg_cbi": 0.491}], "stars": [{"bvid": "BV1LxEK6sEAi", "title": "“一场等待八千年的爱恋”", "tname": "—", "pubdate": 1780885445, "year": "2026", "view": 290173, "f7": 0.9188, "cbi": 14.455, "tier": "high", "duration": 22, "from_user": "c8a221e803", "folder": "二次元"}, {"bvid": "BV1uKQwBUEcG", "title": "所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は", "tname": "—", "pubdate": 1775824160, "year": "2026", "view": 367274, "f7": 0.656, "cbi": 11.18, "tier": "high", "duration": 169, "from_user": "c8a221e803", "folder": "BA"}, {"bvid": "BV1Cy411Y7E4", "title": "【静止画MAD】不可幸力", "tname": "—", "pubdate": 1715918400, "year": "2024", "view": 655434, "f7": 0.3717, "cbi": 6.344, "tier": "high", "duration": 261, "from_user": "ae6f971cfb", "folder": "默认收藏夹"}, {"bvid": "BV1jV4y1D7pE", "title": "Aaron Blaise大师手绘课：如何绘制犬科动物（犬、土狼、狐等）【中英字幕】", "tname": "—", "pubdate": 1680575732, "year": "2023", "view": 63563, "f7": 0.6964, "cbi": 5.598, "tier": "high", "duration": 66524, "from_user": "73dfb167a8", "folder": "艺术"}, {"bvid": "BV1hu4m1N74H", "title": "香蕉♂机长【1—7集】", "tname": "—", "pubdate": 1707477931, "year": "2024", "view": 543816, "f7": 0.3018, "cbi": 5.341, "tier": "high", "duration": 1346, "from_user": "5687d6d605", "folder": "笑死我了"}, {"bvid": "BV1pHZaBrEqW", "title": "【Blender插件】二次元一键渲染助手插件公开配布！任何模型任何渲染都可以适配！轻松解决二创入门问题", "tname": "—", "pubdate": 1771491600, "year": "2026", "view": 73882, "f7": 0.6029, "cbi": 5.096, "tier": "high", "duration": 530, "from_user": "543a86dc6c", "folder": "blender"}, {"bvid": "BV1Ve8jzFEA1", "title": "你可以支持一下小地球吗", "tname": "—", "pubdate": 1753693818, "year": "2025", "view": 816064, "f7": 0.3124, "cbi": 5.026, "tier": "high", "duration": 66, "from_user": "7d554dae4f", "folder": "GPT声音克隆"}, {"bvid": "BV1Htp3zVEXy", "title": "【新人必看】如何快速提升b站等级", "tname": "—", "pubdate": 1757675695, "year": "2025", "view": 261174, "f7": 0.3307, "cbi": 4.914, "tier": "high", "duration": 94, "from_user": "16b4a8aa1b", "folder": "默认收藏夹"}, {"bvid": "BV1MStP6YEsz", "title": "“这是最后一舞了……”", "tname": "—", "pubdate": 1787931838, "year": "2026", "view": 59162, "f7": 0.63, "cbi": 4.91, "tier": "high", "duration": 34, "from_user": "c8a221e803", "folder": "BA"}, {"bvid": "BV1H666BUEu9", "title": "“致明天，亦或是八千年后的你.”", "tname": "—", "pubdate": 1769826600, "year": "2026", "view": 155274, "f7": 0.3985, "cbi": 4.756, "tier": "high", "duration": 13, "from_user": "c8a221e803", "folder": "二次元"}, {"bvid": "BV1iH4y1c7qA", "title": "鬼畜大电影【生化危鸡】耗时两年半！一口气看爽！全程高燃！10小时整部剧完结！", "tname": "—", "pubdate": 1721965500, "year": "2024", "view": 1347715, "f7": 0.3414, "cbi": 4.692, "tier": "high", "duration": 36000, "from_user": "12fdfc0813", "folder": "支持用"}, {"bvid": "BV1kDLWz8E4F", "title": "“可惜惊艳我整个青春的人始终没有回头看我一眼”", "tname": "—", "pubdate": 1745382600, "year": "2025", "view": 137492, "f7": 0.4104, "cbi": 4.638, "tier": "high", "duration": 158, "from_user": "c8a221e803", "folder": "二次元"}, {"bvid": "BV1Px411o72K", "title": "在B站怎样才能快速升6级？【读评论08】", "tname": "—", "pubdate": 1561722010, "year": "2019", "view": 191900, "f7": 0.3417, "cbi": 4.515, "tier": "high", "duration": 321, "from_user": "2d96cdbcbb", "folder": "读评论"}, {"bvid": "BV1Ha3T69E5X", "title": "爱丽丝正在看着你", "tname": "—", "pubdate": 1784940526, "year": "2026", "view": 188726, "f7": 0.3275, "cbi": 4.29, "tier": "high", "duration": 19, "from_user": "c8a221e803", "folder": "BA"}, {"bvid": "BV1zJ9wYjE6b", "title": "小明剑魔二创教程/AI鬼畜换声全网最详细教程指南（成品在2P）", "tname": "—", "pubdate": 1740637939, "year": "2025", "view": 180881, "f7": 0.3335, "cbi": 4.278, "tier": "high", "duration": 419, "from_user": "12fdfc0813", "folder": "素材"}, {"bvid": "BV11bAUzBEqG", "title": "决战！我要夺冠！！！《下一个是谁6》06", "tname": "—", "pubdate": 1772192118, "year": "2026", "view": 11307458, "f7": 0.3469, "cbi": 4.073, "tier": "high", "duration": 6629, "from_user": "5184b2c44f", "folder": "《下一个是谁》第六季"}, {"bvid": "BV1FL411i7fb", "title": "鬼畜界《天下第一下饭会》1 —— 无规则擂台格斗进阶赛", "tname": "—", "pubdate": 1685930400, "year": "2023", "view": 372624, "f7": 0.2342, "cbi": 4.004, "tier": "high", "duration": 396, "from_user": "12fdfc0813", "folder": "学学人家"}, {"bvid": "BV17Ux4zREpN", "title": "我是真的在你家装了监控", "tname": "—", "pubdate": 1759580378, "year": "2025", "view": 136869, "f7": 0.3452, "cbi": 3.893, "tier": "high", "duration": 18, "from_user": "7d554dae4f", "folder": "blender"}, {"bvid": "BV1Swuu6NED1", "title": "【5个月爆肝240分钟】自制《轩辕剑:天之痕》动画大长篇-总集篇 AI制作同人作品", "tname": "—", "pubdate": 1786154400, "year": "2026", "view": 494344, "f7": 0.2131, "cbi": 3.818, "tier": "high", "duration": 15090, "from_user": "12fdfc0813", "folder": "支持用"}, {"bvid": "BV19xcYzqEzh", "title": "别划走", "tname": "—", "pubdate": 1770877657, "year": "2026", "view": 228968, "f7": 0.2604, "cbi": 3.672, "tier": "high", "duration": 32, "from_user": "7d554dae4f", "folder": "GPT声音克隆"}], "year_span": "2011–2026", "year_text": "<p>两个值得停下来看的形状：<b>① 「感谢低谷」</b>——2018 年（平均CBI 0.807）、2021 年（平均CBI 0.8）、2022 年（平均CBI 0.641） 的收藏条目感谢水平显著低于两侧年份，全段最低点 2022 年。这批视频大量收藏、但相对其播放量得到的硬币与点赞稀薄——与收藏行为本身的「存档心态」（先存下再说）吻合，具体成因属假说，本报告不展开；<b>② 年代峰值</b>——2026 年的条目平均 CBI 达 1.631（n=119），成为整条时间线的高水位段。</p>", "oldnew_text": "<p><b>五年之界的读法：</b>≥5 年前发布的 205 条里，神作线以上 62 条（神作率 30.2%、优秀率 40.0%、平均 CBI 0.998）——它们今天出现在你首页的概率趋近于零，除非你恰好关注了当年的 up 主。近 5 年的 440 条水位更高（平均 CBI 1.346），但这不是「新比旧好」的证据，而是收藏行为的「存档偏向」：人们收藏时更倾向新内容。真正站得住的结论是：<b>被时间线掩埋的旧内容里，每 10 条就有约 3 条神作</b>——这条平行时间线值得一条专门的浏览通道。</p>"};
+
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const pct = x => (x == null ? '—' : Math.round(x * 1000) / 10 + '%');
+const num = x => (x == null ? '—' : x.toLocaleString('en-US'));
+
+function init(){
+  if (!MINE || !MINE.meta) { document.querySelector('.wrap').insertAdjacentHTML('afterbegin','<div class="guide" style="margin-top:20px">数据尚未注入：运行 <code>python engine/build_nostalgia.py</code> 后刷新。</div>'); return; }
+  const o = MINE.overall || {}, c = MINE.control || {}, on = MINE.old_vs_new || {};
+  document.getElementById('badges').innerHTML =
+    `<span>匿名用户 ${num(MINE.meta.users)}</span><span>视频 ${num(o.n)}</span><span>年代 ${MINE.year_span || '—'}</span><span>基线 n=6734 · 28点曲线</span><span>全公开数据 · 身份匿名</span>`;
+
+  document.getElementById('kpi-duo').innerHTML = `
+    <div class="side mine"><h4>挖掘组 · 收藏夹考古</h4>
+      <div class="row"><span>视频</span><b>${num(o.n)}</b></div>
+      <div class="row"><span>神作率 CBI≥1.2</span><b>${pct(o.high_rate)}</b></div>
+      <div class="row"><span>优秀率 CBI≥1.0</span><b>${pct(o.good_rate)}</b></div>
+      <div class="row"><span>平均 CBI</span><b>${o.avg_cbi}</b></div></div>
+    <div class="side ctrl"><h4>对照组 · 今日时间线</h4>
+      <div class="row"><span>视频</span><b>${num(c.n)}</b></div>
+      <div class="row"><span>神作率 CBI≥1.2</span><b>${pct(c.high_rate)}</b></div>
+      <div class="row"><span>优秀率 CBI≥1.0</span><b>${pct(c.good_rate)}</b></div>
+      <div class="row"><span>平均 CBI</span><b>${c.avg_cbi}</b></div></div>`;
+
+  document.getElementById('kpi-cards').innerHTML = `
+    <div class="card"><h4>对照组口径<span class="en">CONTROL</span></h4><dl><dt>来源</dt><dd>排行榜 / 热门 / 推荐流（前作采集流）</dd><dt>含义</dt><dd>今天的时间线主动给你看的东西</dd></dl></div>
+    <div class="card"><h4>挖掘组口径<span class="en">MINED</span></h4><dl><dt>来源</dt><dd>匿名用户的公开收藏夹（每用户≤3夹）</dd><dt>含义</dt><dd>被时间线掩埋的平行时间线</dd></dl></div>`;
+
+  const oldSeg = (MINE.old_vs_new||{}).old || {};
+  const oldStars = Math.round((oldSeg.n||0) * (oldSeg.high_rate||0));
+  document.getElementById('verdict-text').innerHTML = `
+    <div class="guide"><b>怎么读这张表：</b>对照组的神作率（${pct(c.high_rate)}）高于挖掘组（${pct(o.high_rate)}）——这不是坏消息，而是口径使然：对照组是排行榜与热门流里的视频，<b>它们是已经赢了曝光竞赛的幸存者</b>，是全站金字塔尖；挖掘组则是个体收藏的随机切面。值得记住的是：普通人的收藏夹里仍有 ${pct(o.high_rate)} 的内容越过神作线、${pct(o.good_rate)} 达到优秀线，且纵深延伸到 ${esc(MINE.year_span||'')}。对照组告诉我们塔尖有多高，收藏夹告诉我们<b>塔身有多实</b>。</div>
+    <div class="guide" style="border-left-color:#2E7D32"><b>本报告最硬的一条数字：</b>≥5 年前发布、今天几乎不可能再被推荐流送到的 ${num(oldSeg.n||0)} 条里，有 <b>${num(oldStars)} 条神作</b>。它们不缺质量，缺的是一条能被看见的通道。</div>`;
+
+  const yr = MINE.by_year || [];
+  document.getElementById('year-table').innerHTML = `<table><tr><th>发布年</th><th>样本</th><th>神作率</th><th>优秀率</th><th>平均CBI</th></tr>` +
+    yr.map(r=>`<tr${r.n<5?' class="rej"':''}><td class="num">${esc(r.year)}</td><td class="num">${r.n}</td><td class="num">${pct(r.high_rate)}</td><td class="num">${pct(r.good_rate)}</td><td class="num">${r.avg_cbi}</td></tr>`).join('') + `</table>` +
+    (yr.some(r=>r.n<5)?'<p class="note">灰色行：样本 n&lt;5，仅供参考，不进入趋势推断。</p>':'');
+  const maxN = Math.max(1, ...yr.map(r=>r.n));
+  document.getElementById('year-bars').innerHTML = yr.map(r=>`
+    <div class="bar-row"><div class="bar-lab">${esc(r.year)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(r.n/maxN*100)}%;background:${r.high_rate>=0.3?'#2E7D32':'#334EAC'}"></div></div>
+      <div class="bar-val">n=${r.n} · 神作 ${pct(r.high_rate)}</div></div>`).join('');
+  document.getElementById('year-text').innerHTML = (MINE.year_text || '');
+
+  document.getElementById('oldnew').innerHTML = ['old','new'].map((k,i)=>{
+    const s = on[k] || {}, lab = k==='old' ? '≥5 年前发布' : '近 5 年发布';
+    return `<div class="side ${i?'ctrl':'mine'}"><h4>${lab}</h4>
+      <div class="row"><span>样本</span><b>${num(s.n||0)}</b></div>
+      <div class="row"><span>神作率</span><b>${pct(s.high_rate)}</b></div>
+      <div class="row"><span>优秀率</span><b>${pct(s.good_rate)}</b></div>
+      <div class="row"><span>平均 CBI</span><b>${s.avg_cbi??'—'}</b></div></div>`;}).join('');
+  document.getElementById('oldnew-text').innerHTML = (MINE.oldnew_text || '');
+
+  document.getElementById('folder-table').innerHTML = `<table><tr><th>匿名夹主</th><th>样本</th><th>优秀率</th><th>平均CBI</th></tr>` +
+    (MINE.folders||[]).map(r=>`<tr><td class="num">${esc(r.user_hash)}</td><td class="num">${r.n}</td><td class="num">${pct(r.good_rate)}</td><td class="num">${r.avg_cbi}</td></tr>`).join('') + `</table>`;
+
+  document.getElementById('stars-table').innerHTML = `<table class="stars"><tr><th>#</th><th>视频</th><th>发布年</th><th>分区</th><th class="num">CBI</th><th class="num">播放</th></tr>` +
+    (MINE.stars||[]).map((v,i)=>`<tr><td class="num">${i+1}</td><td><a href="https://www.bilibili.com/video/${esc(v.bvid)}" target="_blank" rel="noopener">${esc(v.title)}</a></td><td class="num">${esc(v.year)}</td><td>${esc(v.tname)}</td><td class="num"><b>${v.cbi}</b></td><td class="num">${num(v.view)}</td></tr>`).join('') + `</table>`;
+}
+init();
+</script>
+</body>
+</html>
