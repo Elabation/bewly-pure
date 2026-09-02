@@ -73,10 +73,10 @@ def main():
     source, hop, prev_rate = arm1, 2, None
     while hop <= MAX_HOP:
         run(["engine/flow_mine.py", "--source", source, "--hop", str(hop),
-             "--min-inflow", "2", "--top-cbi-fill", "18", "--fill", "random",
-             "--draw", "random",
+             "--min-inflow", "2", "--top-cbi-fill", "18", "--fill", "cbi",
+             "--draw", "strength", "--probe", "30",
              "--max-gods", "18", "--max-users", "80", "--interval", "0.45"],
-            f"第 {hop} 跳流式挖掘（随机抽样候选+随机补足——无偏统计链）")
+            f"第 {hop} 跳流式挖掘（工程链：CBI 浓度补足+剪枝；探针 30 作对照组）")
         summ = json.load(open(os.path.join(MINE, f"flow_h{hop}_summary.json"), encoding="utf-8"))
         rate = summ["hop2_high_rate"]
         rho = (rate / prev_rate) if prev_rate else None
@@ -101,11 +101,12 @@ def main():
         prev_rate = rate
         hop += 1
 
-    out = {"hop1_rate": round(hop1_rate, 3), "protocol": "draw=random fill=random（无偏链）",
+    out = {"hop1_rate": round(hop1_rate, 3),
+           "protocol": "draw=strength fill=cbi probe=30（工程链+对照探针）",
            "criteria": {"rho_floor": RHO_FLOOR, "abs_floor": ABS_FLOOR,
                         "min_seeds": MIN_SEEDS, "max_hop": MAX_HOP},
            "verdicts": verdicts, "final_hops": len(verdicts),
-           "conclusion": f"统计链共流 {len(verdicts)} 跳（含第一跳共 {len(verdicts)+1} 层节点），"
+           "conclusion": f"工程链共流 {len(verdicts)} 跳（含第一跳共 {len(verdicts)+1} 层节点），"
                          f"终跳神作率 {verdicts[-1]['rate']:.3f}"}
     json.dump(out, open(os.path.join(MINE, "hop_verdict.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
