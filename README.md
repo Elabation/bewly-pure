@@ -7,9 +7,9 @@
 > **⚡ 浏览器扩展安装（2 分钟）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
 
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
-> PC 端：**基于 BewlyBewly（MIT）做增量开发**——UI/网格/无限滚动用它的成熟框架，推荐过滤算法是我们自己的 CBI 感谢指数。
-> **预构建产物在 `extension-bewly/`**（下载即装），增量源码与方案见 [docs/bewly-integration-plan.md](docs/bewly-integration-plan.md)，版权划分见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
-> 手机端（免 root）：Via/X（Android）+ Userscripts（iOS）。
+> **PC 端现役版本：BewlyBewly 增量版**（`extension-bewly/`，下载即装）——UI/网格/无限滚动基于 [BewlyBewly](https://github.com/hakadao/BewlyBewly)（MIT）成熟框架，推荐过滤算法是我们自己的 **CBI×F7 双重指标**。
+> 增量版能力（cb17）：同步层砍直播/短视频/切片签名 → CBI×F7 双重判定砍「看过不给」→ 每卡左下角评分角标 → 左下角状态胶囊（实时**过滤比率**/缓存/熔断可视+一键解除）→ **四档性能**（并行·快筛免请求 / 闪滑·判定限时 / 标准·全量 / 极速·零请求）→ 判定缓存持久化（越用越快）→ 全部阈值在设置面板手调。
+> 手机端（免 root）：**尚未完成**，方案评估见 [docs/mobile-plan.md](docs/mobile-plan.md)。
 > 动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
 >
 > **核心立场：过滤低质，而不是保留高质。**
@@ -129,8 +129,9 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 | 2.5 | 生态调查《看过，却不给》 | ✅✅ **第三版：十三项统计实验**（偏相关/分位回归/洛伦兹/PCA/χ²/MWU/**时代演化 2020-2026**/**时长×质量**/**层间对比**），单栏可读性重写，报告 web/ecosystem-report.html |
 | 3 | 过滤验证：真实页面验证规则 | ✅ **扩展 v1.0 真机全链路实测**（wbi 签名直连 code 0、网格 17 卡 CBI 角标全亮、砍 3 条）；判定逻辑离线模拟 feed 层砍 32% 卡片收回 54% 播放份额 |
 | 3.5 | 引擎 v2：CBI 相对基线取代全局阈值 | ✅ 设计+参数落地：config 新增 `cbi` 段（threshold 0.5 / min_view 5w）+ 8 条过滤器规则（报告§13），扩展判定核心同步 |
-| 4 | 手机端方案（免 root） | ✅ **机制落地**：`userscript/bilibili-clean-mobile.user.js`（m.bilibili.com 首页热榜 SSR / 频道流 / 视频页相关流三股全过滤），单测 21/21 + 真实样本端到端 23.3% 过滤率验证，安装指南见 docs/mobile-plan.md，待真机实测 |
+| 4 | 手机端方案（免 root） | 🚧 **尚未完成**：userscript 机制验证过（m.bilibili.com 三股流过滤原型），但未达发布标准；方案评估见 docs/mobile-plan.md |
 | 5 | 成果发布 | ✅ GitHub 公开仓库 + Pages 报告 + 扩展教程齐备 |
+| 6 | **BewlyBewly 增量版扩展** | ✅ **现役 PC 版（cb17）**：CBI×F7 双重判定、评分角标、四档性能（并行/闪滑/标准/极速）、判定缓存、过滤比率胶囊、熔断可视+一键解除、设置面板全参数手调；预构建产物 `extension-bewly/`（每版归档 `releases/cbN`） |
 
 ## 现成方案对比（为什么自己写）
 
