@@ -66,8 +66,11 @@ def main():
     ap.add_argument("--fill", default="cbi", choices=["cbi", "random"],
                     help="种子补足方式：cbi=CBI top（浓缩，工程策略）/ random=随机（无偏统计链）")
     ap.add_argument("--draw", default="strength", choices=["strength", "random"],
-                    help="候选截断方式：strength=CBI 浓度排序（工程剪枝）/ "
-                         "random=简单随机抽样（无偏统计链——跳间神作率可比的前提）")
+                    help="候选截断方式：strength=CBI 浓度排序（工程剪枝，主链）/ "
+                         "random=简单随机抽样（无偏统计链）")
+    ap.add_argument("--probe", type=int, default=0,
+                    help="剪枝模式下，从被剪候选随机抽 N 个同跳挖（对照组——"
+                         "剪枝组率/探针率 = 浓度信号有效性直接检验）")
     ap.add_argument("--flowmap-out", default="", help="种子→用户映射旁证文件（.flowmap.json 键）")
     args = ap.parse_args()
 
@@ -168,6 +171,14 @@ def main():
             print(f"[prune] 新用户 {len(candidates)}，流强度分布 min={ss[0]} 中位={ss[len(ss)//2]} "
                   f"max={ss[-1]}；实挖 top {len(mids)}（强度 {mids[0][1]}~{mids[-1][1]}）"
                   f"——真剪枝：砍 {len(candidates)-len(mids)} 个低浓度候选")
+    # 随机探针（对照组）：剪枝模式下从被剪候选随机抽 N 个同跳挖——
+    # 剪枝组率 / 探针率 = CBI 浓度信号有效性的直接检验（免质疑证据）
+    probe_mids = []
+    if args.draw == "strength" and args.probe > 0:
+        pruned = [c for c in candidates if c not in mids]
+        random.shuffle(pruned)
+        probe_mids = pruned[:args.probe]
+        print(f"[probe] 对照探针 {len(probe_mids)}/{len(pruned)} 个被剪候选随机入挖")
 
     # ── 5) 匿名挖收藏夹（复用 mine() 的二跳逻辑 + 请求计数 + 发现顺序）──
     users, videos = [], []
@@ -211,6 +222,7 @@ def main():
             if not medias:
                 continue
             users.append({"user_hash": anon, "seed_type": f"flow_hop{args.hop}", "flow_strength": strength,
+                          "probe": 0,
                           "discovered_at": ui, "folder_title": folder.get("title") or "?",
                           "media_count": folder.get("media_count"), "entries": len(medias)})
             targets = random.sample(medias[:args.per_folder],
@@ -246,6 +258,66 @@ def main():
             rate = n_high / max(1, sum(1 for v2 in videos if (v2.get("view") or 0) >= 3000))
             print(f"[progress] 用户 {ui}  请求 {req}  神作 {n_high}（合格神作率 {rate:.3f}）")
 
+    # ── 5b) 随机探针（对照组）：被剪候选随机样本，同跳挖掘，单独统计 ──
+    probe_req = 0
+    probe_users = probe_videos = probe_high = 0
+    if probe_mids:
+        print(f"[probe] 开始对照组挖掘 {len(probe_mids)} 人", flush=True)
+        for pi, (mid, strength) in enumerate(probe_mids, 1):
+            anon = mid2hash.get(str(mid)) or anon_mid(mid)
+            mid2hash[str(mid)] = anon
+            try:
+                fd = cli_anon.get_json("https://api.bilibili.com/x/v3/fav/folder/created/list-all",
+                                       {"up_mid": mid, "type": 2, "rid": 0}) or {}
+                probe_req += 1
+                folders = [f for f in (fd.get("list") or [])
+                           if ((f.get("attr") or 0) & 1) == 0 and (f.get("media_count") or 0) > 3]
+            except Exception:
+                folders = []
+            folders.sort(key=lambda f: f.get("media_count") or 0, reverse=True)
+            for folder in folders[:2]:  # 探针预算减半：2 夹
+                try:
+                    res = cli_anon.get_json("https://api.bilibili.com/x/v3/fav/resource/list",
+                                            {"media_id": folder.get("id"), "pn": 1, "ps": 20,
+                                             "keyword": "", "order": "mtime", "type": 0,
+                                             "tid": 0, "platform": "web"}, sign_wbi=True)
+                    probe_req += 1
+                except Exception:
+                    continue
+                medias = [m for m in (res.get("medias") or [])
+                          if m and m.get("bvid") and m.get("type") == 2][:args.per_folder]
+                if not medias:
+                    continue
+                users.append({"user_hash": anon, "seed_type": f"probe_hop{args.hop}",
+                              "flow_strength": strength, "probe": 1,
+                              "discovered_at": pi, "folder_title": folder.get("title") or "?",
+                              "media_count": folder.get("media_count"), "entries": len(medias)})
+                targets = random.sample(medias, max(1, int(len(medias) * args.sample_ratio)))
+                for m in targets:
+                    try:
+                        v = cli_anon.fetch_view(m["bvid"])
+                        probe_req += 1
+                    except Exception:
+                        continue
+                    st = v.get("stat") or {}
+                    view = st.get("view") or 0
+                    cbi = cbi_of(f7_of(st), view)
+                    t = tier_of(cbi, view)
+                    probe_high += t == "high"
+                    pub = m.get("pubtime") or v.get("pubdate") or 0
+                    videos.append({"bvid": m["bvid"], "title": v.get("title") or m.get("title"),
+                                   "tname": v.get("tname") or "?", "pubdate": pub,
+                                   "year": time.strftime("%Y", time.localtime(pub)) if pub else "?",
+                                   "view": view, "f7": round(f7_of(st), 4), "cbi": round(cbi, 3),
+                                   "tier": t, "duration": v.get("duration"),
+                                   "stat": {k: st.get(k) for k in
+                                            ("view", "danmaku", "reply", "favorite", "coin",
+                                             "share", "like")},
+                                   "from_user": anon, "folder": folder.get("title") or "?"})
+                probe_users += 1
+            if pi % 10 == 0:
+                print(f"[probe] {pi}/{len(probe_mids)}", flush=True)
+
     # ── 6) 落盘（immutable 原始文件 + E3 分析产物）──
     stamp = time.strftime("%Y%m%d_%H%M%S")
     path = os.path.join(MINE_DIR, f"favmine_flowH{args.hop}_{stamp}.json")
@@ -265,10 +337,16 @@ def main():
                                  for g, mids_src in [(gd, user_flow_src.get(g["bvid"], [])) for gd in god_meta]}
     json.dump(flowmap, open(fm_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 
-    # 分析：合格神作率 / α 三档 / 曲线拐点（简化：每 10% 预算的边际产出）
+    # 分析：合格神作率（主链与探针分开）/ α 三档 / 曲线拐点
     qual = [v for v in videos if (v.get("view") or 0) >= 3000]
-    hop2_rate = sum(1 for v in qual if v["tier"] == "high") / max(1, len(qual))
-    hop2_good = sum(1 for v in qual if v["tier"] in GOOD_TIERS) / max(1, len(qual))
+    probe_hashes = {u["user_hash"] for u in users if u.get("probe")}
+    qual_main = [v for v in qual if v.get("from_user") not in probe_hashes]
+    qual_probe = [v for v in qual if v.get("from_user") in probe_hashes]
+    hop2_rate = sum(1 for v in qual_main if v["tier"] == "high") / max(1, len(qual_main))
+    hop2_good = sum(1 for v in qual_main if v["tier"] in GOOD_TIERS) / max(1, len(qual_main))
+    probe_rate = (round(sum(1 for v in qual_probe if v["tier"] == "high") / max(1, len(qual_probe)), 3)
+                  if len(qual_probe) >= 30 else None)
+    prune_gain = (round(hop2_rate / probe_rate, 3) if probe_rate else None)
     alphas = {}
     for a in (0.3, 0.5, 0.7):
         k = max(1, int(len(mids) * a))
@@ -292,15 +370,20 @@ def main():
 
     outp = os.path.join(MINE_DIR, f"flow_h{args.hop}_summary.json")
     json.dump({"hop2_high_rate": round(hop2_rate, 3), "hop2_good_rate": round(hop2_good, 3),
-               "hop1_high_rate": 0.259, "baseline": 0.059,
                "n_users": len(users), "n_videos": len(videos), "n_qual": len(qual),
                "anon_requests": req, "auth_requests": len(god_meta),
+               "probe": {"n_probe_users": len(probe_hashes), "n_qual_probe": len(qual_probe),
+                         "probe_rate": probe_rate, "prune_gain": prune_gain,
+                         "note": "剪枝组率/随机探针率 = CBI 浓度信号有效性的直接检验"},
                "alpha_cutoffs": alphas, "flow_strength_monotonicity": monotone,
                "curve": curve, "seeds": god_meta},
               open(outp, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"\n=== 第 {args.hop} 跳结果 ===")
     print(f"  用户 {len(users)}  合格视频 {len(qual)}  匿名请求 {req} + 主号 {len(god_meta)}")
-    print(f"  本跳神作率 {hop2_rate:.3f}（第一跳 0.259，基线 0.059）  优秀率 {hop2_good:.3f}")
+    print(f"  本跳神作率 {hop2_rate:.3f}（主链，如实记载）  优秀率 {hop2_good:.3f}")
+    if probe_rate is not None:
+        print(f"  对照探针率 {probe_rate} → 剪枝增益 {prune_gain}× "
+              f"（CBI 浓度信号有效性直接检验）")
     print(f"  α 截断: {json.dumps(alphas, ensure_ascii=False)}")
     print(f"  流强度单调性: {json.dumps(monotone, ensure_ascii=False)}")
     print(f"[done] -> {outp}\n         -> {path}")
