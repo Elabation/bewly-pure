@@ -16,6 +16,7 @@
   python engine/fav_miner.py --analyze data/fav_mine/favmine_xxx.json   # 只分析已挖掘数据
 """
 import argparse
+from cbi_scale import SCALE, GOOD_TIERS  # CBI 分档单一定义源
 import hashlib
 import json
 import os
@@ -76,15 +77,9 @@ def cbi_of(f7: float, view: int) -> float:
 
 
 def tier_of(cbi: float, view: int) -> str:
-    if view < 3000:
-        return "unproven"
-    if cbi >= 1.2:
-        return "high"
-    if cbi >= 1.0:
-        return "normal"
-    if cbi >= 0.5:
-        return "low"
-    return "junk"
+    # 统一分档：单一定义源见 cbi_scale.py（本函数保留同名转发，兼容旧调用）
+    from cbi_scale import tier_of as _t
+    return _t(cbi, view)
 
 
 def anon_mid(mid: int) -> str:
@@ -109,8 +104,10 @@ def load_seed_bvids(limit: int) -> list:
     return pool[:limit]
 
 
-def seeds_from_comments(cli: BiliClient, n: int) -> list:
-    """从样本视频的评论区抓真实观众 mid（未登录态每视频仅返回~3条，用全量视频补足）。"""
+def seeds_from_comments(cli: BiliClient, n: int, mode: str = "all") -> list:
+    """从评论区抓真实观众 mid（未登录态每视频仅返回~3条，用全量视频补足）。
+    mode=high：只从 CBI>=3.0 的神作评论区抓（E1 臂① 流引导）
+    mode=low ：只从 CBI<0.7 的普通视频评论区抓（E1 臂③ 随机评论对照）"""
     sdir = os.path.join(ROOT, "data", "samples")
     vids = []
     for fn in sorted(os.listdir(sdir)):
@@ -120,7 +117,19 @@ def seeds_from_comments(cli: BiliClient, n: int) -> list:
                     vids.extend(v for v in (json.load(f).get("videos") or []) if v.get("aid"))
             except Exception:
                 continue
-    random.shuffle(vids)
+
+    def _cbi(v):
+        st = v.get("stat") or {}
+        view = st.get("view") or 0
+        return cbi_of(f7_of(st), view) if view >= 3000 else None
+
+    if mode == "high":
+        vids = sorted((v for v in vids if (_cbi(v) or 0) >= SCALE["high"]), key=lambda v: -(_cbi(v) or 0))
+    elif mode == "low":
+        vids = sorted((v for v in vids if _cbi(v) is not None and _cbi(v) < 0.7),
+                      key=lambda v: (_cbi(v) or 0))
+    else:
+        random.shuffle(vids)
     mids, seen = [], set()
     for v in vids:
         if len(mids) >= n:
@@ -138,13 +147,14 @@ def seeds_from_comments(cli: BiliClient, n: int) -> list:
                     if len(mids) >= n:
                         break
             if got:
-                print(f"[comment-seed] {v.get('bvid')} +{got} (total {len(mids)})")
+                print(f"[comment-seed:{mode}] {v.get('bvid')} +{got} (total {len(mids)})")
         except Exception as e:
-            print(f"[comment-seed] {v.get('bvid')} failed: {e}")
+            print(f"[comment-seed:{mode}] {v.get('bvid')} failed: {e}")
     return mids
 
 
-def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, out_dir: str, comment_seed_count: int = 0):
+def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, out_dir: str,
+         comment_seed_count: int = 0, seed_mode: str = "all", auth_cli: "BiliClient | None" = None):
     seeds = load_seed_bvids(n_users * 2)
     print(f"[seed] {len(seeds)} candidate seed videos")
 
@@ -166,14 +176,17 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                 pass
     print(f"[dedupe] {len(mined_hashes)} users already mined -> will skip")
 
-    # 1) 种子 → 用户 mid：uploader（重度用户）+ 评论区观众（真实用户）
-    mids, seen_mid = [], set()
+    # 1) 种子 → 用户 mid：uploader（重度用户）+ 评论区观众（真实用户，可按所评视频分数定向）
+    mids = []  # [(mid, seed_type)]
+    seen_mid = set()
     if comment_seed_count:
-        for mid in seeds_from_comments(cli, comment_seed_count):
+        st = "comment" if seed_mode == "all" else f"comment_{seed_mode}"
+        seed_cli = auth_cli if auth_cli is not None else cli
+        for mid in seeds_from_comments(seed_cli, comment_seed_count, seed_mode):
             if mid not in seen_mid:
                 seen_mid.add(mid)
-                mids.append(mid)
-        print(f"[seed] comment seeds: {len(mids)}")
+                mids.append((mid, st))
+        print(f"[seed] comment seeds({st}): {sum(1 for _, s in mids if s == st)}")
     for i, bv in enumerate(seeds, 1):
         if len(mids) >= n_users:
             break
@@ -185,22 +198,22 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                 mid = (data.get("owner") or {}).get("mid")
             if mid and mid not in seen_mid:
                 seen_mid.add(mid)
-                mids.append(mid)
+                mids.append((mid, "uploader"))
         except Exception:
             continue
     # 过滤已挖
     fresh = []
-    for mid in mids:
+    for mid, st in mids:
         h = mid2hash.get(str(mid))
         if h and h in mined_hashes:
             continue
-        fresh.append(mid)
+        fresh.append((mid, st))
     print(f"[dedupe] fresh mids {len(fresh)}/{len(mids)}")
     mids = fresh
 
     # 2) 每用户：收藏夹列表 → 挑夹 → 条目 → 抽样补 view
     users, videos = [], []
-    for ui, mid in enumerate(mids, 1):
+    for ui, (mid, stype) in enumerate(mids, 1):
         h = mid2hash.get(str(mid))
         anon = h or anon_mid(mid)
         mid2hash[str(mid)] = anon
@@ -240,7 +253,7 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                       if m and m.get("bvid") and m.get("type") == 2]
             if not medias:
                 continue
-            users.append({"user_hash": anon, "folder_title": title,
+            users.append({"user_hash": anon, "seed_type": stype, "folder_title": title,
                           "media_count": folder.get("media_count"), "entries": len(medias)})
             # 对前 per_folder 条按比例抽样补 view
             targets = medias[:per_folder]
@@ -269,6 +282,8 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                     "stat": {k: stat.get(k) for k in
                              ("view", "danmaku", "reply", "favorite", "coin", "share", "like")},
                     "from_user": anon, "folder": title,
+                    # UP 主入库即匿名（宝藏 UP 主识别用；老档案无此字段，分析需容忍缺失）
+                    "up": anon_mid(v.get("owner_mid")) if v.get("owner_mid") else None,
                 })
                 enriched += 1
             print(f"[user {ui}/{len(mids)}] {anon} 夹「{title}」条目 {len(medias)} 补查 {enriched}")
@@ -285,6 +300,7 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
         "meta": {
             "mined_at": time.strftime("%Y-%m-%d %H:%M:%S"),
             "users": len(users), "videos": len(videos),
+            "arm": seed_mode,
             "weights": {"fav": W_FAV, "coin": W_COIN, "like": W_LIKE},
             "baseline": "cbi_baseline.json n=6734 fit_at=2026-09-01（与扩展 core.ts 同源）",
             "privacy": "用户身份入库即 sha1 匿名；仅公开收藏夹；仅 API 元数据",
@@ -331,8 +347,11 @@ def analyze(path: str, out=None):
     with open(path, encoding="utf-8") as f:
         payload = json.load(f)
     videos = payload["videos"]
+    # 统一重算 tier（存量旧文件的 tier 是旧口径 1.2 线；一切以 cbi 数值现算为准）
+    for v in videos:
+        v["tier"] = tier_of(v.get("cbi", 0), v.get("view") or 0)
     meta = {"mined_at": payload["meta"]["mined_at"], "users": payload["meta"]["users"],
-            "n": len(videos)}
+            "n": len(videos), "tier_scale": "normal>=1 / good>=2 / high(神)>=3"}
 
     # 年代 × 质量矩阵
     by_year = defaultdict(list)
@@ -344,7 +363,7 @@ def analyze(path: str, out=None):
         vs = by_year[y]
         n = len(vs)
         hi = sum(1 for v in vs if v["tier"] == "high")
-        nm = sum(1 for v in vs if v["tier"] in ("high", "normal"))
+        nm = sum(1 for v in vs if v["tier"] in GOOD_TIERS)
         avg_cbi = sum(v["cbi"] for v in vs) / n
         year_rows.append({"year": y, "n": n, "high": hi, "high_rate": round(hi / n, 3),
                           "good": nm, "good_rate": round(nm / n, 3),
@@ -368,13 +387,13 @@ def analyze(path: str, out=None):
             except Exception:
                 continue
     ctrl_n = len(ctrl)
-    ctrl_high = sum(1 for c in ctrl if c["cbi"] >= 1.2)
-    ctrl_good = sum(1 for c in ctrl if c["cbi"] >= 1.0)
+    ctrl_high = sum(1 for c in ctrl if c["cbi"] >= SCALE["high"])
+    ctrl_good = sum(1 for c in ctrl if c["cbi"] >= SCALE["good"])
     ctrl_avg = sum(c["cbi"] for c in ctrl) / ctrl_n if ctrl_n else 0
     ctrl_years = Counter(time.strftime("%Y", time.localtime(c["pubdate"])) for c in ctrl if c["pubdate"])
 
     mined_high = sum(1 for v in videos if v["tier"] == "high")
-    mined_good = sum(1 for v in videos if v["tier"] in ("high", "normal"))
+    mined_good = sum(1 for v in videos if v["tier"] in GOOD_TIERS)
     mined_avg = sum(v["cbi"] for v in videos) / len(videos) if videos else 0
 
     # 老视频定义：pubdate 距今 ≥ 5 年
@@ -386,7 +405,7 @@ def analyze(path: str, out=None):
             return {"n": 0}
         n = len(vs)
         return {"n": n, "high_rate": round(sum(1 for v in vs if v["tier"] == "high") / n, 3),
-                "good_rate": round(sum(1 for v in vs if v["tier"] in ("high", "normal")) / n, 3),
+                "good_rate": round(sum(1 for v in vs if v["tier"] in GOOD_TIERS) / n, 3),
                 "avg_cbi": round(sum(v["cbi"] for v in vs) / n, 3)}
     old_seg, new_seg = seg(old), seg(new)
 
@@ -398,7 +417,7 @@ def analyze(path: str, out=None):
     for uh, vs in by_user.items():
         n = len(vs)
         folder_rows.append({"user_hash": uh, "n": n,
-                            "good_rate": round(sum(1 for v in vs if v["tier"] in ("high", "normal")) / n, 3),
+                            "good_rate": round(sum(1 for v in vs if v["tier"] in GOOD_TIERS) / n, 3),
                             "avg_cbi": round(sum(v["cbi"] for v in vs) / n, 3)})
     folder_rows.sort(key=lambda r: r["good_rate"], reverse=True)
 
@@ -444,6 +463,8 @@ def main():
     ap = argparse.ArgumentParser(description="洁净B站 · 收藏夹考古挖掘器")
     ap.add_argument("--users", type=int, default=60, help="挖掘多少个用户的收藏夹")
     ap.add_argument("--comment-seeds", type=int, default=0, help="额外从老视频评论区抓多少个种子用户")
+    ap.add_argument("--arm", default="all", choices=["all", "high", "low"],
+                    help="E1 分臂：high=只从神作评论区抓种子 / low=只从普通视频评论区抓 / all=不分")
     ap.add_argument("--per-folder", type=int, default=20, help="每夹取前多少条")
     ap.add_argument("--sample-ratio", type=float, default=0.6, help="条目里补 view 详情的比例")
     ap.add_argument("--interval", type=float, default=0.45, help="请求间隔秒")
@@ -459,7 +480,7 @@ def main():
         analyze(args.analyze if args.analyze != "ALL" else None)
         return
 
-    cli = BiliClient(interval=args.interval)
+    cli_anon = BiliClient(interval=args.interval)
     try:
         req = __import__("urllib.request", fromlist=["urllib.request"]).Request(
             "https://www.bilibili.com/", headers={"User-Agent": BiliClient.__dict__.get("UA", "Mozilla/5.0")})
@@ -468,22 +489,26 @@ def main():
             for sc in (resp.headers.get_all("Set-Cookie") or []):
                 m = _re.match(r"([^=]+)=([^;]*)", sc)
                 if m:
-                    cli.cookies[m.group(1)] = m.group(2)
+                    cli_anon.cookies[m.group(1)] = m.group(2)
     except Exception:
         pass
 
+    # 混合模式（2026-09-03）：主号客户端只用于评论区抓取（登录态独占优势），
+    # 收藏夹/详情等海量请求全部走匿名客户端——账号暴露面压至最小。
+    cli_auth = None
     if os.path.exists(sess_path):
         val = open(sess_path, encoding="utf-8").read().strip()
         if val:
-            cli.cookies["SESSDATA"] = val
-            print("[auth] SESSDATA loaded from local file (never printed/committed)")
+            cli_auth = BiliClient(interval=args.interval)
+            cli_auth.cookies["SESSDATA"] = val
+            print("[auth] 混合模式：主号仅评论区抓取；其余请求匿名")
         else:
             print("[auth] .sessdata 为空，按未登录继续")
     else:
         print("[auth] 无 .sessdata，未登录模式（评论区受限每页~3条）")
 
-    path = mine(cli, args.users + args.comment_seeds, args.per_folder, args.sample_ratio, args.out,
-                comment_seed_count=args.comment_seeds)
+    path = mine(cli_anon, args.users + args.comment_seeds, args.per_folder, args.sample_ratio, args.out,
+                comment_seed_count=args.comment_seeds, seed_mode=args.arm, auth_cli=cli_auth)
     analyze(path)
 
 
