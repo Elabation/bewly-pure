@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "BewlyBewly · 洁净B站版",
   "version": "0.41.1",
-  "version_name": "0.41.1-cb15",
-  "description": "基于 BewlyBewly (MIT, hakadao) 的增量版：CBI×F7 双重指标过滤低质推荐，熔断状态可视+一键解除+版本自愈。见仓库 THIRD_PARTY_NOTICES.md。",
+  "version_name": "0.41.1-cb16",
+  "description": "基于 BewlyBewly (MIT, hakadao) 的增量版：CBI×F7 双重过滤 + 并行加速档（快筛免请求/无跳脸/角标补全）+ 可视熔断。见仓库 THIRD_PARTY_NOTICES.md。",
   "homepage_url": "https://github.com/hakadao/BewlyBewly",
   "background": {
     "service_worker": "./dist/background/index.js"
