@@ -181,6 +181,7 @@ class BiliClient:
             "title": data.get("title"),
             "tname": data.get("tname"),
             "owner": (data.get("owner") or {}).get("name"),
+            "owner_mid": (data.get("owner") or {}).get("mid"),
             "pubdate": data.get("pubdate"),
             "duration": data.get("duration"),
             "dimension": {"width": dim.get("width"), "height": dim.get("height"),
