@@ -7,9 +7,12 @@
             至少 MIN_NB 个有效点，否则 AG=None。
 AG(v) = max over u in U(38个方向) of 分位数( ⟨x_v-μ_N, u⟩ in {⟨x_i-μ_N, u⟩}_{i∈N∪{v}} )
 正向校验：取最深方向 u*，要求 ⟨x_v-μ_N, u*⟩>0 且 x_v 至少两维原始率>0。
+"""
+from cbi_scale import SCALE, GOOD_TIERS  # noqa: F401
 
+"""
 验证（文档 docs/appreciation-geometry.md §2）：
-  V2 分歧集规模：AG≥0.95 且 CBI<1.0 的「AG独捞」占比应在 5-15%
+  V2 分歧集规模：AG≥0.95 且 CBI<3.0 的「AG独捞」占比应在 5-15%
   V3 刷量免疫：随机 20% 视频 coin×1.8，AG 排名提升幅度 < CBI 排名提升幅度
 用法： python engine/ag_depth.py
 """
@@ -212,12 +215,12 @@ def main():
 
     # ============ V2：分歧集 ============
     mined_v = [p for p in valid if p["src"] == "mined"]
-    ag_only = [p for p in mined_v if p["ag"] >= 0.95 and p["cbi"] < 1.0]
-    cbi_only = [p for p in mined_v if p["cbi"] >= 1.0 and p["ag"] < 0.80]
+    ag_only = [p for p in mined_v if p["ag"] >= 0.95 and p["cbi"] < SCALE["high"]]
+    cbi_only = [p for p in mined_v if p["cbi"] >= SCALE["high"] and p["ag"] < 0.80]
     both = [p for p in mined_v if p["ag"] >= 0.95 and p["cbi"] >= 1.0]
     print(f"=== V2 分歧集（挖掘组 n={len(mined_v)}）===")
-    print(f"  AG独捞（AG>=0.95 & CBI<1.0）: {len(ag_only)} ({len(ag_only)/len(mined_v):.1%})")
-    print(f"  CBI独捞（CBI>=1.0 & AG<0.80）: {len(cbi_only)} ({len(cbi_only)/len(mined_v):.1%})")
+    print(f"  AG独捞（AG>=0.95 & CBI<3.0）: {len(ag_only)} ({len(ag_only)/len(mined_v):.1%})")
+    print(f"  CBI独捞（CBI>=3.0 & AG<0.80）: {len(cbi_only)} ({len(cbi_only)/len(mined_v):.1%})")
     print(f"  双过: {len(both)} ({len(both)/len(mined_v):.1%})")
 
     # 方向画像：AG 最深方向的构成（u 的主分量）
