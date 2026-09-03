@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "mined_at": "2026-09-03 02:08:17",
+    "users": 0,
+    "videos": 0,
+    "arm": "all",
+    "weights": {
+      "fav": 3.0,
+      "coin": 2.0,
+      "like": 0.3
+    },
+    "baseline": "cbi_baseline.json n=6734 fit_at=2026-09-01（与扩展 core.ts 同源）",
+    "privacy": "用户身份入库即 sha1 匿名；仅公开收藏夹；仅 API 元数据"
+  },
+  "users": [],
+  "videos": []
+}
