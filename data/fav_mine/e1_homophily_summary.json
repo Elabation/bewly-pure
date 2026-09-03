@@ -1,0 +1,110 @@
+{
+  "min_videos": 5,
+  "scale": {
+    "low": 0.5,
+    "normal": 1.0,
+    "good": 2.0,
+    "high": 3.0
+  },
+  "n_users": {
+    "flow_high": 40,
+    "uploader": 19,
+    "comment_low": 43
+  },
+  "metrics": {
+    "神作率": {
+      "means": {
+        "flow_high": 0.2614495323057832,
+        "uploader": 0.06906938795208296,
+        "comment_low": 0.17605836779953649
+      },
+      "tests": {
+        "flow_high>uploader": {
+          "z": 4.526,
+          "p": 3.0058466856862923e-06
+        },
+        "flow_high>comment_low": {
+          "z": 2.233,
+          "p": 0.012780556416752659
+        },
+        "comment_low>uploader": {
+          "z": 3.397,
+          "p": 0.0003402186910456796
+        }
+      }
+    },
+    "优秀率": {
+      "means": {
+        "flow_high": 0.45217724670061116,
+        "uploader": 0.17396828103627057,
+        "comment_low": 0.3231294164534726
+      },
+      "tests": {
+        "flow_high>uploader": {
+          "z": 4.266,
+          "p": 9.93158361793632e-06
+        },
+        "flow_high>comment_low": {
+          "z": 2.98,
+          "p": 0.0014406529888437234
+        },
+        "comment_low>uploader": {
+          "z": 2.802,
+          "p": 0.00254049883458487
+        }
+      }
+    },
+    "平均CBI": {
+      "means": {
+        "flow_high": 2.297223657429753,
+        "uploader": 1.2349239516866644,
+        "comment_low": 1.8932068691548927
+      },
+      "tests": {
+        "flow_high>uploader": {
+          "z": 4.396,
+          "p": 5.508108872644103e-06
+        },
+        "flow_high>comment_low": {
+          "z": 2.151,
+          "p": 0.01574624254844956
+        },
+        "comment_low>uploader": {
+          "z": 3.29,
+          "p": 0.0005001188931407541
+        }
+      }
+    },
+    "中位CBI": {
+      "means": {
+        "flow_high": 1.90505,
+        "uploader": 1.0535263157894734,
+        "comment_low": 1.5047441860465118
+      },
+      "tests": {
+        "flow_high>uploader": {
+          "z": 3.885,
+          "p": 5.11222016970193e-05
+        },
+        "flow_high>comment_low": {
+          "z": 2.57,
+          "p": 0.005084687622377165
+        },
+        "comment_low>uploader": {
+          "z": 2.573,
+          "p": 0.005043698128423379
+        }
+      }
+    }
+  },
+  "e1": {
+    "ratio": 3.785,
+    "p": 3.0058466856862923e-06,
+    "pass": true
+  },
+  "e2": {
+    "ratio": 1.485,
+    "p": 0.012780556416752659,
+    "pass": true
+  }
+}
