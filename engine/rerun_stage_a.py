@@ -24,10 +24,18 @@ ENG = os.path.join(ROOT, "engine")
 PY = sys.executable
 
 
-def run(cmd, desc):
-    print(f"\n=== [{time.strftime('%H:%M:%S')}] {desc} ===", flush=True)
-    r = subprocess.run([PY] + cmd, cwd=ROOT)
-    if r.returncode != 0:
+def run(cmd, desc, retries=3):
+    """执行子命令；退出码 3 = 风控熔断 → 冷却 25 分钟后重试。"""
+    for attempt in range(retries + 1):
+        print(f"\n=== [{time.strftime('%H:%M:%S')}] {desc}"
+              f"{'（冷却重试 ' + str(attempt + 1) + '）' if attempt else ''} ===", flush=True)
+        r = subprocess.run([PY] + cmd, cwd=ROOT)
+        if r.returncode == 0:
+            return
+        if r.returncode == 3 and attempt < retries:
+            print("[cool] 风控熔断——冷却 90 分钟（深夜 IP 封堵长冷却期）", flush=True)
+            time.sleep(5400)
+            continue
         print(f"[ABORT] {desc} 退出码 {r.returncode} —— fail-fast 终止", flush=True)
         sys.exit(1)
 
@@ -45,11 +53,27 @@ def main():
         sys.exit(2)
     print("[auth] 账号存活 ✓", flush=True)
 
-    base = ["--per-folder", "20", "--sample-ratio", "0.85", "--interval", "0.45"]
+    base = ["--per-folder", "20", "--sample-ratio", "0.85", "--interval", "0.7"]
 
-    # 臂②：uploader 基线（150 种子，全部 --users 主路，无评论区种子）
-    run(["engine/fav_miner.py", "--users", "150", "--comment-seeds", "0"] + base,
-        "臂② uploader 基线（150 种子）")
+    # 臂②：uploader 基线——幂等跳过（2026-09-03 晨诊断：样本库 126 种子的 uploader 池
+    # 已被 02:02 基线挖干——20 个有夹用户全部入库，其余 102 个本来就无公开夹；
+    # 重跑只会对无夹用户空转并误触熔断。扩池属后续增强，不属本轮重采。）
+    arm2_users = 0
+    mdir = os.path.join(ROOT, "data", "fav_mine")
+    for fn in os.listdir(mdir):
+        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn \
+                and "merged" not in fn and "flowH" not in fn:
+            try:
+                meta = json.load(open(os.path.join(mdir, fn), encoding="utf-8")).get("meta") or {}
+            except Exception:
+                continue
+            if meta.get("arm") == "all" and (meta.get("users") or 0) > 0:
+                arm2_users = max(arm2_users, int(meta.get("users") or 0))
+    if arm2_users:
+        print(f"[skip] 臂② 基线已存在（{arm2_users} 条台账 / 20 唯一用户）——uploader 池已挖尽，跳过", flush=True)
+    else:
+        run(["engine/fav_miner.py", "--users", "150", "--comment-seeds", "0"] + base,
+            "臂② uploader 基线（150 种子）")
     if not account_alive():
         print("[ABORT] 臂②后账号失效", flush=True); sys.exit(2)
 
