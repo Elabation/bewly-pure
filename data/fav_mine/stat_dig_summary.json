@@ -1,0 +1,152 @@
+{
+  "Q1_hop3_vs_arm1": {
+    "n_hop3": 19,
+    "n_arm1": 40,
+    "mean_hop3": 0.289,
+    "mean_arm1": 0.261,
+    "mwu_z": 1.046,
+    "p_one": 0.14770477272061094
+  },
+  "Q1_bootstrap": {
+    "hop1": [
+      0.253,
+      0.206,
+      0.301
+    ],
+    "hop2": [
+      0.246,
+      0.194,
+      0.301
+    ],
+    "hop3": [
+      0.294,
+      0.235,
+      0.352
+    ],
+    "hop4": [
+      0.216,
+      0.168,
+      0.266
+    ]
+  },
+  "Q5_hop4_in_noise": {
+    "hop4_rate": 0.216,
+    "hop3_ci": [
+      0.235,
+      0.352
+    ],
+    "in_ci": false
+  },
+  "Q2_probe_anatomy": [
+    {
+      "user": "0c2756dc",
+      "n": 34,
+      "god": 11,
+      "rate": 0.324,
+      "strength": 9.91
+    },
+    {
+      "user": "24bebe9f",
+      "n": 33,
+      "god": 16,
+      "rate": 0.485,
+      "strength": 6.47
+    },
+    {
+      "user": "8085290a",
+      "n": 33,
+      "god": 10,
+      "rate": 0.303,
+      "strength": 9.91
+    },
+    {
+      "user": "b02f84bc",
+      "n": 31,
+      "god": 16,
+      "rate": 0.516,
+      "strength": 9.91
+    },
+    {
+      "user": "cd79f45a",
+      "n": 30,
+      "god": 7,
+      "rate": 0.233,
+      "strength": 10.49
+    },
+    {
+      "user": "67ea2cfd",
+      "n": 15,
+      "god": 7,
+      "rate": 0.467,
+      "strength": 12.16
+    },
+    {
+      "user": "309f0696",
+      "n": 15,
+      "god": 13,
+      "rate": 0.867,
+      "strength": 9.58
+    }
+  ],
+  "Q2_probe_minus_top1": {
+    "rate": 0.439,
+    "n": 157
+  },
+  "Q3_certification": {
+    "harvest_n": 370,
+    "harvest_mean": 4.831,
+    "lib_n": 1473,
+    "lib_mean": 4.425,
+    "mwu_z": 2.719,
+    "p_one": 0.0032771359507861295
+  },
+  "Q4_inflow_dist_raw": {
+    "all": {
+      "1": 6713,
+      "2": 113,
+      "3": 7,
+      "4": 1,
+      "6": 1
+    },
+    "high": {
+      "1": 1412,
+      "2": 46,
+      "3": 4,
+      "6": 1
+    },
+    "n_videos_multi": 122,
+    "note": "从原始档案边集计算（merged 去重会抹掉汇流结构）"
+  },
+  "Q6_seeding_response": [
+    {
+      "band": "[3.0,4.0)",
+      "users": 30,
+      "videos": 938,
+      "god_rate": 0.249
+    },
+    {
+      "band": "[4.0,6.0)",
+      "users": 27,
+      "videos": 1018,
+      "god_rate": 0.228
+    },
+    {
+      "band": "[6.0,9.0)",
+      "users": 12,
+      "videos": 445,
+      "god_rate": 0.31
+    },
+    {
+      "band": "[9.0,12.0)",
+      "users": 6,
+      "videos": 146,
+      "god_rate": 0.397
+    },
+    {
+      "band": "[12.0,∞)",
+      "users": 28,
+      "videos": 1015,
+      "god_rate": 0.242
+    }
+  ]
+}
