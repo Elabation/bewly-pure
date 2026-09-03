@@ -63,8 +63,12 @@ def main():
     ap.add_argument("--min-inflow", type=int, default=2, help="汇流度门槛")
     ap.add_argument("--top-cbi-fill", type=int, default=0,
                     help="汇流不足 max-gods 时，用 CBI 最高的神作补足 N 个（稀疏采样下汇流被低估）")
-    ap.add_argument("--fill", default="cbi", choices=["cbi", "random"],
-                    help="种子补足方式：cbi=CBI top（浓缩，工程策略）/ random=随机（无偏统计链）")
+    ap.add_argument("--fill", default="cbi", choices=["cbi", "random", "midband"],
+                    help="种子补足方式：cbi=CBI top（浓缩，工程策略）/ random=随机（无偏统计链） / "
+                         "midband=掐头去尾中带（只从 CBI∈[band-lo,band-hi) 补，Elabation 实验）")
+    ap.add_argument("--band-lo", type=float, default=6.0, help="midband 下限")
+    ap.add_argument("--band-hi", type=float, default=12.0, help="midband 上限")
+    ap.add_argument("--summary-suffix", default="", help="summary 文件名后缀（隔离并行实验）")
     ap.add_argument("--draw", default="strength", choices=["strength", "random"],
                     help="候选截断方式：strength=CBI 浓度排序（工程剪枝，主链）/ "
                          "random=简单随机抽样（无偏统计链）")
@@ -94,6 +98,13 @@ def main():
             pool.sort(key=lambda x: -x[1])
             fill = pool[:need]
             print(f"[hop{args.hop}] 汇流不足，CBI top 补足 {min(need, len(pool))} 个（浓缩策略）")
+        elif args.fill == "midband":
+            lo, hi = args.band_lo, args.band_hi
+            band = [(b, c) for b, c in pool if lo <= c < hi]
+            random.shuffle(band)
+            fill = band[:need]
+            print(f"[hop{args.hop}] 汇流不足，掐头去尾中带补足 {min(need, len(band))} 个"
+                  f"（种子 CBI∈[{lo},{hi})，隔离病毒头与贴线尾——Elabation 实验）")
         else:
             random.shuffle(pool)
             fill = pool[:need]
@@ -384,9 +395,11 @@ def main():
         strata[min(u["flow_strength"], 4)][1] += len(sv)
     monotone = {f"强度{ s if s < 4 else '4+'}": round(h / max(1, n), 3) for s, (h, n) in sorted(strata.items())}
 
-    outp = os.path.join(MINE_DIR, f"flow_h{args.hop}_summary.json")
+    outp = os.path.join(MINE_DIR, f"flow_h{args.hop}_summary{args.summary_suffix}.json")
     json.dump({"hop2_high_rate": round(hop2_rate, 3), "hop2_good_rate": round(hop2_good, 3),
                "n_users": len(users), "n_videos": len(videos), "n_qual": len(qual),
+               "fill_mode": args.fill,
+               "band": [args.band_lo, args.band_hi] if args.fill == "midband" else None,
                "anon_requests": req, "auth_requests": len(god_meta),
                "probe": {"n_probe_users": len(probe_hashes), "n_qual_probe": len(qual_probe),
                          "probe_rate": probe_rate, "prune_gain": prune_gain,
