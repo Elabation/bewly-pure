@@ -27,7 +27,8 @@ from cbi_scale import SCALE, GOOD_TIERS, tier_of  # noqa: E402
 MINE_DIR = os.path.join(ROOT, "data", "fav_mine")
 MIN_VIDEOS = 5  # 用户至少 5 条合格视频才计入
 
-ARMS 動態发现（2026-09-03 重采版）：扫描全部 favmine_*.json，按 meta.arm 分类——
+"""
+ARMS 动态发现（2026-09-03 重采版）：扫描全部 favmine_*.json，按 meta.arm 分类——
   "high" → flow_high / "low" → comment_low / "all"（无 hop，纯 uploader 种子轮）→ uploader。
 不硬编码文件名（旧版硬编码时间戳是重跑炸弹）。
 """
