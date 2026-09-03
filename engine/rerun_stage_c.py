@@ -40,6 +40,10 @@ def main():
              "engine/cbi_scale.py", "engine/e1_homophily.py", "engine/deep_mining.py",
              "engine/build_report_v2.py", "engine/gen_flow_viz.py",
              "engine/ag_depth.py", "engine/ag_folium.py",
+             "engine/rerun_stage_a.py", "engine/rerun_stage_b.py", "engine/rerun_stage_c.py",
+             "engine/probe_once.py", "engine/warm_seeds.py",
+             "engine/diag_fav.py", "engine/diag_ua.py", "engine/diag_hop4.py",
+             "engine/diag_postmortem.py",
              "docs/appreciation-geometry.md", "docs/flow-viz.html", "docs/report-v2.html"]
     for fn in sorted(os.listdir(MINE)):
         if fn.endswith(".json") and ("favmine_" in fn or "_summary" in fn or "verdict" in fn):
