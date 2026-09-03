@@ -1,0 +1,838 @@
+{
+  "hop2_high_rate": 0.296,
+  "hop2_good_rate": 0.467,
+  "n_users": 49,
+  "n_videos": 735,
+  "n_qual": 659,
+  "anon_requests": 965,
+  "auth_requests": 18,
+  "probe": {
+    "n_probe_users": 0,
+    "n_qual_probe": 0,
+    "probe_rate": null,
+    "prune_gain": null,
+    "note": "剪枝组率/随机探针率 = CBI 浓度信号有效性的直接检验"
+  },
+  "alpha_cutoffs": {
+    "0.3": {
+      "users": 9,
+      "requests": 461,
+      "high_n": 95,
+      "high_rate": 0.287,
+      "good_rate": 0.486,
+      "efficiency": 0.2061
+    },
+    "0.5": {
+      "users": 11,
+      "requests": 558,
+      "high_n": 114,
+      "high_rate": 0.295,
+      "good_rate": 0.487,
+      "efficiency": 0.2043
+    },
+    "0.7": {
+      "users": 17,
+      "requests": 841,
+      "high_n": 184,
+      "high_rate": 0.308,
+      "good_rate": 0.483,
+      "efficiency": 0.2188
+    }
+  },
+  "flow_strength_monotonicity": {
+    "强度3.21": 0.108,
+    "强度3.36": 0.342,
+    "强度3.39": 0.298,
+    "强度3.42": 0.284,
+    "强度3.73": 0.255,
+    "强度4+": 0.353
+  },
+  "curve": [
+    {
+      "req": 38,
+      "users": 1,
+      "high": 0,
+      "good": 0,
+      "user_req": 2,
+      "flow_strength": 5.5
+    },
+    {
+      "req": 40,
+      "users": 2,
+      "high": 0,
+      "good": 0,
+      "user_req": 2,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 94,
+      "users": 3,
+      "high": 16,
+      "good": 28,
+      "user_req": 54,
+      "flow_strength": 7.24
+    },
+    {
+      "req": 96,
+      "users": 4,
+      "high": 16,
+      "good": 28,
+      "user_req": 2,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 151,
+      "users": 5,
+      "high": 29,
+      "good": 47,
+      "user_req": 55,
+      "flow_strength": 3.73
+    },
+    {
+      "req": 153,
+      "users": 6,
+      "high": 29,
+      "good": 47,
+      "user_req": 2,
+      "flow_strength": 5.5
+    },
+    {
+      "req": 155,
+      "users": 7,
+      "high": 29,
+      "good": 47,
+      "user_req": 2,
+      "flow_strength": 3.24
+    },
+    {
+      "req": 157,
+      "users": 8,
+      "high": 29,
+      "good": 47,
+      "user_req": 2,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 209,
+      "users": 9,
+      "high": 36,
+      "good": 61,
+      "user_req": 52,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 211,
+      "users": 10,
+      "high": 36,
+      "good": 61,
+      "user_req": 2,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 213,
+      "users": 11,
+      "high": 36,
+      "good": 61,
+      "user_req": 2,
+      "flow_strength": 7.24
+    },
+    {
+      "req": 215,
+      "users": 12,
+      "high": 36,
+      "good": 61,
+      "user_req": 2,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 267,
+      "users": 13,
+      "high": 44,
+      "good": 77,
+      "user_req": 52,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 318,
+      "users": 14,
+      "high": 62,
+      "good": 104,
+      "user_req": 51,
+      "flow_strength": 6.58
+    },
+    {
+      "req": 320,
+      "users": 15,
+      "high": 62,
+      "good": 104,
+      "user_req": 2,
+      "flow_strength": 3.81
+    },
+    {
+      "req": 339,
+      "users": 16,
+      "high": 63,
+      "good": 107,
+      "user_req": 19,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 341,
+      "users": 17,
+      "high": 63,
+      "good": 107,
+      "user_req": 2,
+      "flow_strength": 3.12
+    },
+    {
+      "req": 343,
+      "users": 18,
+      "high": 63,
+      "good": 107,
+      "user_req": 2,
+      "flow_strength": 6.58
+    },
+    {
+      "req": 348,
+      "users": 19,
+      "high": 63,
+      "good": 107,
+      "user_req": 5,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 367,
+      "users": 20,
+      "high": 66,
+      "good": 115,
+      "user_req": 19,
+      "flow_strength": 3.39
+    },
+    {
+      "req": 369,
+      "users": 21,
+      "high": 66,
+      "good": 115,
+      "user_req": 2,
+      "flow_strength": 3.24
+    },
+    {
+      "req": 371,
+      "users": 22,
+      "high": 66,
+      "good": 115,
+      "user_req": 2,
+      "flow_strength": 3.73
+    },
+    {
+      "req": 412,
+      "users": 23,
+      "high": 87,
+      "good": 144,
+      "user_req": 41,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 461,
+      "users": 24,
+      "high": 95,
+      "good": 161,
+      "user_req": 49,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 463,
+      "users": 25,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 465,
+      "users": 26,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 3.81
+    },
+    {
+      "req": 467,
+      "users": 27,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 469,
+      "users": 28,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 3.36
+    },
+    {
+      "req": 471,
+      "users": 29,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 473,
+      "users": 30,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 475,
+      "users": 31,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 3.24
+    },
+    {
+      "req": 477,
+      "users": 32,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 479,
+      "users": 33,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 3.65
+    },
+    {
+      "req": 481,
+      "users": 34,
+      "high": 95,
+      "good": 161,
+      "user_req": 2,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 501,
+      "users": 35,
+      "high": 101,
+      "good": 169,
+      "user_req": 20,
+      "flow_strength": 7.24
+    },
+    {
+      "req": 503,
+      "users": 36,
+      "high": 101,
+      "good": 169,
+      "user_req": 2,
+      "flow_strength": 3.65
+    },
+    {
+      "req": 505,
+      "users": 37,
+      "high": 101,
+      "good": 169,
+      "user_req": 2,
+      "flow_strength": 3.65
+    },
+    {
+      "req": 554,
+      "users": 38,
+      "high": 114,
+      "good": 188,
+      "user_req": 49,
+      "flow_strength": 3.39
+    },
+    {
+      "req": 556,
+      "users": 39,
+      "high": 114,
+      "good": 188,
+      "user_req": 2,
+      "flow_strength": 4.63
+    },
+    {
+      "req": 558,
+      "users": 40,
+      "high": 114,
+      "good": 188,
+      "user_req": 2,
+      "flow_strength": 3.65
+    },
+    {
+      "req": 560,
+      "users": 41,
+      "high": 114,
+      "good": 188,
+      "user_req": 2,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 612,
+      "users": 42,
+      "high": 132,
+      "good": 214,
+      "user_req": 52,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 656,
+      "users": 43,
+      "high": 147,
+      "good": 236,
+      "user_req": 44,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 658,
+      "users": 44,
+      "high": 147,
+      "good": 236,
+      "user_req": 2,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 660,
+      "users": 45,
+      "high": 147,
+      "good": 236,
+      "user_req": 2,
+      "flow_strength": 3.36
+    },
+    {
+      "req": 714,
+      "users": 46,
+      "high": 148,
+      "good": 242,
+      "user_req": 54,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 716,
+      "users": 47,
+      "high": 148,
+      "good": 242,
+      "user_req": 2,
+      "flow_strength": 6.58
+    },
+    {
+      "req": 718,
+      "users": 48,
+      "high": 148,
+      "good": 242,
+      "user_req": 2,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 720,
+      "users": 49,
+      "high": 148,
+      "good": 242,
+      "user_req": 2,
+      "flow_strength": 3.12
+    },
+    {
+      "req": 727,
+      "users": 50,
+      "high": 150,
+      "good": 244,
+      "user_req": 7,
+      "flow_strength": 4.74
+    },
+    {
+      "req": 729,
+      "users": 51,
+      "high": 150,
+      "good": 244,
+      "user_req": 2,
+      "flow_strength": 3.21
+    },
+    {
+      "req": 731,
+      "users": 52,
+      "high": 150,
+      "good": 244,
+      "user_req": 2,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 733,
+      "users": 53,
+      "high": 150,
+      "good": 244,
+      "user_req": 2,
+      "flow_strength": 6.38
+    },
+    {
+      "req": 735,
+      "users": 54,
+      "high": 150,
+      "good": 244,
+      "user_req": 2,
+      "flow_strength": 7.24
+    },
+    {
+      "req": 786,
+      "users": 55,
+      "high": 169,
+      "good": 266,
+      "user_req": 51,
+      "flow_strength": 3.36
+    },
+    {
+      "req": 841,
+      "users": 56,
+      "high": 184,
+      "good": 289,
+      "user_req": 55,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 843,
+      "users": 57,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 4.63
+    },
+    {
+      "req": 845,
+      "users": 58,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 4.4
+    },
+    {
+      "req": 847,
+      "users": 59,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 3.73
+    },
+    {
+      "req": 849,
+      "users": 60,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 851,
+      "users": 61,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 7.24
+    },
+    {
+      "req": 853,
+      "users": 62,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 3.65
+    },
+    {
+      "req": 855,
+      "users": 63,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 857,
+      "users": 64,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 4.4
+    },
+    {
+      "req": 860,
+      "users": 65,
+      "high": 184,
+      "good": 289,
+      "user_req": 3,
+      "flow_strength": 6.58
+    },
+    {
+      "req": 862,
+      "users": 66,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 3.73
+    },
+    {
+      "req": 864,
+      "users": 67,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 4.63
+    },
+    {
+      "req": 866,
+      "users": 68,
+      "high": 184,
+      "good": 289,
+      "user_req": 2,
+      "flow_strength": 6.58
+    },
+    {
+      "req": 892,
+      "users": 69,
+      "high": 187,
+      "good": 295,
+      "user_req": 26,
+      "flow_strength": 3.36
+    },
+    {
+      "req": 894,
+      "users": 70,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 896,
+      "users": 71,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 4.4
+    },
+    {
+      "req": 898,
+      "users": 72,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 3.73
+    },
+    {
+      "req": 900,
+      "users": 73,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 3.39
+    },
+    {
+      "req": 902,
+      "users": 74,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 4.63
+    },
+    {
+      "req": 904,
+      "users": 75,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 3.39
+    },
+    {
+      "req": 906,
+      "users": 76,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 3.81
+    },
+    {
+      "req": 908,
+      "users": 77,
+      "high": 187,
+      "good": 295,
+      "user_req": 2,
+      "flow_strength": 4.58
+    },
+    {
+      "req": 961,
+      "users": 78,
+      "high": 195,
+      "good": 308,
+      "user_req": 53,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 963,
+      "users": 79,
+      "high": 195,
+      "good": 308,
+      "user_req": 2,
+      "flow_strength": 3.42
+    },
+    {
+      "req": 965,
+      "users": 80,
+      "high": 195,
+      "good": 308,
+      "user_req": 2,
+      "flow_strength": 6.38
+    }
+  ],
+  "seeds": [
+    {
+      "bvid": "BV1ETfABHEqn",
+      "aid": 116115095166407,
+      "inflow": 2,
+      "cbi": 6.383,
+      "tier": "high",
+      "title": "明天见"
+    },
+    {
+      "bvid": "BV1tCuT6bE8q",
+      "aid": 117056280201593,
+      "inflow": 4.74,
+      "cbi": 4.741,
+      "tier": "high",
+      "title": "【同人动画】致以辉煌的人 【奥特曼光之创想季】"
+    },
+    {
+      "bvid": "BV1JGgX63Ekb",
+      "aid": 116987191628977,
+      "inflow": 3.36,
+      "cbi": 3.364,
+      "tier": "high",
+      "title": "“把女生钓成翘嘴的六万能公式”🎭︎"
+    },
+    {
+      "bvid": "BV1CB316PEBa",
+      "aid": 117003096492226,
+      "inflow": 3.42,
+      "cbi": 3.42,
+      "tier": "high",
+      "title": "【中文字幕】【天馬咲希 × 青柳冬弥 × 神代類 × 暁山瑞希 × KAITO】"
+    },
+    {
+      "bvid": "BV1tghw6AEPF",
+      "aid": 117166657571799,
+      "inflow": 3.73,
+      "cbi": 3.726,
+      "tier": "high",
+      "title": "夏天过完后，空调怎么清洁省钱又省力#空调 #空调清洁"
+    },
+    {
+      "bvid": "BV1hQM86bELa",
+      "aid": 116879767243526,
+      "inflow": 3.29,
+      "cbi": 3.289,
+      "tier": "high",
+      "title": "“人生大事莫过生死其他都不要紧”"
+    },
+    {
+      "bvid": "BV1ar4y1b7nK",
+      "aid": 769108721,
+      "inflow": 3.12,
+      "cbi": 3.119,
+      "tier": "high",
+      "title": "被封70天的我意外学会了如何制作卤肉饭"
+    },
+    {
+      "bvid": "BV1No4y1o7ac",
+      "aid": 373642744,
+      "inflow": 3.24,
+      "cbi": 3.237,
+      "tier": "high",
+      "title": "【合集】十分钟 机器学习 系列视频 《统计学习方法》——监督学习篇"
+    },
+    {
+      "bvid": "BV1UPg46DERG",
+      "aid": 116969659501321,
+      "inflow": 3.39,
+      "cbi": 3.388,
+      "tier": "high",
+      "title": "车和车相撞叫车祸"
+    },
+    {
+      "bvid": "BV1DBQnBBEmY",
+      "aid": 116408662955475,
+      "inflow": 6.58,
+      "cbi": 6.585,
+      "tier": "high",
+      "title": "【世界去死】せかいしね feat.歌愛ユキ【本家投稿】"
+    },
+    {
+      "bvid": "BV1tBKE6DEdD",
+      "aid": 116933269653162,
+      "inflow": 3.81,
+      "cbi": 3.805,
+      "tier": "high",
+      "title": "1985年春节前后拍的超清珍贵影像，真实呈现80年代中国的人间烟火，北京的胡同，"
+    },
+    {
+      "bvid": "BV16gK56WENc",
+      "aid": 116929696108876,
+      "inflow": 4.58,
+      "cbi": 4.582,
+      "tier": "high",
+      "title": "【自设/meme】OBH COMBI SASET"
+    },
+    {
+      "bvid": "BV1os421w738",
+      "aid": 1854872860,
+      "inflow": 5.5,
+      "cbi": 5.499,
+      "tier": "high",
+      "title": "【诗岸·原创】参考答案：略"
+    },
+    {
+      "bvid": "BV1SqBfB1EmK",
+      "aid": 115938682734697,
+      "inflow": 3.65,
+      "cbi": 3.652,
+      "tier": "high",
+      "title": "镂空文字效果"
+    },
+    {
+      "bvid": "BV1QzLc6bENS",
+      "aid": 116595292639521,
+      "inflow": 4.4,
+      "cbi": 4.402,
+      "tier": "high",
+      "title": "“竖起小指吧！”"
+    },
+    {
+      "bvid": "BV17Jta6oERJ",
+      "aid": 117190648928314,
+      "inflow": 3.21,
+      "cbi": 3.212,
+      "tier": "high",
+      "title": "歌赫娜主线拍摄花絮 （原作者：Crcat-H）"
+    },
+    {
+      "bvid": "BV1kKbf65Ezj",
+      "aid": 117124932569083,
+      "inflow": 4.63,
+      "cbi": 4.633,
+      "tier": "high",
+      "title": "一口气看完，原神1.0-7.0！从蒙德到至冬，原神用6年讲了什么？"
+    },
+    {
+      "bvid": "BV1Jk846WEmf",
+      "aid": 117143588832418,
+      "inflow": 7.24,
+      "cbi": 7.241,
+      "tier": "high",
+      "title": "【本家】バーンアウト - 初音ミク【カササギ】"
+    }
+  ]
+}
