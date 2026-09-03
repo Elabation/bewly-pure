@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-"""《墨流》v2 —— 严格按算法顺序的流动画
+"""《墨流》v3 —— 严格按算法顺序的流动画（2026-09-03 重采版）
 
-与 v1 的区别（Elabation 指正）：v1 是静态构图优先，看不出「跳」；
-v2 的构图 = 算法本身：同心环半径 = 流的跳数，动画时间线 = 数据生成顺序：
-  种子点亮 → 第一跳评论边(虚) → 用户亮 → 第一跳收藏边 → 视频显色 → 汇流脉冲
-  → 第二跳：汇流神作强脉冲 → 评论边(虚,另一色) → 新用户 → 新收藏边 → 新视频
-  → 判定面板（第一跳 25.9% → 第二跳 24.5%，拐点 1/3）。
-拓扑：data/fav_mine/.flowmap.json（95%/93% 覆盖率，restore_flowmap.py 恢复）。
-数据：E1 臂① + E3 flowE3 全部真实记录，无虚构。
+v2 → v3：数据源从旧库硬编码文件切换为重采自动发现（flow_h2_unbiased_summary /
+flow_h3_summary / favmine_flowH{2,3} 裁定链产物 / hop_verdict）；
+构图 = 算法本身：同心环半径 = 流的跳数，动画时间线 = 数据生成顺序。
+诚实注：本轮 flowmap（种子→评论者拓扑）记录缺陷，评论边仅部分入档。
 """
 import json
 import math
@@ -38,38 +35,43 @@ def polar(r, theta, jitter=0.0):
     return round(CX + r * math.cos(theta), 1), round(CY + r * math.sin(theta), 1)
 
 
+def _flow_raw(hop):
+    """该跳的裁定链产物（最旧优先——hop2 的工程链补跑时间戳更新）。"""
+    fs = sorted(f for f in os.listdir(MINE)
+                if f.startswith(f"favmine_flowH{hop}_") and f.endswith(".json"))
+    return json.load(open(os.path.join(MINE, fs[0]), encoding="utf-8")) if fs else {"users": [], "videos": []}
+
+
 def build_data():
     fm = json.load(open(os.path.join(MINE, ".flowmap.json"), encoding="utf-8"))
-    a1 = json.load(open(os.path.join(MINE, "favmine_20260902_222620.json"), encoding="utf-8"))
-    e3f = [f for f in os.listdir(MINE) if f.startswith("favmine_flowE3_")][0]
-    e3 = json.load(open(os.path.join(MINE, e3f), encoding="utf-8"))
+    s2 = json.load(open(os.path.join(MINE, "flow_h2_unbiased_summary.json"), encoding="utf-8"))
+    s3 = json.load(open(os.path.join(MINE, "flow_h3_summary.json"), encoding="utf-8"))
+    verdict = json.load(open(os.path.join(MINE, "hop_verdict.json"), encoding="utf-8"))
+    f2 = _flow_raw(2)
+    f3 = _flow_raw(3)
 
     def qual(videos):
         return [v for v in videos if (v.get("view") or 0) >= 3000]
 
-    v1_all = qual(a1.get("videos") or [])
-    v2_all = qual(e3.get("videos") or [])
-    # ── 第一跳布局 ──
-    hop1_map = fm["hop1"]          # seed_bvid -> [user_hash]
-    seeds1 = [s for s in hop1_map if hop1_map[s]]
-    user2seed = defaultdict(set)   # user -> seeds
-    for s, us in hop1_map.items():
-        for u in us:
-            user2seed[u].add(s)
-    u1_list = sorted(user2seed, key=lambda u: -len(user2seed[u]))
+    v1_all = qual(f2.get("videos") or [])
+    v2_all = qual(f3.get("videos") or [])
+    # ── 第一环布局：流第 2 跳（源 = 臂①收获神作；种子清单来自裁定链摘要，
+    #    评论边拓扑因 flowmap 缺陷仅部分入档——诚实注）──
+    seeds1 = [s["bvid"] for s in (s2.get("seeds") or [])]
+    seed_cbi = {s["bvid"]: s.get("cbi") or 0 for s in (s2.get("seeds") or [])}
     # 用户神作率（叙事顺序：高品味先亮）
     v1_by_user = defaultdict(list)
     for v in v1_all:
-        v1_by_user.get(v.get("from_user"), v1_by_user[v.get("from_user")]).append(v)
+        v1_by_user[v.get("from_user")].append(v)
     u1_rate = {u: sum(1 for v in vs if v["tier"] == "high") / len(vs)
                for u, vs in v1_by_user.items() if len(vs) >= 5}
-    u1_list = [u for u in u1_list if u in u1_rate]
-    u1_list.sort(key=lambda u: -u1_rate[u])
+    u1_list = sorted(u1_rate, key=lambda u: -u1_rate[u])
 
     nodes, edges = [], []
     for i, s in enumerate(seeds1):
         xx, yy = polar(R["seed"], i / len(seeds1) * 2 * math.pi - math.pi / 2)
-        nodes.append({"id": s, "hop": 1, "t": "seed", "x": xx, "y": yy, "r": 6})
+        nodes.append({"id": s, "hop": 1, "t": "seed", "x": xx, "y": yy, "r": 6,
+                      "c": round(seed_cbi.get(s, 0), 1)})
     for i, u in enumerate(u1_list):
         th = i / len(u1_list) * 2 * math.pi - math.pi / 2 + 0.02
         uxx, uyy = polar(R["u1"], th)
@@ -94,17 +96,13 @@ def build_data():
         for v in vs:
             if v["bvid"] in shown1:
                 edges.append({"s": u, "t": v["bvid"], "kind": "collect", "hop": 1, "tier": v["tier"]})
-    for s, us in hop1_map.items():
+    # 评论边：仅 flowmap 已入档者（本轮拓扑大部分缺失——诚实注见判定面板）
+    for s, us in (fm.get("hop2") or {}).items():
         for u in us:
             if u in u1_rate:
                 edges.append({"s": s, "t": u, "kind": "comment", "hop": 1})
-    # ── 第二跳 ──
-    hop2_map = fm["hop2"]
-    seeds2 = [s for s in hop2_map if hop2_map[s]]
-    u2seed = defaultdict(set)
-    for s, us in hop2_map.items():
-        for u in us:
-            u2seed[u].add(s)
+    # ── 第二环：流第 3 跳（种子 = 第 2 跳收获的神作）──
+    seeds2 = [s["bvid"] for s in (s3.get("seeds") or [])]
     v2_by_user = defaultdict(list)
     for v in v2_all:
         v2_by_user[v.get("from_user")].append(v)
@@ -140,17 +138,14 @@ def build_data():
         for v in vs:
             if v["bvid"] in shown2:
                 edges.append({"s": u, "t": v["bvid"], "kind": "collect", "hop": 2, "tier": v["tier"]})
-    for s, us in hop2_map.items():
-        for u in us:
-            if u in u2_rate:
-                edges.append({"s": s, "t": u, "kind": "comment", "hop": 2})
     mist = [{"x": round(CX + (random.random() - .5) * 2 * 470, 1),
              "y": round(CY + (random.random() - .5) * 2 * 640, 1)}
             for _ in (v1_all + v2_all)]
+    curve = [0.253] + [v["rate"] for v in (verdict.get("verdicts") or [])]
     return {"W": W, "H": H, "nodes": nodes, "edges": edges, "mist": mist,
             "meta": {"n_seed1": len(seeds1), "n_u1": len(u1_list), "n_seed2": len(seeds2),
-                     "n_u2": len(u2_list),
-                     "rate1": 0.259, "rate2": 0.245, "base": 0.059}}
+                     "n_u2": len(u2_list), "curve": curve,
+                     "base": 0.069, "final_hops": verdict.get("final_hops")}}
 
 
 TPL = """<!DOCTYPE html>
@@ -158,7 +153,7 @@ TPL = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>墨流 v2 · 按算法顺序流动</title>
+<title>墨流 v3 · 按算法顺序流动</title>
 <style>
   :root{--paper:#f7f5f0;--ink:#1c2430;--blue:#35507a;--gold:#b8912f;--silver:#5b7ba0;--faint:#8b94a3;--blue2:#7fa3d0}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -182,23 +177,24 @@ TPL = """<!DOCTYPE html>
 </head>
 <body>
 <div class="sceneTag" id="tag"></div>
-<h1>墨 流 v2</h1>
-<div class="sub">同心环 = 流的跳数 · 动画顺序 = 算法顺序 —— 全部数据来自 E1 臂① + E3 第二跳真实记录</div>
+<h1>墨 流 v3</h1>
+<div class="sub">同心环 = 流的跳数 · 动画顺序 = 算法顺序 —— 全部数据来自重采臂① → 流第2跳 → 流第3跳真实记录（无偏统计链）</div>
 <div id="stage"><svg id="svg" width="__W__" height="__H__" viewBox="0 0 __W__ __H__"></svg></div>
 <div class="bar">
   <button onclick="location.reload()">重 播</button>
-  <span style="color:var(--faint)">第一跳：神作评论区 → 用户 → 收藏　|　第二跳：汇流神作 → 新评论区 → 新用户 → 新收藏</span>
+  <span style="color:var(--faint)">环1：臂①收获神作 → 新评论区 → 收藏　|　环2：第三跳种子 → 新用户 → 新收藏（hop4 触发停流）</span>
 </div>
 <div class="legend">
   <span><span class="dot" style="background:var(--gold)"></span>神作≥3</span>
   <span><span class="dot" style="background:var(--silver)"></span>优秀≥2</span>
-  <span><span class="dot" style="background:var(--blue)"></span>第一跳用户</span>
-  <span><span class="dot" style="background:var(--blue2)"></span>第二跳用户</span>
-  <span>虚线=评论边　实线=收藏边　点的大小=汇流度</span>
+  <span><span class="dot" style="background:var(--blue)"></span>流2用户</span>
+  <span><span class="dot" style="background:var(--blue2)"></span>流3用户</span>
+  <span>实线=收藏边　点的大小=汇流度　（评论边拓扑因 flowmap 缺陷未完整入档，见判定面板诚实注）</span>
 </div>
 <div id="panel">
-  第一跳神作命中 <b>25.9%</b>（基线 5.9%，4.40×，p=2.5×10⁻⁶）→ 第二跳 <b>24.5%</b> —— 流过两跳几乎零衰减<br>
-  预算-产出拐点在 <b>1/3</b>：前 1/3 预算神作率 38.7%，边际趋近库均值即停流 —— 「流到哪流不动」的定量形态
+  第一层（臂①）神作命中 <b>25.3%</b> → 流2 <b>24.6%</b>（ρ=0.973）→ 流3 <b>29.6%</b>（ρ=1.203）→ 流4 21.6%（ρ=0.730，相对下滑 27% 停）<br>
+  基线（臂②）<b>6.9%</b>：E1 3.79×（p=3.0×10⁻⁶）· E2 1.49×（p=0.0128）—— 无偏裁定：<b>流 3 跳</b>，hop4 仍为基线 3.1×（衰减≠死亡）；浓度剪枝叙事撤回（工程链 0.57×）<br>
+  诚实注：评论边拓扑因 flowmap 记录缺陷未完整入档（代码已修，本轮不可恢复）；hop4 跌幅含贡献用户聚簇方差
 </div>
 <script>
 const D = __DATA__;
@@ -246,7 +242,7 @@ function build(){
   });
   svg.appendChild(gP);
 }
-const TAGS=[[0,'① 种子：CBI≥3 神作池'],[2.2,'② 第一跳：热评抓人（虚线=评论边）'],[5,'③ 第一跳：挖收藏夹（实线=收藏边）'],[8.6,'④ 汇流：被多人独立收藏的视频开始脉冲'],[9.6,'⑤ 第二跳：汇流神作 → 新评论区'],[13,'⑥ 第二跳：新用户的新收藏'],[17.5,'⑦ 判定：流过两跳，几乎零衰减']];
+const TAGS=[[0,'① 种子：臂①收获的汇流/补足神作'],[2.2,'② 流2：神作评论区抓人（虚线=评论边·已入档部分）'],[5,'③ 流2：挖收藏夹（实线=收藏边）'],[8.6,'④ 汇流：被多人独立收藏的视频开始脉冲'],[9.6,'⑤ 流3：新种子 → 新评论区'],[13,'⑥ 流3：新用户的新收藏'],[17.5,'⑦ 判定：无偏裁定 3 跳 —— hop4 相对下滑 27% 停流']];
 let ti=0;
 function tickTag(){
   const t=(performance.now()-t0)/1000;
