@@ -184,6 +184,20 @@ def main():
     users, videos = [], []
     curve = []          # 预算-产出曲线: {req, users, high, good, cbi_sum, cbi_n}
     n_high = n_good = 0
+    no_folder_streak = 0  # 风控熔断计数（与 fav_miner 同判据：连续 15 用户无夹）
+    # 落盘路径前置 + 检查点增量落盘（2026-09-03 交接修复：熔断/中断不再丢整跳数据）
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    path = os.path.join(MINE_DIR, f"favmine_flowH{args.hop}_{stamp}.json")
+
+    def dump_now(partial: bool):
+        json.dump({"meta": {"mined_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+                            "users": len(users), "videos": len(videos),
+                            "arm": f"flow_hop{args.hop}", "hop": args.hop,
+                            "seeds": god_meta, "anon_requests": req, "partial": partial,
+                            "privacy": "同 fav_miner；主号仅评论区抓取"},
+                   "users": users, "videos": videos},
+                  open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        json.dump(mid2hash, open(os.path.join(MINE_DIR, ".mid2hash.json"), "w", encoding="utf-8"))
     for ui, (mid, strength) in enumerate(mids, 1):
         anon = mid2hash.get(str(mid)) or anon_mid(mid)
         mid2hash[str(mid)] = anon
@@ -252,11 +266,21 @@ def main():
             got += 1
             if got >= 3:
                 break
+        if not got:
+            no_folder_streak += 1
+            if no_folder_streak >= 50:
+                print(f"[FUSE] 连续 {no_folder_streak} 用户无公开收藏夹——疑似 IP 风控封堵"
+                      f"或候选池枯竭（两者签名相同），中止本跳（已落盘至最近检查点），"
+                      f"fail-fast 不产出假衰减裁定", flush=True)
+                sys.exit(3)
+        else:
+            no_folder_streak = 0
         curve.append({"req": req, "users": ui, "high": n_high, "good": n_good,
                       "user_req": req - u_req0, "flow_strength": strength})
         if ui % 20 == 0:
+            dump_now(True)
             rate = n_high / max(1, sum(1 for v2 in videos if (v2.get("view") or 0) >= 3000))
-            print(f"[progress] 用户 {ui}  请求 {req}  神作 {n_high}（合格神作率 {rate:.3f}）")
+            print(f"[progress] 用户 {ui}  请求 {req}  神作 {n_high}（合格神作率 {rate:.3f}）[checkpoint]")
 
     # ── 5b) 随机探针（对照组）：被剪候选随机样本，同跳挖掘，单独统计 ──
     probe_req = 0
@@ -318,16 +342,8 @@ def main():
             if pi % 10 == 0:
                 print(f"[probe] {pi}/{len(probe_mids)}", flush=True)
 
-    # ── 6) 落盘（immutable 原始文件 + E3 分析产物）──
-    stamp = time.strftime("%Y%m%d_%H%M%S")
-    path = os.path.join(MINE_DIR, f"favmine_flowH{args.hop}_{stamp}.json")
-    json.dump({"meta": {"mined_at": time.strftime("%Y-%m-%d %H:%M:%S"), "users": len(users),
-                        "videos": len(videos), f"arm": "flow_hop{args.hop}", "hop": args.hop,
-                        "seeds": god_meta, "anon_requests": req,
-                        "privacy": "同 fav_miner；主号仅评论区抓取"},
-               "users": users, "videos": videos},
-              open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
-    json.dump(mid2hash, open(os.path.join(MINE_DIR, ".mid2hash.json"), "w", encoding="utf-8"))
+    # ── 6) 落盘（immutable 原始文件 + E3 分析产物；检查点转正档）──
+    dump_now(False)
     # 种子→用户映射旁证（可恢复流拓扑；2026-09-02 教训：缺失导致动画/分析无法回溯评论边）
     fm_path = os.path.join(MINE_DIR, ".flowmap.json")
     flowmap = json.load(open(fm_path, encoding="utf-8")) if os.path.exists(fm_path) else {}
