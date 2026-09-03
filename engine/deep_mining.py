@@ -208,7 +208,8 @@ def main():
 
 
 def latest_merged():
-    fs = sorted(glob.glob(os.path.join(MINE, "favmine_merged_*.json")), key=os.path.getmtime)
+    fs = sorted((f for f in glob.glob(os.path.join(MINE, "favmine_merged_*.json"))
+                 if "_analysis" not in os.path.basename(f)), key=os.path.getmtime)
     return fs[-1] if fs else None
 
 
