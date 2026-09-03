@@ -1,0 +1,765 @@
+{
+  "meta": {
+    "mined_at": "",
+    "users": 223,
+    "n": 8124,
+    "tier_scale": "normal>=1 / good>=2 / high(神)>=3"
+  },
+  "overall": {
+    "n": 8124,
+    "high": 1622,
+    "high_rate": 0.2,
+    "good_rate": 0.353,
+    "avg_cbi": 2.012
+  },
+  "control": {
+    "n": 166,
+    "high_rate": 0.127,
+    "good_rate": 0.247,
+    "avg_cbi": 1.58,
+    "year_dist": {
+      "2026": 166
+    },
+    "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"
+  },
+  "old_vs_new": {
+    "cutoff": "5 年",
+    "old": {
+      "n": 898,
+      "high_rate": 0.12,
+      "good_rate": 0.245,
+      "avg_cbi": 1.543
+    },
+    "new": {
+      "n": 7226,
+      "high_rate": 0.21,
+      "good_rate": 0.366,
+      "avg_cbi": 2.07
+    }
+  },
+  "by_year": [
+    {
+      "year": "2009",
+      "n": 12,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.945
+    },
+    {
+      "year": "2010",
+      "n": 6,
+      "high": 1,
+      "high_rate": 0.167,
+      "good": 3,
+      "good_rate": 0.5,
+      "avg_cbi": 2.436
+    },
+    {
+      "year": "2011",
+      "n": 5,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 1,
+      "good_rate": 0.2,
+      "avg_cbi": 1.747
+    },
+    {
+      "year": "2012",
+      "n": 7,
+      "high": 2,
+      "high_rate": 0.286,
+      "good": 4,
+      "good_rate": 0.571,
+      "avg_cbi": 2.424
+    },
+    {
+      "year": "2013",
+      "n": 5,
+      "high": 1,
+      "high_rate": 0.2,
+      "good": 3,
+      "good_rate": 0.6,
+      "avg_cbi": 2.196
+    },
+    {
+      "year": "2014",
+      "n": 3,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 1,
+      "good_rate": 0.333,
+      "avg_cbi": 1.629
+    },
+    {
+      "year": "2015",
+      "n": 12,
+      "high": 1,
+      "high_rate": 0.083,
+      "good": 2,
+      "good_rate": 0.167,
+      "avg_cbi": 1.536
+    },
+    {
+      "year": "2016",
+      "n": 14,
+      "high": 1,
+      "high_rate": 0.071,
+      "good": 3,
+      "good_rate": 0.214,
+      "avg_cbi": 1.489
+    },
+    {
+      "year": "2017",
+      "n": 53,
+      "high": 2,
+      "high_rate": 0.038,
+      "good": 6,
+      "good_rate": 0.113,
+      "avg_cbi": 1.086
+    },
+    {
+      "year": "2018",
+      "n": 73,
+      "high": 8,
+      "high_rate": 0.11,
+      "good": 14,
+      "good_rate": 0.192,
+      "avg_cbi": 1.404
+    },
+    {
+      "year": "2019",
+      "n": 203,
+      "high": 23,
+      "high_rate": 0.113,
+      "good": 53,
+      "good_rate": 0.261,
+      "avg_cbi": 1.584
+    },
+    {
+      "year": "2020",
+      "n": 260,
+      "high": 36,
+      "high_rate": 0.138,
+      "good": 74,
+      "good_rate": 0.285,
+      "avg_cbi": 1.666
+    },
+    {
+      "year": "2021",
+      "n": 345,
+      "high": 41,
+      "high_rate": 0.119,
+      "good": 76,
+      "good_rate": 0.22,
+      "avg_cbi": 1.467
+    },
+    {
+      "year": "2022",
+      "n": 516,
+      "high": 64,
+      "high_rate": 0.124,
+      "good": 139,
+      "good_rate": 0.269,
+      "avg_cbi": 1.592
+    },
+    {
+      "year": "2023",
+      "n": 570,
+      "high": 77,
+      "high_rate": 0.135,
+      "good": 172,
+      "good_rate": 0.302,
+      "avg_cbi": 1.692
+    },
+    {
+      "year": "2024",
+      "n": 790,
+      "high": 135,
+      "high_rate": 0.171,
+      "good": 269,
+      "good_rate": 0.341,
+      "avg_cbi": 1.881
+    },
+    {
+      "year": "2025",
+      "n": 1361,
+      "high": 275,
+      "high_rate": 0.202,
+      "good": 510,
+      "good_rate": 0.375,
+      "avg_cbi": 2.038
+    },
+    {
+      "year": "2026",
+      "n": 3889,
+      "high": 955,
+      "high_rate": 0.246,
+      "good": 1534,
+      "good_rate": 0.394,
+      "avg_cbi": 2.256
+    }
+  ],
+  "folders": [
+    {
+      "user_hash": "711d2bdb90",
+      "n": 5,
+      "good_rate": 1.0,
+      "avg_cbi": 3.935
+    },
+    {
+      "user_hash": "eacf7c87c8",
+      "n": 14,
+      "good_rate": 0.929,
+      "avg_cbi": 5.392
+    },
+    {
+      "user_hash": "309f069677",
+      "n": 14,
+      "good_rate": 0.929,
+      "avg_cbi": 5.431
+    },
+    {
+      "user_hash": "ae6cc2bf89",
+      "n": 45,
+      "good_rate": 0.822,
+      "avg_cbi": 3.693
+    },
+    {
+      "user_hash": "131d8ffdb5",
+      "n": 10,
+      "good_rate": 0.8,
+      "avg_cbi": 3.924
+    },
+    {
+      "user_hash": "82558c0349",
+      "n": 15,
+      "good_rate": 0.8,
+      "avg_cbi": 3.403
+    },
+    {
+      "user_hash": "72e97536de",
+      "n": 44,
+      "good_rate": 0.795,
+      "avg_cbi": 3.485
+    },
+    {
+      "user_hash": "8dd2c98ac5",
+      "n": 37,
+      "good_rate": 0.784,
+      "avg_cbi": 3.918
+    },
+    {
+      "user_hash": "67297f1dd0",
+      "n": 9,
+      "good_rate": 0.778,
+      "avg_cbi": 2.799
+    },
+    {
+      "user_hash": "f9e0b56338",
+      "n": 17,
+      "good_rate": 0.765,
+      "avg_cbi": 2.666
+    },
+    {
+      "user_hash": "0b869765d8",
+      "n": 17,
+      "good_rate": 0.765,
+      "avg_cbi": 3.508
+    },
+    {
+      "user_hash": "75759a85a4",
+      "n": 37,
+      "good_rate": 0.757,
+      "avg_cbi": 4.005
+    },
+    {
+      "user_hash": "24bebe9f27",
+      "n": 30,
+      "good_rate": 0.733,
+      "avg_cbi": 3.557
+    },
+    {
+      "user_hash": "b02f84bc72",
+      "n": 30,
+      "good_rate": 0.733,
+      "avg_cbi": 3.342
+    },
+    {
+      "user_hash": "487ae24d49",
+      "n": 22,
+      "good_rate": 0.727,
+      "avg_cbi": 3.345
+    }
+  ],
+  "stars": [
+    {
+      "bvid": "BV1Q5bX6yEXX",
+      "title": "各学校的教育局举报电话",
+      "tname": "?",
+      "pubdate": 1786887133,
+      "year": "2026",
+      "view": 269260,
+      "f7": 1.5146,
+      "cbi": 22.87,
+      "tier": "high",
+      "duration": 12,
+      "stat": {
+        "view": 269260,
+        "danmaku": 386,
+        "reply": 1846,
+        "favorite": 123859,
+        "coin": 3016,
+        "share": 10583,
+        "like": 100700
+      },
+      "from_user": "5df4d34ca3",
+      "folder": "默认收藏夹",
+      "up": "e964ec3623"
+    },
+    {
+      "bvid": "BV1hJVY61Enx",
+      "title": "Solar5 琳奈-‘Round n Round’ M/V【鸣潮生日会】",
+      "tname": "?",
+      "pubdate": 1780137637,
+      "year": "2026",
+      "view": 1283419,
+      "f7": 1.5644,
+      "cbi": 21.969,
+      "tier": "high",
+      "duration": 116,
+      "stat": {
+        "view": 1283419,
+        "danmaku": 17285,
+        "reply": 5273,
+        "favorite": 263557,
+        "coin": 556780,
+        "share": 21413,
+        "like": 345372
+      },
+      "from_user": "6445b9d211",
+      "folder": "默认收藏夹",
+      "up": "4f9f48dff6"
+    },
+    {
+      "bvid": "BV1qjgn6EEmB",
+      "title": "速成法教会你侦察实操",
+      "tname": "?",
+      "pubdate": 1786626720,
+      "year": "2026",
+      "view": 482918,
+      "f7": 1.0525,
+      "cbi": 18.788,
+      "tier": "high",
+      "duration": 86,
+      "stat": {
+        "view": 482918,
+        "danmaku": 364,
+        "reply": 1019,
+        "favorite": 150447,
+        "coin": 8243,
+        "share": 2931,
+        "like": 134879
+      },
+      "from_user": "c811dbaf89",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1Ti421C79r",
+      "title": "不会打光的进来吃细糠！",
+      "tname": "?",
+      "pubdate": 1715425723,
+      "year": "2024",
+      "view": 486894,
+      "f7": 1.0239,
+      "cbi": 18.3,
+      "tier": "high",
+      "duration": 18,
+      "stat": {
+        "view": 486894,
+        "danmaku": 154,
+        "reply": 476,
+        "favorite": 146819,
+        "coin": 7801,
+        "share": 2046,
+        "like": 141624
+      },
+      "from_user": "874933f220",
+      "folder": "绘画素材",
+      "up": "f74d19b2e2"
+    },
+    {
+      "bvid": "BV1nnKp6SEJx",
+      "title": "绘画参考|背景参考|溶图素材",
+      "tname": "?",
+      "pubdate": 1784549760,
+      "year": "2026",
+      "view": 143742,
+      "f7": 1.4563,
+      "cbi": 16.783,
+      "tier": "high",
+      "duration": 20,
+      "stat": {
+        "view": 143742,
+        "danmaku": 63,
+        "reply": 128,
+        "favorite": 62308,
+        "coin": 2552,
+        "share": 1175,
+        "like": 57693
+      },
+      "from_user": "8dd2c98ac5",
+      "folder": "绘画"
+    },
+    {
+      "bvid": "BV1wb8C6MEEm",
+      "title": "【自存/要电脑！！！】花一点时间整个皮套逗自己开心（live2d教程）",
+      "tname": "?",
+      "pubdate": 1787371873,
+      "year": "2026",
+      "view": 292605,
+      "f7": 1.0536,
+      "cbi": 16.654,
+      "tier": "high",
+      "duration": 795,
+      "stat": {
+        "view": 292605,
+        "danmaku": 170,
+        "reply": 584,
+        "favorite": 89490,
+        "coin": 8828,
+        "share": 2771,
+        "like": 73874
+      },
+      "from_user": "e834d944ac",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1oSQZBREoK",
+      "title": "摄影审美提升 ‖ 摄影师Harrison Pérez——《MOON》",
+      "tname": "?",
+      "pubdate": 1774258534,
+      "year": "2026",
+      "view": 431913,
+      "f7": 0.8912,
+      "cbi": 15.637,
+      "tier": "high",
+      "duration": 58,
+      "stat": {
+        "view": 431913,
+        "danmaku": 1061,
+        "reply": 2381,
+        "favorite": 94627,
+        "coin": 19065,
+        "share": 4736,
+        "like": 209705
+      },
+      "from_user": "17a637e998",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1SC3k6AEyu",
+      "title": "宿命天成命中败，仙尊悔而我不悔！伍链表示接，加油！",
+      "tname": "?",
+      "pubdate": 1785290427,
+      "year": "2026",
+      "view": 276506,
+      "f7": 1.0191,
+      "cbi": 15.611,
+      "tier": "high",
+      "duration": 12,
+      "stat": {
+        "view": 276506,
+        "danmaku": 11760,
+        "reply": 14047,
+        "favorite": 65101,
+        "coin": 14673,
+        "share": 224,
+        "like": 190450
+      },
+      "from_user": "34a7710417",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1718s6CEL7",
+      "title": "那还说啥了直接电。",
+      "tname": "?",
+      "pubdate": 1787456085,
+      "year": "2026",
+      "view": 218247,
+      "f7": 1.1231,
+      "cbi": 15.587,
+      "tier": "high",
+      "duration": 22,
+      "stat": {
+        "view": 218247,
+        "danmaku": 143,
+        "reply": 359,
+        "favorite": 72618,
+        "coin": 2268,
+        "share": 2102,
+        "like": 75775
+      },
+      "from_user": "67ea2cfd67",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1TTdBBtEtt",
+      "title": "青年大学习初入社会学校不教，但你要会的53个技能",
+      "tname": "?",
+      "pubdate": 1776427800,
+      "year": "2026",
+      "view": 2358604,
+      "f7": 1.2412,
+      "cbi": 14.887,
+      "tier": "high",
+      "duration": 6907,
+      "stat": {
+        "view": 2358604,
+        "danmaku": 1652,
+        "reply": 3002,
+        "favorite": 815051,
+        "coin": 167836,
+        "share": 36858,
+        "like": 489257
+      },
+      "from_user": "e2844282bb",
+      "folder": "草"
+    },
+    {
+      "bvid": "BV13M4m1D7eL",
+      "title": "关于手的究极理解（大概）一个视频教你理解手~",
+      "tname": "?",
+      "pubdate": 1712989466,
+      "year": "2024",
+      "view": 591584,
+      "f7": 0.7906,
+      "cbi": 13.784,
+      "tier": "high",
+      "duration": 80,
+      "stat": {
+        "view": 591584,
+        "danmaku": 250,
+        "reply": 576,
+        "favorite": 123967,
+        "coin": 24836,
+        "share": 4486,
+        "like": 153816
+      },
+      "from_user": "434dc509dc",
+      "folder": "美术"
+    },
+    {
+      "bvid": "BV1hj7W6hEEg",
+      "title": "【新v不怕死挑战】当我决定给每个人手写一封情书...?",
+      "tname": "?",
+      "pubdate": 1782633600,
+      "year": "2026",
+      "view": 351124,
+      "f7": 0.8128,
+      "cbi": 13.723,
+      "tier": "high",
+      "duration": 43,
+      "stat": {
+        "view": 351124,
+        "danmaku": 501,
+        "reply": 25730,
+        "favorite": 39746,
+        "coin": 70912,
+        "share": 1128,
+        "like": 81075
+      },
+      "from_user": "309f069677",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1uF7s6wEmX",
+      "title": "罗蕾莱 / Low Cortisol FUNK【少女前线2：追放MMD】",
+      "tname": "?",
+      "pubdate": 1782567223,
+      "year": "2026",
+      "view": 491564,
+      "f7": 0.7478,
+      "cbi": 13.385,
+      "tier": "high",
+      "duration": 19,
+      "stat": {
+        "view": 491564,
+        "danmaku": 355,
+        "reply": 1498,
+        "favorite": 104632,
+        "coin": 4570,
+        "share": 4915,
+        "like": 148477
+      },
+      "from_user": "309f069677",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1eKu46xEW8",
+      "title": "⚡️赛博开箱⚡️ 【B站AI创造公开赛】",
+      "tname": "?",
+      "pubdate": 1786084406,
+      "year": "2026",
+      "view": 518826,
+      "f7": 0.7107,
+      "cbi": 12.681,
+      "tier": "high",
+      "duration": 69,
+      "stat": {
+        "view": 518826,
+        "danmaku": 291,
+        "reply": 2021,
+        "favorite": 32766,
+        "coin": 123026,
+        "share": 546,
+        "like": 81305
+      },
+      "from_user": "ccad9fa518",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1fWh365EjU",
+      "title": "新手学电脑，从认识键盘功能开始",
+      "tname": "?",
+      "pubdate": 1787626644,
+      "year": "2026",
+      "view": 67194,
+      "f7": 1.5031,
+      "cbi": 12.305,
+      "tier": "high",
+      "duration": 19,
+      "stat": {
+        "view": 67194,
+        "danmaku": 13,
+        "reply": 245,
+        "favorite": 31115,
+        "coin": 559,
+        "share": 495,
+        "like": 21791
+      },
+      "from_user": "eacf7c87c8",
+      "folder": "默认收藏夹",
+      "up": "a95ac7f03c"
+    },
+    {
+      "bvid": "BV1jtREBEEL5",
+      "title": "——  那么 这趟列车的下一站又会是哪里呢",
+      "tname": "?",
+      "pubdate": 1777714249,
+      "year": "2026",
+      "view": 531784,
+      "f7": 0.6899,
+      "cbi": 12.256,
+      "tier": "high",
+      "duration": 88,
+      "stat": {
+        "view": 531784,
+        "danmaku": 663,
+        "reply": 1226,
+        "favorite": 72965,
+        "coin": 48000,
+        "share": 5904,
+        "like": 173305
+      },
+      "from_user": "b8d56e0543",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1GtfzBCE3d",
+      "title": "收下吧我的毕生所学",
+      "tname": "?",
+      "pubdate": 1771851028,
+      "year": "2026",
+      "view": 238201,
+      "f7": 0.8511,
+      "cbi": 12.164,
+      "tier": "high",
+      "duration": 127,
+      "stat": {
+        "view": 238201,
+        "danmaku": 55,
+        "reply": 229,
+        "favorite": 56175,
+        "coin": 8747,
+        "share": 963,
+        "like": 55714
+      },
+      "from_user": "5d4a9a1bb6",
+      "folder": "画",
+      "up": "2f349fe002"
+    },
+    {
+      "bvid": "BV1q2P3zsEvo",
+      "title": "「原创电子音乐」- The final Landscape…",
+      "tname": "?",
+      "pubdate": 1772389305,
+      "year": "2026",
+      "view": 664419,
+      "f7": 0.7077,
+      "cbi": 12.034,
+      "tier": "high",
+      "duration": 183,
+      "stat": {
+        "view": 664419,
+        "danmaku": 530,
+        "reply": 2288,
+        "favorite": 126386,
+        "coin": 21209,
+        "share": 3545,
+        "like": 162044
+      },
+      "from_user": "9ab8909843",
+      "folder": "洗涤私の耳朵"
+    },
+    {
+      "bvid": "BV1LThM6bEvr",
+      "title": "PLC天阶功法丨一个视频免费带你从0到1学会PLC，60小时速通PLC编程，项目案例讲解学完即就业！",
+      "tname": "?",
+      "pubdate": 1787593914,
+      "year": "2026",
+      "view": 361293,
+      "f7": 0.7061,
+      "cbi": 11.992,
+      "tier": "high",
+      "duration": 8515,
+      "stat": {
+        "view": 361293,
+        "danmaku": 320,
+        "reply": 1065,
+        "favorite": 71835,
+        "coin": 9974,
+        "share": 4132,
+        "like": 65502
+      },
+      "from_user": "eacf7c87c8",
+      "folder": "默认收藏夹",
+      "up": "ae480c64f9"
+    },
+    {
+      "bvid": "BV1td6oBkEmw",
+      "title": "办公常用快捷键，拿走不谢！",
+      "tname": "?",
+      "pubdate": 1768139958,
+      "year": "2026",
+      "view": 512041,
+      "f7": 0.6701,
+      "cbi": 11.985,
+      "tier": "high",
+      "duration": 17,
+      "stat": {
+        "view": 512041,
+        "danmaku": 36,
+        "reply": 161,
+        "favorite": 105667,
+        "coin": 5268,
+        "share": 3104,
+        "like": 51968
+      },
+      "from_user": "93bebb7837",
+      "folder": "默认收藏夹",
+      "up": "99e852fed4"
+    }
+  ]
+}
