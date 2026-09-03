@@ -1,0 +1,722 @@
+{
+  "meta": {
+    "mined_at": "2026-09-03 02:02:02",
+    "users": 48,
+    "n": 691,
+    "tier_scale": "normal>=1 / good>=2 / high(神)>=3"
+  },
+  "overall": {
+    "n": 691,
+    "high": 43,
+    "high_rate": 0.062,
+    "good_rate": 0.168,
+    "avg_cbi": 1.226
+  },
+  "control": {
+    "n": 166,
+    "high_rate": 0.127,
+    "good_rate": 0.247,
+    "avg_cbi": 1.58,
+    "year_dist": {
+      "2026": 166
+    },
+    "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"
+  },
+  "old_vs_new": {
+    "cutoff": "5 年",
+    "old": {
+      "n": 213,
+      "high_rate": 0.023,
+      "good_rate": 0.075,
+      "avg_cbi": 1.017
+    },
+    "new": {
+      "n": 478,
+      "high_rate": 0.079,
+      "good_rate": 0.209,
+      "avg_cbi": 1.319
+    }
+  },
+  "by_year": [
+    {
+      "year": "2011",
+      "n": 1,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.852
+    },
+    {
+      "year": "2013",
+      "n": 1,
+      "high": 1,
+      "high_rate": 1.0,
+      "good": 1,
+      "good_rate": 1.0,
+      "avg_cbi": 3.891
+    },
+    {
+      "year": "2015",
+      "n": 2,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.662
+    },
+    {
+      "year": "2016",
+      "n": 3,
+      "high": 1,
+      "high_rate": 0.333,
+      "good": 1,
+      "good_rate": 0.333,
+      "avg_cbi": 1.942
+    },
+    {
+      "year": "2017",
+      "n": 7,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.986
+    },
+    {
+      "year": "2018",
+      "n": 13,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.908
+    },
+    {
+      "year": "2019",
+      "n": 88,
+      "high": 2,
+      "high_rate": 0.023,
+      "good": 11,
+      "good_rate": 0.125,
+      "avg_cbi": 1.084
+    },
+    {
+      "year": "2020",
+      "n": 52,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 2,
+      "good_rate": 0.038,
+      "avg_cbi": 0.987
+    },
+    {
+      "year": "2021",
+      "n": 71,
+      "high": 1,
+      "high_rate": 0.014,
+      "good": 2,
+      "good_rate": 0.028,
+      "avg_cbi": 0.776
+    },
+    {
+      "year": "2022",
+      "n": 46,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 3,
+      "good_rate": 0.065,
+      "avg_cbi": 0.648
+    },
+    {
+      "year": "2023",
+      "n": 70,
+      "high": 4,
+      "high_rate": 0.057,
+      "good": 14,
+      "good_rate": 0.2,
+      "avg_cbi": 1.323
+    },
+    {
+      "year": "2024",
+      "n": 72,
+      "high": 3,
+      "high_rate": 0.042,
+      "good": 12,
+      "good_rate": 0.167,
+      "avg_cbi": 1.226
+    },
+    {
+      "year": "2025",
+      "n": 136,
+      "high": 11,
+      "high_rate": 0.081,
+      "good": 40,
+      "good_rate": 0.294,
+      "avg_cbi": 1.507
+    },
+    {
+      "year": "2026",
+      "n": 129,
+      "high": 20,
+      "high_rate": 0.155,
+      "good": 30,
+      "good_rate": 0.233,
+      "avg_cbi": 1.542
+    }
+  ],
+  "folders": [
+    {
+      "user_hash": "5184b2c44f",
+      "n": 27,
+      "good_rate": 0.444,
+      "avg_cbi": 2.038
+    },
+    {
+      "user_hash": "ae6f971cfb",
+      "n": 33,
+      "good_rate": 0.424,
+      "avg_cbi": 1.913
+    },
+    {
+      "user_hash": "c8a221e803",
+      "n": 48,
+      "good_rate": 0.396,
+      "avg_cbi": 2.137
+    },
+    {
+      "user_hash": "5687d6d605",
+      "n": 49,
+      "good_rate": 0.306,
+      "avg_cbi": 1.762
+    },
+    {
+      "user_hash": "12fdfc0813",
+      "n": 48,
+      "good_rate": 0.271,
+      "avg_cbi": 1.444
+    },
+    {
+      "user_hash": "543a86dc6c",
+      "n": 46,
+      "good_rate": 0.239,
+      "avg_cbi": 1.637
+    },
+    {
+      "user_hash": "7d554dae4f",
+      "n": 41,
+      "good_rate": 0.171,
+      "avg_cbi": 0.964
+    },
+    {
+      "user_hash": "e8996ae1af",
+      "n": 40,
+      "good_rate": 0.125,
+      "avg_cbi": 1.146
+    },
+    {
+      "user_hash": "2d96cdbcbb",
+      "n": 49,
+      "good_rate": 0.122,
+      "avg_cbi": 1.367
+    },
+    {
+      "user_hash": "73dfb167a8",
+      "n": 49,
+      "good_rate": 0.122,
+      "avg_cbi": 1.202
+    },
+    {
+      "user_hash": "16b4a8aa1b",
+      "n": 10,
+      "good_rate": 0.1,
+      "avg_cbi": 1.165
+    },
+    {
+      "user_hash": "812949a3be",
+      "n": 51,
+      "good_rate": 0.078,
+      "avg_cbi": 1.004
+    },
+    {
+      "user_hash": "d6df88f929",
+      "n": 28,
+      "good_rate": 0.071,
+      "avg_cbi": 1.031
+    },
+    {
+      "user_hash": "8ef0590b80",
+      "n": 51,
+      "good_rate": 0.02,
+      "avg_cbi": 0.569
+    },
+    {
+      "user_hash": "039ed56a4c",
+      "n": 17,
+      "good_rate": 0.0,
+      "avg_cbi": 0.311
+    }
+  ],
+  "stars": [
+    {
+      "bvid": "BV1uKQwBUEcG",
+      "title": "所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は",
+      "tname": "?",
+      "pubdate": 1775824160,
+      "year": "2026",
+      "view": 367355,
+      "f7": 0.656,
+      "cbi": 11.18,
+      "tier": "high",
+      "duration": 169,
+      "stat": {
+        "view": 367355,
+        "danmaku": 579,
+        "reply": 1464,
+        "favorite": 46675,
+        "coin": 33725,
+        "share": 4620,
+        "like": 111716
+      },
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1No4FzbEk8",
+      "title": "「蔚蓝档案/MMT」《大乱之后》（日富美篇-1）",
+      "tname": "?",
+      "pubdate": 1760181238,
+      "year": "2025",
+      "view": 89609,
+      "f7": 0.6302,
+      "cbi": 5.712,
+      "tier": "high",
+      "duration": 136,
+      "stat": {
+        "view": 89609,
+        "danmaku": 71,
+        "reply": 297,
+        "favorite": 15906,
+        "coin": 583,
+        "share": 274,
+        "like": 25283
+      },
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1ZANreSEfM",
+      "title": "这种金属拉丝效果怎么做？ps10秒搞定",
+      "tname": "?",
+      "pubdate": 1739276972,
+      "year": "2025",
+      "view": 705599,
+      "f7": 0.3293,
+      "cbi": 5.511,
+      "tier": "high",
+      "duration": 55,
+      "stat": {
+        "view": 705599,
+        "danmaku": 176,
+        "reply": 660,
+        "favorite": 65649,
+        "coin": 2950,
+        "share": 1090,
+        "like": 98344
+      },
+      "from_user": "12fdfc0813",
+      "folder": "素材"
+    },
+    {
+      "bvid": "BV1hu4m1N74H",
+      "title": "香蕉♂机长【1—7集】",
+      "tname": "?",
+      "pubdate": 1707477931,
+      "year": "2024",
+      "view": 543850,
+      "f7": 0.3018,
+      "cbi": 5.34,
+      "tier": "high",
+      "duration": 1346,
+      "stat": {
+        "view": 543850,
+        "danmaku": 3691,
+        "reply": 1205,
+        "favorite": 42654,
+        "coin": 11147,
+        "share": 20387,
+        "like": 46301
+      },
+      "from_user": "5687d6d605",
+      "folder": "笑死我了"
+    },
+    {
+      "bvid": "BV1pHZaBrEqW",
+      "title": "【Blender插件】二次元一键渲染助手插件公开配布！任何模型任何渲染都可以适配！轻松解决二创入门问题",
+      "tname": "?",
+      "pubdate": 1771491600,
+      "year": "2026",
+      "view": 73932,
+      "f7": 0.6028,
+      "cbi": 5.096,
+      "tier": "high",
+      "duration": 530,
+      "stat": {
+        "view": 73932,
+        "danmaku": 63,
+        "reply": 204,
+        "favorite": 12768,
+        "coin": 2008,
+        "share": 323,
+        "like": 7486
+      },
+      "from_user": "543a86dc6c",
+      "folder": "blender"
+    },
+    {
+      "bvid": "BV1Ve8jzFEA1",
+      "title": "你可以支持一下小地球吗",
+      "tname": "?",
+      "pubdate": 1753693818,
+      "year": "2025",
+      "view": 816080,
+      "f7": 0.3124,
+      "cbi": 5.026,
+      "tier": "high",
+      "duration": 66,
+      "stat": {
+        "view": 816080,
+        "danmaku": 294,
+        "reply": 121,
+        "favorite": 76426,
+        "coin": 8065,
+        "share": 19,
+        "like": 31837
+      },
+      "from_user": "7d554dae4f",
+      "folder": "GPT声音克隆"
+    },
+    {
+      "bvid": "BV1MStP6YEsz",
+      "title": "“这是最后一舞了……”",
+      "tname": "?",
+      "pubdate": 1787931838,
+      "year": "2026",
+      "view": 59865,
+      "f7": 0.6301,
+      "cbi": 4.936,
+      "tier": "high",
+      "duration": 34,
+      "stat": {
+        "view": 59865,
+        "danmaku": 369,
+        "reply": 319,
+        "favorite": 11381,
+        "coin": 87,
+        "share": 401,
+        "like": 11343
+      },
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1Htp3zVEXy",
+      "title": "【新人必看】如何快速提升b站等级",
+      "tname": "?",
+      "pubdate": 1757675695,
+      "year": "2025",
+      "view": 261688,
+      "f7": 0.3303,
+      "cbi": 4.912,
+      "tier": "high",
+      "duration": 94,
+      "stat": {
+        "view": 261688,
+        "danmaku": 8749,
+        "reply": 7564,
+        "favorite": 5952,
+        "coin": 30558,
+        "share": 9451,
+        "like": 24862
+      },
+      "from_user": "16b4a8aa1b",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV1H666BUEu9",
+      "title": "“致明天，亦或是八千年后的你.”",
+      "tname": "?",
+      "pubdate": 1769826600,
+      "year": "2026",
+      "view": 155281,
+      "f7": 0.3985,
+      "cbi": 4.756,
+      "tier": "high",
+      "duration": 13,
+      "stat": {
+        "view": 155281,
+        "danmaku": 19,
+        "reply": 364,
+        "favorite": 15022,
+        "coin": 1986,
+        "share": 1002,
+        "like": 42830
+      },
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    },
+    {
+      "bvid": "BV1iH4y1c7qA",
+      "title": "鬼畜大电影【生化危鸡】耗时两年半！一口气看爽！全程高燃！10小时整部剧完结！",
+      "tname": "?",
+      "pubdate": 1721965500,
+      "year": "2024",
+      "view": 1347737,
+      "f7": 0.3414,
+      "cbi": 4.692,
+      "tier": "high",
+      "duration": 36000,
+      "stat": {
+        "view": 1347737,
+        "danmaku": 31197,
+        "reply": 2346,
+        "favorite": 93420,
+        "coin": 66686,
+        "share": 21014,
+        "like": 154795
+      },
+      "from_user": "12fdfc0813",
+      "folder": "支持用"
+    },
+    {
+      "bvid": "BV1kDLWz8E4F",
+      "title": "“可惜惊艳我整个青春的人始终没有回头看我一眼”",
+      "tname": "?",
+      "pubdate": 1745382600,
+      "year": "2025",
+      "view": 137496,
+      "f7": 0.4104,
+      "cbi": 4.637,
+      "tier": "high",
+      "duration": 158,
+      "stat": {
+        "view": 137496,
+        "danmaku": 48,
+        "reply": 129,
+        "favorite": 14673,
+        "coin": 3494,
+        "share": 257,
+        "like": 18061
+      },
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    },
+    {
+      "bvid": "BV1Px411o72K",
+      "title": "在B站怎样才能快速升6级？【读评论08】",
+      "tname": "?",
+      "pubdate": 1561722010,
+      "year": "2019",
+      "view": 191901,
+      "f7": 0.3417,
+      "cbi": 4.515,
+      "tier": "high",
+      "duration": 321,
+      "stat": {
+        "view": 191901,
+        "danmaku": 2269,
+        "reply": 836,
+        "favorite": 5350,
+        "coin": 21201,
+        "share": 1739,
+        "like": 23752
+      },
+      "from_user": "2d96cdbcbb",
+      "folder": "读评论"
+    },
+    {
+      "bvid": "BV1BGw2zmEbx",
+      "title": "Blender三渲二教程 | 水彩效果材质",
+      "tname": "?",
+      "pubdate": 1773738000,
+      "year": "2026",
+      "view": 8271,
+      "f7": 0.8888,
+      "cbi": 4.304,
+      "tier": "high",
+      "duration": 973,
+      "stat": {
+        "view": 8271,
+        "danmaku": 0,
+        "reply": 35,
+        "favorite": 2193,
+        "coin": 261,
+        "share": 32,
+        "like": 834
+      },
+      "from_user": "5687d6d605",
+      "folder": "布兰嘚儿教程"
+    },
+    {
+      "bvid": "BV1Ha3T69E5X",
+      "title": "爱丽丝正在看着你",
+      "tname": "?",
+      "pubdate": 1784940526,
+      "year": "2026",
+      "view": 188737,
+      "f7": 0.3274,
+      "cbi": 4.29,
+      "tier": "high",
+      "duration": 19,
+      "stat": {
+        "view": 188737,
+        "danmaku": 185,
+        "reply": 1573,
+        "favorite": 16498,
+        "coin": 242,
+        "share": 7912,
+        "like": 39407
+      },
+      "from_user": "c8a221e803",
+      "folder": "BA"
+    },
+    {
+      "bvid": "BV1bHDPBHEWr",
+      "title": "烘焙店太贵还一堆添加剂？实测柏翠PE8855pro全自动面包机，懒人早餐自由稳了",
+      "tname": "?",
+      "pubdate": 1775355060,
+      "year": "2026",
+      "view": 419970,
+      "f7": 0.2434,
+      "cbi": 4.252,
+      "tier": "high",
+      "duration": 121,
+      "stat": {
+        "view": 419970,
+        "danmaku": 31,
+        "reply": 49,
+        "favorite": 29061,
+        "coin": 2915,
+        "share": 10,
+        "like": 30626
+      },
+      "from_user": "7d554dae4f",
+      "folder": "默认收藏夹"
+    },
+    {
+      "bvid": "BV11bAUzBEqG",
+      "title": "决战！我要夺冠！！！《下一个是谁6》06",
+      "tname": "?",
+      "pubdate": 1772192118,
+      "year": "2026",
+      "view": 11310681,
+      "f7": 0.3468,
+      "cbi": 4.072,
+      "tier": "high",
+      "duration": 6629,
+      "stat": {
+        "view": 11310681,
+        "danmaku": 264059,
+        "reply": 68150,
+        "favorite": 370393,
+        "coin": 1238890,
+        "share": 51081,
+        "like": 1111462
+      },
+      "from_user": "5184b2c44f",
+      "folder": "《下一个是谁》第六季"
+    },
+    {
+      "bvid": "BV1FL411i7fb",
+      "title": "鬼畜界《天下第一下饭会》1 —— 无规则擂台格斗进阶赛",
+      "tname": "?",
+      "pubdate": 1685930400,
+      "year": "2023",
+      "view": 372626,
+      "f7": 0.2342,
+      "cbi": 4.004,
+      "tier": "high",
+      "duration": 396,
+      "stat": {
+        "view": 372626,
+        "danmaku": 1496,
+        "reply": 658,
+        "favorite": 10426,
+        "coin": 22297,
+        "share": 1432,
+        "like": 38044
+      },
+      "from_user": "12fdfc0813",
+      "folder": "学学人家"
+    },
+    {
+      "bvid": "BV17Ux4zREpN",
+      "title": "我是真的在你家装了监控",
+      "tname": "?",
+      "pubdate": 1759580378,
+      "year": "2025",
+      "view": 136884,
+      "f7": 0.3451,
+      "cbi": 3.893,
+      "tier": "high",
+      "duration": 18,
+      "stat": {
+        "view": 136884,
+        "danmaku": 150,
+        "reply": 333,
+        "favorite": 12192,
+        "coin": 2558,
+        "share": 44,
+        "like": 18503
+      },
+      "from_user": "7d554dae4f",
+      "folder": "blender"
+    },
+    {
+      "bvid": "BV12s411Z7fm",
+      "title": "欢乐正前方",
+      "tname": "?",
+      "pubdate": 1365921881,
+      "year": "2013",
+      "view": 452906,
+      "f7": 0.2201,
+      "cbi": 3.891,
+      "tier": "high",
+      "duration": 21932,
+      "stat": {
+        "view": 452906,
+        "danmaku": 5302,
+        "reply": 1880,
+        "favorite": 29716,
+        "coin": 3733,
+        "share": 2956,
+        "like": 10272
+      },
+      "from_user": "d6df88f929",
+      "folder": "国语版"
+    },
+    {
+      "bvid": "BV16zXNB1EXc",
+      "title": "别装了！你的二次元老婆，早就把你那点心思出卖了！",
+      "tname": "?",
+      "pubdate": 1774613232,
+      "year": "2026",
+      "view": 866443,
+      "f7": 0.2449,
+      "cbi": 3.863,
+      "tier": "high",
+      "duration": 625,
+      "stat": {
+        "view": 866443,
+        "danmaku": 6873,
+        "reply": 14333,
+        "favorite": 46595,
+        "coin": 23348,
+        "share": 9042,
+        "like": 85843
+      },
+      "from_user": "c8a221e803",
+      "folder": "二次元"
+    }
+  ]
+}
