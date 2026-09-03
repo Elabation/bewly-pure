@@ -1,0 +1,44 @@
+{
+  "hop1_rate": 0.253,
+  "protocol": "draw=random fill=random（无偏统计链；剪枝归工程叙事不入神作率——Elabation 2026-09-03 准则修订）",
+  "criteria": {
+    "rho_floor": 0.95,
+    "abs_floor": 0.8,
+    "min_seeds": 10,
+    "max_hop": 6
+  },
+  "verdicts": [
+    {
+      "hop": 2,
+      "rate": 0.246,
+      "rho": null,
+      "n_seeds": 18,
+      "stop": false,
+      "reason": "",
+      "vs_hop1": 0.973,
+      "efficiency": 0.1731
+    },
+    {
+      "hop": 3,
+      "rate": 0.296,
+      "rho": 1.203,
+      "n_seeds": 18,
+      "stop": false,
+      "reason": "",
+      "vs_hop1": 1.171,
+      "efficiency": 0.2043
+    },
+    {
+      "hop": 4,
+      "rate": 0.216,
+      "rho": 0.73,
+      "n_seeds": 18,
+      "stop": true,
+      "reason": "跳间相对下滑 27.0% > 5%（信号传递失真）",
+      "vs_hop1": 0.855,
+      "efficiency": 0.1619
+    }
+  ],
+  "final_hops": 3,
+  "conclusion": "无偏统计链共流 3 跳（含第一跳共 4 层节点），终跳神作率 0.216"
+}
