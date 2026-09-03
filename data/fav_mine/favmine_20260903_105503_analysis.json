@@ -1,0 +1,751 @@
+{
+  "meta": {
+    "mined_at": "2026-09-03 11:29:23",
+    "users": 95,
+    "n": 1489,
+    "tier_scale": "normal>=1 / good>=2 / high(神)>=3"
+  },
+  "overall": {
+    "n": 1489,
+    "high": 220,
+    "high_rate": 0.148,
+    "good_rate": 0.284,
+    "avg_cbi": 1.731
+  },
+  "control": {
+    "n": 166,
+    "high_rate": 0.127,
+    "good_rate": 0.247,
+    "avg_cbi": 1.58,
+    "year_dist": {
+      "2026": 166
+    },
+    "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"
+  },
+  "old_vs_new": {
+    "cutoff": "5 年",
+    "old": {
+      "n": 202,
+      "high_rate": 0.094,
+      "good_rate": 0.193,
+      "avg_cbi": 1.403
+    },
+    "new": {
+      "n": 1287,
+      "high_rate": 0.156,
+      "good_rate": 0.298,
+      "avg_cbi": 1.783
+    }
+  },
+  "by_year": [
+    {
+      "year": "2009",
+      "n": 12,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 0.945
+    },
+    {
+      "year": "2010",
+      "n": 2,
+      "high": 1,
+      "high_rate": 0.5,
+      "good": 1,
+      "good_rate": 0.5,
+      "avg_cbi": 3.27
+    },
+    {
+      "year": "2011",
+      "n": 1,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 1.81
+    },
+    {
+      "year": "2015",
+      "n": 4,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 0,
+      "good_rate": 0.0,
+      "avg_cbi": 1.724
+    },
+    {
+      "year": "2016",
+      "n": 3,
+      "high": 0,
+      "high_rate": 0.0,
+      "good": 1,
+      "good_rate": 0.333,
+      "avg_cbi": 1.736
+    },
+    {
+      "year": "2017",
+      "n": 23,
+      "high": 1,
+      "high_rate": 0.043,
+      "good": 4,
+      "good_rate": 0.174,
+      "avg_cbi": 1.054
+    },
+    {
+      "year": "2018",
+      "n": 23,
+      "high": 2,
+      "high_rate": 0.087,
+      "good": 5,
+      "good_rate": 0.217,
+      "avg_cbi": 1.415
+    },
+    {
+      "year": "2019",
+      "n": 22,
+      "high": 4,
+      "high_rate": 0.182,
+      "good": 6,
+      "good_rate": 0.273,
+      "avg_cbi": 1.823
+    },
+    {
+      "year": "2020",
+      "n": 42,
+      "high": 5,
+      "high_rate": 0.119,
+      "good": 11,
+      "good_rate": 0.262,
+      "avg_cbi": 1.606
+    },
+    {
+      "year": "2021",
+      "n": 100,
+      "high": 10,
+      "high_rate": 0.1,
+      "good": 20,
+      "good_rate": 0.2,
+      "avg_cbi": 1.374
+    },
+    {
+      "year": "2022",
+      "n": 135,
+      "high": 20,
+      "high_rate": 0.148,
+      "good": 38,
+      "good_rate": 0.281,
+      "avg_cbi": 1.649
+    },
+    {
+      "year": "2023",
+      "n": 128,
+      "high": 21,
+      "high_rate": 0.164,
+      "good": 34,
+      "good_rate": 0.266,
+      "avg_cbi": 1.646
+    },
+    {
+      "year": "2024",
+      "n": 118,
+      "high": 10,
+      "high_rate": 0.085,
+      "good": 30,
+      "good_rate": 0.254,
+      "avg_cbi": 1.553
+    },
+    {
+      "year": "2025",
+      "n": 224,
+      "high": 28,
+      "high_rate": 0.125,
+      "good": 63,
+      "good_rate": 0.281,
+      "avg_cbi": 1.594
+    },
+    {
+      "year": "2026",
+      "n": 652,
+      "high": 118,
+      "high_rate": 0.181,
+      "good": 210,
+      "good_rate": 0.322,
+      "avg_cbi": 1.949
+    }
+  ],
+  "folders": [
+    {
+      "user_hash": "f9e0b56338",
+      "n": 17,
+      "good_rate": 0.765,
+      "avg_cbi": 2.666
+    },
+    {
+      "user_hash": "29c40e6c1e",
+      "n": 17,
+      "good_rate": 0.647,
+      "avg_cbi": 2.598
+    },
+    {
+      "user_hash": "f44f1fd4fd",
+      "n": 50,
+      "good_rate": 0.64,
+      "avg_cbi": 2.776
+    },
+    {
+      "user_hash": "63acda7f39",
+      "n": 32,
+      "good_rate": 0.594,
+      "avg_cbi": 3.041
+    },
+    {
+      "user_hash": "4d2278f273",
+      "n": 17,
+      "good_rate": 0.588,
+      "avg_cbi": 2.787
+    },
+    {
+      "user_hash": "08ec86a030",
+      "n": 12,
+      "good_rate": 0.583,
+      "avg_cbi": 2.782
+    },
+    {
+      "user_hash": "d60719d6ca",
+      "n": 16,
+      "good_rate": 0.562,
+      "avg_cbi": 2.654
+    },
+    {
+      "user_hash": "6fd328c020",
+      "n": 10,
+      "good_rate": 0.5,
+      "avg_cbi": 3.664
+    },
+    {
+      "user_hash": "c6a6f1654d",
+      "n": 34,
+      "good_rate": 0.471,
+      "avg_cbi": 2.32
+    },
+    {
+      "user_hash": "d82d2e21b8",
+      "n": 41,
+      "good_rate": 0.439,
+      "avg_cbi": 1.934
+    },
+    {
+      "user_hash": "ea97c596d4",
+      "n": 50,
+      "good_rate": 0.42,
+      "avg_cbi": 2.04
+    },
+    {
+      "user_hash": "be47fa92c0",
+      "n": 32,
+      "good_rate": 0.406,
+      "avg_cbi": 2.328
+    },
+    {
+      "user_hash": "1a22edac43",
+      "n": 48,
+      "good_rate": 0.396,
+      "avg_cbi": 1.988
+    },
+    {
+      "user_hash": "b8ee592418",
+      "n": 26,
+      "good_rate": 0.385,
+      "avg_cbi": 2.177
+    },
+    {
+      "user_hash": "9220a0b375",
+      "n": 44,
+      "good_rate": 0.364,
+      "avg_cbi": 2.153
+    }
+  ],
+  "stars": [
+    {
+      "bvid": "BV1Q5bX6yEXX",
+      "title": "各学校的教育局举报电话",
+      "tname": "?",
+      "pubdate": 1786887133,
+      "year": "2026",
+      "view": 269260,
+      "f7": 1.5146,
+      "cbi": 22.87,
+      "tier": "high",
+      "duration": 12,
+      "stat": {
+        "view": 269260,
+        "danmaku": 386,
+        "reply": 1846,
+        "favorite": 123859,
+        "coin": 3016,
+        "share": 10583,
+        "like": 100700
+      },
+      "from_user": "5df4d34ca3",
+      "folder": "默认收藏夹",
+      "up": "e964ec3623"
+    },
+    {
+      "bvid": "BV1hJVY61Enx",
+      "title": "Solar5 琳奈-‘Round n Round’ M/V【鸣潮生日会】",
+      "tname": "?",
+      "pubdate": 1780137637,
+      "year": "2026",
+      "view": 1283419,
+      "f7": 1.5644,
+      "cbi": 21.969,
+      "tier": "high",
+      "duration": 116,
+      "stat": {
+        "view": 1283419,
+        "danmaku": 17285,
+        "reply": 5273,
+        "favorite": 263557,
+        "coin": 556780,
+        "share": 21413,
+        "like": 345372
+      },
+      "from_user": "6445b9d211",
+      "folder": "默认收藏夹",
+      "up": "4f9f48dff6"
+    },
+    {
+      "bvid": "BV1td6oBkEmw",
+      "title": "办公常用快捷键，拿走不谢！",
+      "tname": "?",
+      "pubdate": 1768139958,
+      "year": "2026",
+      "view": 512041,
+      "f7": 0.6701,
+      "cbi": 11.985,
+      "tier": "high",
+      "duration": 17,
+      "stat": {
+        "view": 512041,
+        "danmaku": 36,
+        "reply": 161,
+        "favorite": 105667,
+        "coin": 5268,
+        "share": 3104,
+        "like": 51968
+      },
+      "from_user": "93bebb7837",
+      "folder": "默认收藏夹",
+      "up": "99e852fed4"
+    },
+    {
+      "bvid": "BV1ckhg6VEFf",
+      "title": "今天学习《被网暴该怎么维权》！别再只会截图了！这套合法的“四步反杀”流程请收好，从取证到索赔，帮你一次性讲明白。",
+      "tname": "?",
+      "pubdate": 1787790000,
+      "year": "2026",
+      "view": 158050,
+      "f7": 0.9531,
+      "cbi": 11.469,
+      "tier": "high",
+      "duration": 162,
+      "stat": {
+        "view": 158050,
+        "danmaku": 112,
+        "reply": 385,
+        "favorite": 43032,
+        "coin": 2404,
+        "share": 759,
+        "like": 55797
+      },
+      "from_user": "e08871915f",
+      "folder": "默认收藏夹",
+      "up": "53039777bb"
+    },
+    {
+      "bvid": "BV1J69eBaEwC",
+      "title": "4个椅子拉伸动作缓解肩背僵硬，释放深层压力",
+      "tname": "?",
+      "pubdate": 1777555858,
+      "year": "2026",
+      "view": 832948,
+      "f7": 0.679,
+      "cbi": 10.848,
+      "tier": "high",
+      "duration": 46,
+      "stat": {
+        "view": 832948,
+        "danmaku": 145,
+        "reply": 434,
+        "favorite": 171543,
+        "coin": 9982,
+        "share": 6741,
+        "like": 103158
+      },
+      "from_user": "93bebb7837",
+      "folder": "默认收藏夹",
+      "up": "adedb870a4"
+    },
+    {
+      "bvid": "BV1WARxBUE1R",
+      "title": "反方向的萤",
+      "tname": "?",
+      "pubdate": 1778044333,
+      "year": "2026",
+      "view": 716898,
+      "f7": 0.5359,
+      "cbi": 8.932,
+      "tier": "high",
+      "duration": 10,
+      "stat": {
+        "view": 716898,
+        "danmaku": 50,
+        "reply": 1731,
+        "favorite": 94679,
+        "coin": 9937,
+        "share": 4802,
+        "like": 267550
+      },
+      "from_user": "d82d2e21b8",
+      "folder": "默认收藏夹",
+      "up": "9522d901ef"
+    },
+    {
+      "bvid": "BV1rJNTznEmN",
+      "title": "“天空，云朵，夏天，微风，安逸，自由”",
+      "tname": "?",
+      "pubdate": 1772933383,
+      "year": "2026",
+      "view": 544407,
+      "f7": 0.5019,
+      "cbi": 8.879,
+      "tier": "high",
+      "duration": 116,
+      "stat": {
+        "view": 544407,
+        "danmaku": 2530,
+        "reply": 2319,
+        "favorite": 69101,
+        "coin": 13435,
+        "share": 4826,
+        "like": 130257
+      },
+      "from_user": "ea97c596d4",
+      "folder": "创意短片",
+      "up": "30d40e6e72"
+    },
+    {
+      "bvid": "BV1sqRcBEEcG",
+      "title": "绝美隐匿于月色中，魔女梦幻小屋！！（建筑教程）",
+      "tname": "?",
+      "pubdate": 1777817403,
+      "year": "2026",
+      "view": 248447,
+      "f7": 0.609,
+      "cbi": 8.831,
+      "tier": "high",
+      "duration": 2168,
+      "stat": {
+        "view": 248447,
+        "danmaku": 86,
+        "reply": 662,
+        "favorite": 42901,
+        "coin": 6559,
+        "share": 4264,
+        "like": 31610
+      },
+      "from_user": "be47fa92c0",
+      "folder": "和舍友玩了四年MC怎么就毕业了？",
+      "up": "8169f839a0"
+    },
+    {
+      "bvid": "BV1ZLMQ6aECW",
+      "title": "这回忆的漩涡",
+      "tname": "?",
+      "pubdate": 1785731221,
+      "year": "2026",
+      "view": 497114,
+      "f7": 0.4828,
+      "cbi": 8.657,
+      "tier": "high",
+      "duration": 22,
+      "stat": {
+        "view": 497114,
+        "danmaku": 17796,
+        "reply": 4010,
+        "favorite": 41152,
+        "coin": 32819,
+        "share": 5542,
+        "like": 169706
+      },
+      "from_user": "6fd328c020",
+      "folder": "默认收藏夹",
+      "up": "876018851e"
+    },
+    {
+      "bvid": "BV1X3gd6BES2",
+      "title": "【洛天依原创】若夏日终将完结",
+      "tname": "?",
+      "pubdate": 1785150000,
+      "year": "2026",
+      "view": 1168513,
+      "f7": 0.5837,
+      "cbi": 8.43,
+      "tier": "high",
+      "duration": 175,
+      "stat": {
+        "view": 1168513,
+        "danmaku": 8445,
+        "reply": 7409,
+        "favorite": 153142,
+        "coin": 68605,
+        "share": 14728,
+        "like": 284660
+      },
+      "from_user": "25635704de",
+      "folder": "默认收藏夹",
+      "up": "ae205e2b15"
+    },
+    {
+      "bvid": "BV1HsQPBVEvU",
+      "title": "【原创音乐】好景不长",
+      "tname": "?",
+      "pubdate": 1775832084,
+      "year": "2026",
+      "view": 812574,
+      "f7": 0.522,
+      "cbi": 8.41,
+      "tier": "high",
+      "duration": 160,
+      "stat": {
+        "view": 812574,
+        "danmaku": 483,
+        "reply": 3386,
+        "favorite": 113581,
+        "coin": 18511,
+        "share": 3992,
+        "like": 154739
+      },
+      "from_user": "08ec86a030",
+      "folder": "默认收藏夹",
+      "up": "b0fa082248"
+    },
+    {
+      "bvid": "BV1TT3y6iE9o",
+      "title": "无论如何我们都希望『＿＿＿』",
+      "tname": "?",
+      "pubdate": 1785305336,
+      "year": "2026",
+      "view": 360892,
+      "f7": 0.495,
+      "cbi": 8.405,
+      "tier": "high",
+      "duration": 33,
+      "stat": {
+        "view": 360892,
+        "danmaku": 5991,
+        "reply": 3633,
+        "favorite": 42632,
+        "coin": 9024,
+        "share": 1829,
+        "like": 109000
+      },
+      "from_user": "b8ee592418",
+      "folder": "默认收藏夹",
+      "up": "895ee92904"
+    },
+    {
+      "bvid": "BV1znGA6zEbW",
+      "title": "【洛天依/诗岸原创】“只要有你陪我听!”",
+      "tname": "?",
+      "pubdate": 1785488400,
+      "year": "2026",
+      "view": 300110,
+      "f7": 0.5046,
+      "cbi": 8.091,
+      "tier": "high",
+      "duration": 207,
+      "stat": {
+        "view": 300110,
+        "danmaku": 615,
+        "reply": 1475,
+        "favorite": 36916,
+        "coin": 11638,
+        "share": 3272,
+        "like": 58039
+      },
+      "from_user": "3c057684fb",
+      "folder": "术曲（有二）",
+      "up": "5a828c2958"
+    },
+    {
+      "bvid": "BV1PQtw6WEyp",
+      "title": "⚡️＂何为帽子＂Funk⚡️",
+      "tname": "?",
+      "pubdate": 1787918778,
+      "year": "2026",
+      "view": 269169,
+      "f7": 0.5336,
+      "cbi": 8.056,
+      "tier": "high",
+      "duration": 52,
+      "stat": {
+        "view": 269169,
+        "danmaku": 484,
+        "reply": 1318,
+        "favorite": 39020,
+        "coin": 4887,
+        "share": 4799,
+        "like": 55991
+      },
+      "from_user": "b8ee592418",
+      "folder": "默认收藏夹",
+      "up": "60ea4a12a1"
+    },
+    {
+      "bvid": "BV1fe9DB6Eg2",
+      "title": "\"无穷的远方，无数的人们\"",
+      "tname": "?",
+      "pubdate": 1777604400,
+      "year": "2026",
+      "view": 958986,
+      "f7": 0.5197,
+      "cbi": 7.931,
+      "tier": "high",
+      "duration": 344,
+      "stat": {
+        "view": 958986,
+        "danmaku": 1579,
+        "reply": 4562,
+        "favorite": 76219,
+        "coin": 101495,
+        "share": 9005,
+        "like": 222386
+      },
+      "from_user": "9a8a8cdd5d",
+      "folder": "减速带",
+      "up": "24c7cc6813"
+    },
+    {
+      "bvid": "BV1MNMd6dEKo",
+      "title": "伍链代表接，加油！加油！",
+      "tname": "?",
+      "pubdate": 1785761198,
+      "year": "2026",
+      "view": 54831,
+      "f7": 1.0336,
+      "cbi": 7.797,
+      "tier": "high",
+      "duration": 15,
+      "stat": {
+        "view": 54831,
+        "danmaku": 2570,
+        "reply": 3073,
+        "favorite": 13370,
+        "coin": 2422,
+        "share": 48,
+        "like": 39067
+      },
+      "from_user": "e08871915f",
+      "folder": "默认收藏夹",
+      "up": "17a5078672"
+    },
+    {
+      "bvid": "BV1Sx8S6YE7N",
+      "title": "【内饰教程】教你做100种不同的我的世界内饰！",
+      "tname": "?",
+      "pubdate": 1787414606,
+      "year": "2026",
+      "view": 553995,
+      "f7": 0.4378,
+      "cbi": 7.721,
+      "tier": "high",
+      "duration": 135,
+      "stat": {
+        "view": 553995,
+        "danmaku": 148,
+        "reply": 339,
+        "favorite": 71954,
+        "coin": 3581,
+        "share": 911,
+        "like": 65010
+      },
+      "from_user": "5df4d34ca3",
+      "folder": "默认收藏夹",
+      "up": "97bd403729"
+    },
+    {
+      "bvid": "BV1QuMu6iEaN",
+      "title": "【BlackSouls2 动画大电影】为这疯狂的舞台，呼唤爱的谢幕",
+      "tname": "?",
+      "pubdate": 1783230565,
+      "year": "2026",
+      "view": 601526,
+      "f7": 0.4421,
+      "cbi": 7.686,
+      "tier": "high",
+      "duration": 2795,
+      "stat": {
+        "view": 601526,
+        "danmaku": 4152,
+        "reply": 2629,
+        "favorite": 53616,
+        "coin": 43729,
+        "share": 9864,
+        "like": 58805
+      },
+      "from_user": "353e894678",
+      "folder": "默认收藏夹",
+      "up": "79edba4e33"
+    },
+    {
+      "bvid": "BV1qGuY61Esa",
+      "title": "教官，送干员们免费的刀皮",
+      "tname": "?",
+      "pubdate": 1786382405,
+      "year": "2026",
+      "view": 914365,
+      "f7": 0.4815,
+      "cbi": 7.46,
+      "tier": "high",
+      "duration": 33,
+      "stat": {
+        "view": 914365,
+        "danmaku": 21413,
+        "reply": 1506,
+        "favorite": 80646,
+        "coin": 76128,
+        "share": 535,
+        "like": 153430
+      },
+      "from_user": "6fd328c020",
+      "folder": "默认收藏夹",
+      "up": "f8a3ab1c5b"
+    },
+    {
+      "bvid": "BV1E3qABAEse",
+      "title": "男生减速带",
+      "tname": "?",
+      "pubdate": 1767688225,
+      "year": "2026",
+      "view": 488673,
+      "f7": 0.4128,
+      "cbi": 7.381,
+      "tier": "high",
+      "duration": 49,
+      "stat": {
+        "view": 488673,
+        "danmaku": 215,
+        "reply": 1727,
+        "favorite": 48481,
+        "coin": 14044,
+        "share": 3236,
+        "like": 93900
+      },
+      "from_user": "9220a0b375",
+      "folder": "仙品",
+      "up": "d857b25985"
+    }
+  ]
+}
