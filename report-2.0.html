@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>看过，却不给 · 第三季 —— 带内百分位与作品-推荐流 · 调研报告 2.0</title>
+<style>
+:root{--ink:#081F5C;--data1:#334EAC;--data2:#7096D1;--data3:#BAD6EB;--paper:#F7F2EB;--shadow:#E3DACB;--sub:#5B7EC2;--dim:#9FB6D4;--amber:#C2803A;--gold:#B8912F}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:14px/1.9 -apple-system,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 80px}
+header.hero{padding:76px 0 30px;border-bottom:1px solid var(--shadow)}
+.kicker{font-size:11px;letter-spacing:4px;color:var(--data1);border:1px dashed var(--data2);display:inline-block;padding:4px 14px;border-radius:999px;margin-bottom:22px}
+h1{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:42px;font-weight:900;letter-spacing:2px;line-height:1.3}
+.hero .lede{font-size:15.5px;color:var(--sub);margin-top:14px;max-width:720px}
+.badges{margin-top:22px;font-size:11.5px;color:var(--data1);letter-spacing:.5px}
+.badges span{border:1px solid var(--data3);border-radius:4px;padding:2px 9px;margin-right:8px;display:inline-block;margin-bottom:6px;background:#fff8}
+nav{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--shadow);z-index:9;font-size:12px;padding:9px 0}
+nav a{color:var(--sub);text-decoration:none;margin-right:12px}
+nav a:hover{color:var(--ink)}
+section{padding:50px 0 10px;border-bottom:1px solid var(--shadow)}
+.sn{font-size:11px;letter-spacing:3px;color:var(--data2)}
+h2{font-family:'Kaiti SC','STKaiti','KaiTi',serif;font-size:25px;margin:6px 0 10px}
+h3{font-size:15px;color:var(--data1);margin:26px 0 8px}
+p{margin:10px 0;max-width:790px}
+p.note{font-size:12.5px;color:var(--sub)}
+.guide{background:#EFE8DA;border-left:4px solid var(--data1);padding:12px 18px;margin:14px 0;font-size:13.5px;color:#22346B;max-width:790px}
+.guide b{color:#081F5C}
+.quote{border-left:3px solid var(--data1);padding:4px 16px;margin:16px 0;color:#22346B;font-size:13.5px;max-width:780px}
+.formula{background:#0E2A6B;color:#EAF1FF;font-family:Consolas,Monaco,monospace;font-size:13px;padding:18px 22px;border-radius:6px;line-height:2.1;margin:16px 0;overflow-x:auto}
+.formula .hl{color:#9CC7FF}
+.kpirow{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0}
+.kpi{flex:1 1 170px;background:#EFE8DA;padding:14px 16px}
+.kpi .n{font-family:Georgia,serif;font-size:26px;color:var(--ink)}
+.kpi .d{font-size:11.5px;color:var(--sub);line-height:1.55;margin-top:2px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:12.5px}
+th{color:var(--data1);font-weight:600;border-bottom:2px solid var(--data2);padding:7px 8px;text-align:left;font-size:12px}
+td{border-bottom:1px solid var(--shadow);padding:7px 8px;vertical-align:top}
+td.num{font-family:Georgia,serif}
+tr.win td{background:#334EAC0d}
+tr.stop td{background:#C2803A14}
+.tag{font-size:10px;border:1px solid var(--data2);color:var(--data1);border-radius:3px;padding:1px 6px;margin-left:6px;letter-spacing:1px;white-space:nowrap}
+.tag.sig{background:#334EAC;color:#fff;border-color:#334EAC}
+.tag.warn{border-color:#C2803A;color:#9A6428}
+.tag.fail{background:#C2803A;color:#fff;border-color:#C2803A}
+.tag.gold{background:#B8912F;color:#fff;border-color:#B8912F}
+.chart-wrap{position:relative;margin:18px 0}
+svg.chart{width:100%;height:auto;background:#fff6;border:1px solid var(--shadow)}
+.legend{font-size:11.5px;color:var(--sub);margin-top:8px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 4px 0 12px}
+.read{background:#EFE8DA;padding:12px 18px;margin:10px 0;font-size:13.5px;color:#22346B;max-width:790px}
+.read b{color:#081F5C}
+.exq{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.ex{flex:1 1 300px;border-left:3px solid var(--data2);background:#fff8;padding:9px 12px;font-size:12.5px}
+.ex .t{color:var(--ink)}
+.ex .m{font-family:Georgia,serif;color:var(--data1);font-size:12px;margin-top:2px}
+.plates{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.plate{background:#fff8;border:1px solid var(--shadow);padding:13px 15px}
+.plate.dim{background:#f5efe4}
+.plate .vh{font-size:11px;letter-spacing:2px;color:var(--data2);margin-bottom:6px}
+.plate .vv{font-family:Georgia,serif;font-size:25px;color:var(--ink);line-height:1.25}
+.plate .vt{font-size:12.5px;color:#334EAC;margin-top:4px}
+.foot{padding:34px 0 10px;font-size:11.5px;color:var(--dim);letter-spacing:1px}
+a{color:var(--data1)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">洁净B站 · 调研报告 2.0 · 一体化</div>
+  <h1>看过，却不给<br>第三季 · 双轴与时光</h1>
+  <div class="lede">收藏与投币本是两种语言。本季以 <b>带内投币百分位</b> 重写神作的度量衡，
+  以 <b>作品-推荐流</b> 重写挖矿的路径，用五臂对照、10 个新种子与一条沉入 2014 年的回溯链，
+  把「神作为什么神、神作在哪里」变成可检验的机制。</div>
+  <div class="badges"><span>五臂对照 · 随机与纵深</span><span>95+76+48 人工标注</span><span>匿名通道 540+ 请求零故障</span><span>主账号零重请求</span><span>2026-09-03 定稿</span></div>
+</header>
+<nav>
+  <a href="#s1">标尺革命</a><a href="#s2">v3 与三轮校验</a><a href="#s3">特例解剖</a><a href="#s4">参照库审计</a><a href="#s5">五臂对照</a><a href="#s6">时光回溯</a><a href="#s7">品味悖论</a><a href="#s8">诚实边界</a>
+</nav>
+
+<section id="s1">
+  <div class="sn">一</div>
+  <h2>标尺革命：CBI 之死与带内百分位立国</h2>
+  <p>上一季的标尺是 F7 几何：收藏×3、投币×2、点赞×0.3，除以同播放段基线——CBI。它在 95 支人工
+  标注的神作上受封。本季的第一件事，是把这把尺子放回解剖台。</p>
+  <h3>95 支标注的判决：CBI 中位倒挂</h3>
+  <table>
+    <tr><th>人工档位</th><th>n=95 各档中位 CBI</th><th>中位 带内投币百分位</th><th>中位 收藏百分位</th></tr>
+    <tr class="win"><td>神作</td><td class="num">9.00</td><td class="num"><b>0.960</b></td><td class="num">0.973</td></tr>
+    <tr><td>优秀</td><td class="num">9.32</td><td class="num">0.894</td><td class="num">0.982</td></tr>
+    <tr class="stop"><td>实用吃灰类</td><td class="num">10.49</td><td class="num">0.697</td><td class="num">0.994</td></tr>
+    <tr class="stop"><td>垃圾/低创/擦边</td><td class="num">10.37</td><td class="num">0.686</td><td class="num">0.993</td></tr>
+  </table>
+  <div class="read"><b>读数</b>：CBI 无法排序——神作（9.00）低于吃灰类（10.49）与垃圾（10.37），收藏轴权重
+  把「被存档的东西」整体顶高；而带内投币百分位 <b>0.960 &gt; 0.894 &gt; 0.697 &gt; 0.686</b>，严格单调，
+  与人工档位完全同序。收藏是「想留」，投币是「真谢」——<b>双轴理论</b>由此从假说升级为度量衡。</div>
+  <div class="guide"><b>定音锤（特例 BV1cBtc65EQc）</b>：养生话术《男人把自己养好，就是最大的资本》——
+  CBI <b>3.17 判神</b>，带内币率百分位 <b>0.216 判垃圾候选</b>；诚意比 coin/fav = 0.013，低于全体 1,623 个
+  CBI 神作的 p5（0.025）。CBI 的全部错误都来自一根 fav×3 引线。</div>
+  <h3>新标尺</h3>
+  <div class="formula">
+    <span class="hl">coin_rate</span> = 投币 ÷ 播放<br>
+    <span class="hl">pct</span>(v) = 带内（Δlog₁₀ = 0.2 的同播放量级）邻居中币率更低者的占比<br>
+    v3 判档：pct ≥ <span class="hl">0.93</span> 神 · ≥ 0.85 优秀 · &lt; 0.72 垃圾；R2 时长 30s/90s ·
+    R3 吃灰（藏/币&gt;8 且藏&gt;15%）· R4 擦边三连 · R8 赞/币&gt;50
+  </div>
+  <p class="note">为什么必须「带内」：26 个视角带的币率中位是一条 U 型曲线（下图）——小视频 0.95%、
+  中腰部 0.54%、头部 2.1%。全局阈值在中腰部冤枉好人、在头部放走水货。「同播放量级横向对比」
+  由 U 型曲线的形状本身强制执行。</p>
+  <div class="chart-wrap"><svg id="u-chart" class="chart" viewBox="0 0 840 360" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="legend"><i style="background:#D0E3FF"></i>实心带（n≥50）<i style="background:#EFE8DA;border:1px solid #D5CDBE"></i>薄带（n&lt;50，百分位仅供参考）<i style="background:#334EAC"></i>币率中位曲线<i style="background:#B8912F"></i>两案落点（k25/k26）</div>
+  <div class="read" id="u-read"></div>
+</section>
+
+<section id="s2">
+  <div class="sn">二</div>
+  <h2>v3 机制与三轮人工校验</h2>
+  <p>v3 不是单指标，是<b>主特征 + 指纹规则</b>的两段结构：带内币率百分位定档，行为指纹规则
+  （时长、吃灰、擦边、感谢 farming）修正边界。它的合法性不由设计者自封，由三轮人工盲校验逐级授予：</p>
+  <div class="kpirow">
+    <div class="kpi"><div class="n">95</div><div class="d">第一轮 · 神作全标注<br>CBI 倒挂在此现形</div></div>
+    <div class="kpi"><div class="n">76</div><div class="d">第二轮 · 筛查名录<br>一致率 ≈93%（20 条显式 + 56 条默认）</div></div>
+    <div class="kpi"><div class="n">48</div><div class="d">第三轮 · 首页域<br>一致率 100%（先生：「我可以给到全对」）</div></div>
+    <div class="kpi"><div class="n">2</div><div class="d">特例解剖 · 主动出题<br>双轴理论的两块活标本</div></div>
+  </div>
+  <p>两支特例是先生亲自点的题。第一支（养生话术）证明 <b>CBI 会把立场型档案顶上神坛</b>；第二支
+  （哈基米猫片）证明 <b>互动轴不是表达轴</b>——评论率带内 0.934 分位、赞率 0.801，币率却只有 0.098。
+  互动与认同都是零成本动作，只有投币有稀缺成本，所以只有投币诚实。v3 的特征表里没有评论量，
+  这两条案例就是它的设计说明书。</p>
+  <div class="guide"><b>三轮之后，机制冻结</b>：v3 的阈值（0.93/0.85/0.72）、规则（R2/R3/R4/R8）自此
+  冻结为生产口径，单一定义源 engine/，后续一切挖矿以 v3 判档。</div>
+</section>
+
+<section id="s3">
+  <div class="sn">三</div>
+  <h2>两支特例的完整解剖</h2>
+  <div class="plates">
+    <div class="plate dim"><div class="vh">前案 · 养生话术（103s）</div><div class="vv">CBI 3.17 神 vs v3 垃圾</div>
+      <div class="vt">币 0.216 · 藏 0.951 · 赞 0.773 ｜ 诚意比 0.013（&lt;p5）｜ 赞/币 70 ｜ 藏/币 79（R3）<br>静默档案：认同式点赞 + 档案式收藏 + 立场式转发（3.45%），评论率仅 0.094 分位。</div></div>
+    <div class="plate"><div class="vh">本案 · 哈基米猫片（51s）</div><div class="vv">CBI 0.79 low vs v3 垃圾</div>
+      <div class="vt">币 0.098 · 藏 0.353 · 赞 0.801 · 评论 0.934 ｜ 诚意比 0.043（&lt;p25）｜ 赞/币 135<br>互动消遣：评论区就是内容本体（0.744% = 带内中位 3.7 倍），但互动轴不是表达轴。</div></div>
+  </div>
+  <p>两案并排的形读：收藏轴劈开物种（0.951 vs 0.353），评论轴劈开行为模式（0.094 vs 0.934），
+  只有币率百分位（0.216 / 0.098）<b>把两个物种一起按在垃圾候选</b>。特例由先生盲评盖章，
+  成为 v3 校准的第 49、50 号数据点。</p>
+</section>
+
+<section id="s4">
+  <div class="sn">四</div>
+  <h2>参照库审计：百分位的地基</h2>
+  <div class="kpirow">
+    <div class="kpi"><div class="n">7,672</div><div class="d">参照人口（view≥3000）<br>挖矿域 7,468 + 首页域 204</div></div>
+    <div class="kpi"><div class="n">26 / 19</div><div class="d">视角带 / 实心带<br>Δlog₁₀=0.2（每带 1.58 倍）</div></div>
+    <div class="kpi"><div class="n">3,006~2.4亿</div><div class="d">播放量跨度</div></div>
+    <div class="kpi"><div class="n">200–630</div><div class="d">中段每带样本<br>判别力最强区</div></div>
+  </div>
+  <p class="note">偏差声明：挖矿域是神作 UP 公开收藏夹的雪球抽样，天然偏向「被收藏的内容」——
+  它是同温层参照系，不是全站普查；首页域 204 条是先生的信息茧房切片。薄带 7 个（&lt;4,000 与
+  &gt;2,500 万播放）由跨带合并或 Stage-A 的 CBI 粗筛兜底。E 臂的 related 全字段（pubdate/tname/tidv2）
+  已为下一代参照库备好纵轴与分区轴。</p>
+</section>
+
+<section id="s5">
+  <div class="sn">五</div>
+  <h2>作品-推荐流：五臂对照</h2>
+  <p>挖矿的根，从「人」（神作 UP 的收藏夹雪球）换到「作品」（related 图）。同一批神作种子，
+  五种走法：<b>A</b> 定向选 5（优秀补位）、<b>B</b> 随机选 5、<b>C′</b> 纵深 2 神作剪@0、
+  <b>D</b> 广度无补位剪@3、<b>E</b> 时光回溯选最早——每臂都是同图上的不同游走策略。</p>
+  <div class="chart-wrap"><svg id="arms-chart" class="chart" viewBox="0 0 840 300" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="legend"><i style="background:#081F5C"></i>E 回溯<i style="background:#334EAC"></i>C′ 纵深<i style="background:#7096D1"></i>D 无补位<i style="background:#BAD6EB"></i>A 定向<i style="background:#D0E3FF"></i>B 随机（明度=产量；标注 请求/深度）</div>
+  <div class="read" id="arms-read"></div>
+  <h3>四条定律</h3>
+  <div class="exq">
+    <div class="ex"><div class="t"><b>定律一 · 神作聚神作（指数级）</b></div>
+      <p style="font-size:12.5px">新番生态 hop1 的 40 邻居中 33 支神作；E 臂洛天依链 25 层收获 339 神。
+      神作图上存在「神作大陆」——神作的邻居分布显著偏离普通视频。</p></div>
+    <div class="ex"><div class="t"><b>定律二 · 定向的价值在贫瘠区</b></div>
+      <p style="font-size:12.5px">A vs B 总量 224/195，但深层复利：hop3+4 为 120 vs 84（+43%）；
+      游戏流 hop4 定向 18 神 vs 随机 5 神（3.6×）。饱和生态里随机即定向。</p></div>
+    <div class="ex"><div class="t"><b>定律三 · 补位是救生圈，不是产量引擎</b></div>
+      <p style="font-size:12.5px">A vs D（唯一差异=优秀补位）：富流前三跳打平（62/55、37/42、66/60）；
+      补位只在贫流救命（自来也流 A 活到 4 层，D hop1 剪）。</p></div>
+    <div class="ex"><div class="t"><b>定律四 · 死亡的单位是物种</b></div>
+      <p style="font-size:12.5px">数学教程四臂全灭（枯/枯/剪/剪），装机、刑诉在 E 臂神=0。
+      剪/枯事件按门类记录，即「币率生态位指标」。</p></div>
+  </div>
+  <h3>命运矩阵</h3>
+  <table id="fate-table"></table>
+  <p class="note">E 臂种子为全新一批（round2 其余确认神作 6 + 参照库高诚意神作 4），与 A–D 的 5 种子
+  不重叠；A/B 共享一次发车（110 请求），C′/D/E 独立发车。全部匿名通道，主账号零重请求。</p>
+</section>
+
+<section id="s6">
+  <div class="sn">六</div>
+  <h2>时光回溯：从 2025 年的一支原创曲，走回 2014 年的诞生代</h2>
+  <p>E 臂规则：每层从神作候选里选<b>发布最早</b>的两支。这不是事后解读，是写进游走策略的
+  时间偏好——于是「选中即回溯」成为机制本身。三条最深链的轨迹：</p>
+  <div class="chart-wrap"><svg id="retro-chart" class="chart" viewBox="0 0 840 420" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="legend"><i style="background:#B8912F"></i>洛天依《夏天.midi》链（339 神 · 25 层）<i style="background:#334EAC"></i>纯手搓初音链（120 神 · 12 层）<i style="background:#7096D1"></i>说唱厂牌链（195 神 · 25 层）<i style="background:#B8912F22"></i>经典层（2014–2017）</div>
+  <div class="read" id="retro-read"></div>
+  <div class="guide"><b>两条边界</b>：其一，浅链的「向新」是短链假象——hop1-2 邻域带新鲜度偏好，
+  链过 8 层后沉底；其二，回溯律对<b>梗类生态失效</b>（鬼畜链被重传与新梗弹跳，向新 +5 个月）。
+  时光机器对艺术经典敞开，对玩梗宇宙关闭。</div>
+</section>
+
+<section id="s7">
+  <div class="sn">七</div>
+  <h2>品味悖论：您自己的收藏夹是 CBI 的反面证词</h2>
+  <p>主账号收藏夹 3 夹 130 条（默认 108 · Movie 6 · Stefanie 16——孙燕姿专夹）。旧快照 113 条的
+  CBI 分布：<b>神 56 / 正常 9 / 低 32 / 垃圾 8 / 未证 8</b>。一半被 CBI 封神——不是品味封神，
+  是<b>收藏这个动作本身拉爆 fav 轴</b>。CBI 在自家收藏夹上结构性失真，与特例案同病灶的两面。
+  品味画像本身极干净：孙燕姿演唱会、Bocchi 舞台、阿尔都塞哲学课、经典小曲、MC 动画 MV——
+  零擦边、零颜值、零养生话术。</p>
+</section>
+
+<section id="s8">
+  <div class="sn">八</div>
+  <h2>诚实边界与交付物</h2>
+  <div class="exq">
+    <div class="ex"><div class="t"><b>偏差三件套</b></div><p style="font-size:12.5px">雪球域偏「被收藏」；首页域是个人茧房；related 图偏互动型物种。三臂三角测量使偏差可测，不可消除。</p></div>
+    <div class="ex"><div class="t"><b>截断 ≠ 枯竭</b></div><p style="font-size:12.5px">A/B/C/D/E 的「到底」全部是深度或预算截断，非自然流尽；自然死（神=0/神+优&lt;5）只发生在贫瘠物种。censored 数据在图例中一律标明。</p></div>
+    <div class="ex"><div class="t"><b>接口考古</b></div><p style="font-size:12.5px">view API tname 空串（W9）由 related 全字段补齐（pubdate/tnamev2/tidv2/rcmd_reason）；reply ps 上限 20；tags API 可用。S4/S6 分区分析解锁。</p></div>
+    <div class="ex"><div class="t"><b>基线冻结</b></div><p style="font-size:12.5px">全部带内百分位以发车时 7,672 条参照人口计算并冻结——流上发现的新样本不入基线，保证五臂可比。</p></div>
+  </div>
+  <h3>交付物清单</h3>
+  <table>
+    <tr><th>交付物</th><th>位置</th><th>说明</th></tr>
+    <tr><td>v3 评分机制</td><td class="num">engine/cbi_scale.py + godflow_v*.py</td><td>带内百分位 + R2/R3/R4/R8 规则，95+76+48 三轮校验</td></tr>
+    <tr><td>五臂对照引擎</td><td class="num">engine/godflow_v1~v5.py</td><td>定向/随机/纵深/无补位/回溯，全部匿名通道</td></tr>
+    <tr><td>五臂数据库</td><td class="num">data/flow_graph/*.json</td><td>11,399 节点、2,049 神作，immutable，按节点分类</td></tr>
+    <tr><td>交互式五臂动画</td><td class="num">docs/godflow-anim.html</td><td>A–E 五页签，回溯链可展开候选现场、直达视频</td></tr>
+    <tr><td>本报告</td><td class="num">docs/report-2.0.html</td><td>一体化收官 · porcelain-data · 数据注入式可重建</td></tr>
+  </table>
+  <div class="guide"><b>结语</b>：上一季证明了流的存在，这一季回答了两个更难的问题——「神作如何度量」
+  （带内投币百分位，经 95 支标注倒挂与两支特例加冕）与「神作在哪里」（related 图的神作大陆，
+  经五臂对照与一条沉入 2014 年的回溯链定位）。收藏与投币是两种语言；从今往后，我们只听后一种。</div>
+</section>
+
+<div class="foot">调研报告 2.0 · 看过，却不给 第三季 · 数据注入式构建 engine/build_report_2.py · 全部匿名接口 · 主账号零重请求 · 2026-09-03</div>
+</div>
+<script>
+const DATA = {"bands": [{"k": 17, "lo": 2511.9, "n": 20, "med": 0.009501965923984272, "p10": 0.003169572107765452, "p90": 0.019728331177231564, "thin": true}, {"k": 18, "lo": 3981.1, "n": 187, "med": 0.008514088789783093, "p10": 0.0017533606078316774, "p90": 0.03974835573348585, "thin": false}, {"k": 19, "lo": 6309.6, "n": 208, "med": 0.007628042135851798, "p10": 0.0014788038120276043, "p90": 0.03702267881372359, "thin": false}, {"k": 20, "lo": 10000.0, "n": 274, "med": 0.00733628223109289, "p10": 0.0011305822498586771, "p90": 0.03932584269662921, "thin": false}, {"k": 21, "lo": 15848.9, "n": 292, "med": 0.006101766859447127, "p10": 0.0010716762276996785, "p90": 0.027935111355512784, "thin": false}, {"k": 22, "lo": 25118.9, "n": 359, "med": 0.00587099887405501, "p10": 0.0008560422314167499, "p90": 0.034080717488789235, "thin": false}, {"k": 23, "lo": 39810.7, "n": 427, "med": 0.005993979845569952, "p10": 0.0011743119266055045, "p90": 0.03286991469816273, "thin": false}, {"k": 24, "lo": 63095.7, "n": 479, "med": 0.006323855243722304, "p10": 0.000978067575577949, "p90": 0.03492605233219568, "thin": false}, {"k": 25, "lo": 100000.0, "n": 570, "med": 0.005968248191784561, "p10": 0.0009023591575500484, "p90": 0.03200301513301816, "thin": false}, {"k": 26, "lo": 158489.3, "n": 604, "med": 0.006012691147404556, "p10": 0.0010649550632137177, "p90": 0.029164616619623482, "thin": false}, {"k": 27, "lo": 251188.6, "n": 611, "med": 0.005405089305107684, "p10": 0.0006922052432356652, "p90": 0.03110893512851897, "thin": false}, {"k": 28, "lo": 398107.2, "n": 630, "med": 0.006179613052266821, "p10": 0.0010112597578572486, "p90": 0.0320023542820841, "thin": false}, {"k": 29, "lo": 630957.3, "n": 620, "med": 0.006411918449576363, "p10": 0.0007441407260210662, "p90": 0.037021626161276064, "thin": false}, {"k": 30, "lo": 1000000.0, "n": 580, "med": 0.0070453309416355775, "p10": 0.0011595966124571093, "p90": 0.04161456801298998, "thin": false}, {"k": 31, "lo": 1584893.2, "n": 521, "med": 0.0074695212683914, "p10": 0.001196476042375757, "p90": 0.03491601476470997, "thin": false}, {"k": 32, "lo": 2511886.4, "n": 437, "med": 0.008896973469205522, "p10": 0.0017090538652576046, "p90": 0.04010592786627048, "thin": false}, {"k": 33, "lo": 3981071.7, "n": 326, "med": 0.010825918147770805, "p10": 0.0014705976109164246, "p90": 0.05242230005576752, "thin": false}, {"k": 34, "lo": 6309573.4, "n": 239, "med": 0.011509289432005604, "p10": 0.0020707452232217537, "p90": 0.0502000795291038, "thin": false}, {"k": 35, "lo": 10000000.0, "n": 137, "med": 0.013764131849350797, "p10": 0.0019835987924436147, "p90": 0.05899717317158679, "thin": false}, {"k": 36, "lo": 15848931.9, "n": 85, "med": 0.019387871950851565, "p10": 0.004052536772167891, "p90": 0.0694643084740906, "thin": false}, {"k": 37, "lo": 25118864.3, "n": 43, "med": 0.021211645433656147, "p10": 0.007069363423829197, "p90": 0.047982906329972805, "thin": true}, {"k": 38, "lo": 39810717.1, "n": 13, "med": 0.020881023612981303, "p10": 0.003993450820249906, "p90": 0.04985125559065932, "thin": true}, {"k": 39, "lo": 63095734.4, "n": 3, "med": 0.026118410081713752, "p10": 0.025778481380722886, "p90": 0.05268694366585717, "thin": true}, {"k": 40, "lo": 100000000.0, "n": 3, "med": 0.007373715292779446, "p10": 0.006494484493286897, "p90": 0.013300140839102996, "thin": true}, {"k": 41, "lo": 158489319.2, "n": 2, "med": 0.038434796315935965, "p10": 0.015173350423816895, "p90": 0.038434796315935965, "thin": true}, {"k": 42, "lo": 251188643.2, "n": 2, "med": 0.013476428496979265, "p10": 0.013444284389695499, "p90": 0.013476428496979265, "thin": true}], "pop": {"n": 7672, "home": 204, "mine": 7468, "dupe": 400}, "pv": {"n_pop": 7639, "n_bands": 26, "n_graded": 95, "medians": {"神作": {"CBI": 9.0, "投币百分位": 0.9601386481802426, "收藏百分位": 0.9726247987117552}, "优秀": {"CBI": 9.32, "投币百分位": 0.8942148760330578, "收藏百分位": 0.9820846905537459}, "实用吃灰类": {"CBI": 10.49, "投币百分位": 0.6972624798711755, "收藏百分位": 0.9935587761674718}, "垃圾/低创/擦边": {"CBI": 10.37, "投币百分位": 0.6861924686192469, "收藏百分位": 0.9933884297520661}}}, "sinc": {"q": {"p5": 0.025, "p10": 0.038, "p25": 0.074, "p50": 0.202, "p75": 0.543, "p90": 1.142, "p95": 1.628}, "n": 1623}, "cases": [{"bv": "BV1cBtc65EQc", "title": "男人把自己养好，就是最大的资本", "up": "最美娇妻壮壮妈", "dur": 103, "view": 103830, "fav": 15621, "coin": 198, "like": 13925, "cbi": 3.173229077263511, "p_coin": 0.21616871704745166, "p_fav": 0.9507908611599297, "sinc": 0.012675244862684848, "v3": "垃圾候选", "rules": ["R3 吃灰(藏/币=79)"], "likecoin": 70.32828282828282, "tags": ["生活", "情侣", "健康", "美女", "科学", "励志", "科普", "肾虚", "男人", "补肾"]}, {"bv": "BV1Zx7B6DE6w", "title": "哈基米上厕所拉力竭了", "up": "哈基米和米哈基", "dur": 51, "view": 174145, "fav": 4298, "coin": 185, "like": 24991, "cbi": 0.7914755138780012, "p_coin": 0.0978441127694859, "p_fav": 0.35323383084577115, "sinc": 0.043043275942298745, "v3": "垃圾候选", "rules": [], "likecoin": 135.08648648648648, "tags": ["动物总动员", "哈基米"]}], "r2": {"n": 76, "tiers": {"优秀": 18, "一般": 22, "垃圾": 25, "神作": 11}, "filled": 20}, "arms": [{"key": "target", "name": "A 定向", "rule": "前沿5 · 神优先+优秀补位", "requests": 55, "gods": 224, "nodes": 1136, "alive": 3, "dry": 2, "dmax": 4, "hops": [62, 37, 66, 54]}, {"key": "random", "name": "B 随机", "rule": "前沿5 · 随机", "requests": 55, "gods": 195, "nodes": 1209, "alive": 3, "dry": 2, "dmax": 4, "hops": [59, 47, 43, 41]}, {"key": "deep", "name": "C′ 纵深", "rule": "前沿2 神only · 神=0 剪 · 深度15", "requests": 87, "gods": 438, "nodes": 2191, "alive": 2, "dry": 3, "dmax": 15, "hops": []}, {"key": "bnopad", "name": "D 无补位", "rule": "前沿≤5 神only · 神<3 剪 · 深度8", "requests": 110, "gods": 312, "nodes": 2414, "alive": 2, "dry": 3, "dmax": 8, "hops": [55, 42, 60, 25]}, {"key": "retro", "name": "E 回溯", "rule": "前沿2 · 最早优先 · 神=0 剪 · 深度25", "requests": 187, "gods": 880, "nodes": 4449, "alive": 1, "dry": 9, "dmax": 25, "hops": []}], "retro": {"chains": [{"seed": "其他 · 纯手搓的视频，初音会喜欢", "seed_bvid": "BV1XPtM6SEHv", "gods": 120, "depth": 12, "status": "pruned", "drift": -128, "span": ["2014-01", "2026-08"], "pts": [{"hop": 1, "t": 1787865234.0}, {"hop": 2, "t": 1677209373.0}, {"hop": 3, "t": 1541703213.5}, {"hop": 4, "t": 1507545046.5}, {"hop": 5, "t": 1509347662.5}, {"hop": 6, "t": 1507473134.5}, {"hop": 7, "t": 1489240965.0}, {"hop": 8, "t": 1520107831.0}, {"hop": 9, "t": 1500267659.5}, {"hop": 10, "t": 1393430491.0}, {"hop": 11, "t": 1455456534.5}]}, {"seed": "音乐 · [原创/洛天依]《夏天.", "seed_bvid": "BV1cZMy6DEMP", "gods": 339, "depth": 25, "status": "pruned", "drift": -72, "span": ["2014-04", "2026-03"], "pts": [{"hop": 1, "t": 1758637428.5}, {"hop": 2, "t": 1578352539.5}, {"hop": 3, "t": 1534055427.0}, {"hop": 4, "t": 1522615616.0}, {"hop": 5, "t": 1418275418.0}, {"hop": 6, "t": 1468025337.5}, {"hop": 7, "t": 1478950982.0}, {"hop": 8, "t": 1500775235.5}, {"hop": 9, "t": 1488551725.0}, {"hop": 10, "t": 1458769723.0}, {"hop": 11, "t": 1492878969.0}, {"hop": 12, "t": 1477223114.0}, {"hop": 13, "t": 1464696321.0}, {"hop": 14, "t": 1765794675.5}, {"hop": 15, "t": 1572040909.5}, {"hop": 16, "t": 1510998350.5}, {"hop": 17, "t": 1468271611.0}, {"hop": 18, "t": 1456169518.5}, {"hop": 19, "t": 1495912599.5}, {"hop": 20, "t": 1468640081.0}, {"hop": 21, "t": 1478884007}, {"hop": 22, "t": 1556580723.5}, {"hop": 23, "t": 1557482610.5}, {"hop": 24, "t": 1560379311.0}]}, {"seed": "其他 · 你那叫说唱厂牌吗？", "seed_bvid": "BV19K411M7L8", "gods": 195, "depth": 25, "status": "censored_depth", "drift": -11, "span": ["2016-08", "2025-01"], "pts": [{"hop": 1, "t": 1563733673.0}, {"hop": 2, "t": 1559345605.5}, {"hop": 3, "t": 1572936036.0}, {"hop": 4, "t": 1577444411.5}, {"hop": 5, "t": 1659692245.0}, {"hop": 6, "t": 1643209217.0}, {"hop": 7, "t": 1562667976.5}, {"hop": 8, "t": 1530006925.0}, {"hop": 9, "t": 1523914735.0}, {"hop": 10, "t": 1525890624.5}, {"hop": 11, "t": 1529345552.0}, {"hop": 12, "t": 1722502796}, {"hop": 13, "t": 1632733484.5}, {"hop": 14, "t": 1688400002.5}, {"hop": 15, "t": 1545601748.5}, {"hop": 16, "t": 1576954055.5}, {"hop": 17, "t": 1575281629.5}, {"hop": 18, "t": 1587843378.0}, {"hop": 19, "t": 1607183870.0}, {"hop": 20, "t": 1571785345.0}, {"hop": 21, "t": 1530791675.0}, {"hop": 22, "t": 1486567374.5}, {"hop": 23, "t": 1483512480.0}, {"hop": 24, "t": 1502471457.5}, {"hop": 25, "t": 1502538013.5}]}], "n_nodes": 4449, "n_gods": 880, "requests": 187, "n_flows": 10}, "owner": {"folders": [{"t": "默认收藏夹", "n": 108}, {"t": "Movie", "n": 6}, {"t": "Stefanie", "n": 16}], "total": 130, "tiers": {"high": 56, "low": 32, "normal": 9, "junk": 8, "unproven": 8}}, "meta": {"date": "2026-09-03", "generated": "2026-09-03 23:11:21"}};
+const $=id=>document.getElementById(id);
+function el(tag,attrs,txt){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!==undefined)e.textContent=txt;return e;}
+function fmtPct(v,d){return (v*100).toFixed(d===undefined?2:d)+'%';}
+// ---------- U 型曲线 ----------
+(function(){
+  const svg=$('u-chart'),W=840,H=360,L=52,R=14,T=16,B=42;
+  const D=DATA.bands,n=D.length;
+  const ymx=4.2, iw=W-L-R, ih=H-T-B, bw=iw/n;
+  for(let g=0;g<=4;g++){
+    const y=T+ih-g/4*ih;
+    svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:g===0?'#7096D1':'#E3DACB','stroke-width':g===0?1:0.7}));
+    svg.appendChild(el('text',{x:L-6,y:y+3,'font-size':9,fill:'#9FB6D4','text-anchor':'end','font-family':'Georgia'},g+'%'));
+  }
+  const meds=[];
+  D.forEach((b,i)=>{
+    const x=L+i*bw+1.5, w=bw-3, h=b.med*100/ymx*ih;
+    svg.appendChild(el('rect',{x:x,y:T+ih-h,width:w,height:h,fill:b.thin?'#EFE8DA':'#D0E3FF'}));
+    meds.push([x+w/2,T+ih-h]);
+    if(b.thin){svg.appendChild(el('text',{x:x+w/2,y:T+ih-h-3,'font-size':7,fill:'#C2803A','text-anchor':'middle'},'薄'));}
+  });
+  svg.appendChild(el('polyline',{points:meds.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#334EAC','stroke-width':1.6}));
+  // 两案落点 k25/k26
+  const k25=D.findIndex(b=>b.k===25),k26=D.findIndex(b=>b.k===26);
+  [[k25,'前案'],[k26,'本案']].forEach(([ki,lab])=>{
+    if(ki<0)return;
+    const cx=L+ki*bw+bw/2;
+    svg.appendChild(el('circle',{cx:cx,cy:T+ih-D[ki].med*100/ymx*ih,r:3.6,fill:'#B8912F'}));
+    svg.appendChild(el('text',{x:cx,y:T+ih+13,'font-size':9,fill:'#B8912F','text-anchor':'middle'},lab));
+  });
+  [[4,'10⁴'],[5,'10⁵'],[6,'10⁶'],[7,'10⁷']].forEach(([e,lab])=>{
+    const ki=D.findIndex(b=>b.k===e);
+    if(ki<0)return;
+    svg.appendChild(el('text',{x:L+ki*bw+bw/2,y:H-B+16,'font-size':10,fill:'#5B7EC2','text-anchor':'middle','font-family':'Georgia'},lab));
+  });
+  svg.appendChild(el('text',{x:L+iw/2,y:H-8,'font-size':9.5,fill:'#8A5A2B','text-anchor':'middle'},'中段凹陷 0.54% —— 全局阈值在这里失真最狠（米色=薄带）'));
+  $('u-read').innerHTML='<b>读数</b>：U 型三段——小视频靠粉丝亲密（中位 <b>0.95%</b>），中腰部内容币率最低（<b>0.54~0.63%</b>），头部爆款全站破圈（<b>2.1~2.6%</b>）。同一个全局阈值，在中腰部冤枉好人、在头部放走水货。「同播放量级横向对比」不是口号，是这条曲线的形状逼出来的度量衡。参照人口 <b>'+DATA.pop.n.toLocaleString()+'</b> 条（挖矿域 '+DATA.pop.mine.toLocaleString()+' + 首页域 '+DATA.pop.home+'，跨文件去重 400），26 带 19 实心。';
+})();
+// ---------- 五臂产量 ----------
+(function(){
+  const svg=$('arms-chart'),W=840,H=300,L=110,R=120,T=16,B=30;
+  const A=DATA.arms, iw=W-L-R, ih=H-T-B;
+  const mx=Math.max(...A.map(a=>a.gods))*1.12;
+  const rank=[...A].sort((a,b)=>b.gods-a.gods).map(a=>a.key);
+  const col={'retro':'#081F5C','deep':'#334EAC','bnopad':'#7096D1','target':'#BAD6EB','random':'#D0E3FF'};
+  A.forEach((a,i)=>{
+    const y=T+i*(ih/A.length)+(ih/A.length-18)/2, w=a.gods/mx*iw;
+    svg.appendChild(el('rect',{x:L,y:y,width:w,height:18,fill:col[a.key]}));
+    svg.appendChild(el('text',{x:L-8,y:y+13,'font-size':12,fill:'#081F5C','text-anchor':'end','font-weight':'600'},a.name));
+    svg.appendChild(el('text',{x:L+w+8,y:y+13,'font-size':12,fill:'#081F5C','font-family':'Georgia'},a.gods.toLocaleString()+' 神 · '+a.nodes.toLocaleString()+' 节点 · '+a.requests+' 请求 · 最深 '+a.dmax+' 层'));
+  });
+  for(let g=0;g<=4;g++){
+    const x=L+g/4*iw;
+    svg.appendChild(el('line',{x1:x,y1:T,x2:x,y2:T+ih,stroke:'#E3DACB','stroke-width':0.7}));
+  }
+  $('arms-read').innerHTML='<b>读数</b>：E 回溯以 <b>'+DATA.retro.n_gods+'</b> 神作居首（10 新种子 × 25 层 × 最早优先，沉入经典层）；C′ 纵深 '+DATA.arms[2].gods+' 神（87 请求，性价比之王）；D 证明去掉补位后富流能自然流 8 层；A/B 在 4 层内几乎打平（224/195），定向的溢价在深层（hop3+4 +43%）与贫瘠区（3.6×）。全部臂的「到底」皆截断而非枯竭，自然死只属于贫瘠物种。';
+})();
+// ---------- 命运矩阵 ----------
+(function(){
+  const rows=[
+    ['A 定向','前沿5 · 神+优补位','神+优<5 枯','55','224','3 活@4层 / 2 枯'],
+    ['B 随机','前沿5 · 随机','池<5 枯','55','195','3 活@4层 / 2 枯'],
+    ['C′ 纵深','前沿2 神only','神=0 剪','87','438','2 到顶@15层 / 3 剪'],
+    ['D 无补位','前沿≤5 神only','神<3 剪','110','312','2 到顶@8层 / 3 剪'],
+    ['E 回溯','前沿2 · 最早优先','神=0 剪','187','880','2 到顶@25层 / 8 剪'],
+  ];
+  let html='<tr><th>臂</th><th>规则</th><th>死法</th><th>请求</th><th>神作</th><th>命运（5 或 10 流）</th></tr>';
+  rows.forEach(r=>{html+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="num">'+r[3]+'</td><td class="num"><b>'+r[4]+'</b></td><td>'+r[5]+'</td></tr>';});
+  $('fate-table').innerHTML=html;
+})();
+// ---------- 回溯下降图 ----------
+(function(){
+  const svg=$('retro-chart'),W=840,H=420,L=56,R=16,T=16,B=36;
+  const C=DATA.retro.chains;
+  const tmin=new Date('2014-01-01').getTime()/1000, tmax=new Date('2026-12-31').getTime()/1000;
+  const yx=t=>T+(t-tmin)/(tmax-tmin)*(H-T-B);
+  const xl=h=>L+h/25*(W-L-R);
+  const cols={'洛天依':'#B8912F','初音':'#334EAC','说唱':'#7096D1'};
+  // 经典层
+  svg.appendChild(el('rect',{x:L,y:yx(new Date('2014-01-01').getTime()/1000),width:W-L-R,height:yx(new Date('2017-12-31').getTime()/1000)-yx(new Date('2014-01-01').getTime()/1000),fill:'#B8912F18'}));
+  svg.appendChild(el('text',{x:W-R-6,y:yx(new Date('2016-06-01').getTime()/1000),'font-size':10,fill:'#8A6A14','text-anchor':'end'},'经典层 2014–2017'));
+  for(let yr=2014;yr<=2026;yr+=2){
+    const y=yx(new Date(yr+'-01-01').getTime()/1000);
+    svg.appendChild(el('line',{x1:L,y1:y,x2:W-R,y2:y,stroke:yr===2014?'#7096D1':'#E3DACB','stroke-width':yr===2014?1:0.7}));
+    svg.appendChild(el('text',{x:L-6,y:y+3,'font-size':9,fill:'#9FB6D4','text-anchor':'end','font-family':'Georgia'},yr));
+  }
+  for(let h=0;h<=25;h+=5){
+    svg.appendChild(el('text',{x:xl(h),y:H-B+18,'font-size':9.5,fill:'#5B7EC2','text-anchor':'middle','font-family':'Georgia'},'L'+h));
+    svg.appendChild(el('line',{x1:xl(h),y1:T,x2:xl(h),y2:H-B,stroke:'#E3DACB','stroke-width':0.6}));
+  }
+  C.forEach(ch=>{
+    const key=ch.seed.includes('洛天依')?'洛天依':(ch.seed.includes('初音')?'初音':(ch.seed.includes('说唱')?'说唱':'other'));
+    if(key==='other')return;
+    const pts=ch.pts.map(p=>[xl(p.hop),yx(p.t)]);
+    svg.appendChild(el('polyline',{points:pts.map(p=>p.join(',')).join(' '),fill:'none',stroke:cols[key],'stroke-width':key==='洛天依'?2:1.4,'stroke-opacity':0.85}));
+    pts.forEach(p=>{
+      svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:key==='洛天依'?3:2.4,fill:cols[key]}));
+    });
+    svg.appendChild(el('text',{x:pts[pts.length-1][0]+6,y:pts[pts.length-1][1]+3,'font-size':10,fill:cols[key],'font-weight':'600'},ch.seed));
+  });
+  svg.appendChild(el('text',{x:L,y:H-8,'font-size':9.5,fill:'#5B7EC2'},'横轴 = 层数 L0（种子）→ L25 · 纵轴 = 选中神作的发布年月 · 每点 = 当层 2 支选中神作的发布时间中位'));
+  $('retro-read').innerHTML='<b>读数</b>：三条链全部向下沉。<b>洛天依链</b>从 2025-04 的十四岁原创曲出发，L5 即触 <b>2014-04</b>（寻遍星空/亚得里亚海的黎明），此后 20 层在 2014–2017 黄金曲库内行走（老街北、一封孤岛的信、孙尚香、闲云志、叙世、三月雨）——漂移 <b>−72 个月</b>；初音链漂移 <b>−128 个月</b>（2014-01）；说唱链 25 层沉入 2016–2017。沉底 = 算法 related 图的深处埋着门类的经典层；回溯规则把它读成了可点击的编年史（E 页签可展开每层候选现场、直达视频）。边界：梗类生态（鬼畜 +5 个月）被重传与新梗稀释，回溯律对其失效。';
+})();
+</script>
+</body>
+</html>
