@@ -157,6 +157,15 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
          comment_seed_count: int = 0, seed_mode: str = "all", auth_cli: "BiliClient | None" = None):
     seeds = load_seed_bvids(n_users * 2)
     print(f"[seed] {len(seeds)} candidate seed videos")
+    seedmap_path = os.path.join(out_dir, ".seedmap.json")
+    seedmap = {}
+    if os.path.exists(seedmap_path):
+        try:
+            seedmap = json.load(open(seedmap_path, encoding="utf-8"))
+        except Exception:
+            seedmap = {}
+    cached = sum(1 for b in seeds if seedmap.get(b))
+    print(f"[seed] seedmap cache: {cached}/{len(seeds)} hits（cache miss 时按 interval 慢速解析）")
 
     # 已挖用户（本地映射，不入仓）——重复挖无增量价值
     map_path = os.path.join(out_dir, ".mid2hash.json")
@@ -190,17 +199,26 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
     for i, bv in enumerate(seeds, 1):
         if len(mids) >= n_users:
             break
-        try:
-            v = cli.fetch_view(bv)
-            mid = (v.get("owner") or {}).get("mid") if isinstance(v.get("owner"), dict) else None
+        # 种子→mid 本地缓存（.seedmap.json，点文件不入仓）：一次解析全程复用，
+        # 重试/跨臂零请求——2026-09-03 修复：种子阶段 250 连发 view 请求触发 IP 软封锁
+        if bv in seedmap and seedmap[bv]:
+            mid = seedmap[bv]
+        else:
+            try:
+                v = cli.fetch_view(bv)
+                mid = v.get("owner_mid")  # fetch_view 契约：owner=名字，owner_mid=数字 mid
+            except Exception:
+                continue
             if not mid:
-                data = cli.get_json("https://api.bilibili.com/x/web-interface/view", {"bvid": bv})
-                mid = (data.get("owner") or {}).get("mid")
-            if mid and mid not in seen_mid:
-                seen_mid.add(mid)
-                mids.append((mid, "uploader"))
-        except Exception:
-            continue
+                continue
+            seedmap[bv] = mid
+            try:
+                json.dump(seedmap, open(seedmap_path, "w", encoding="utf-8"))
+            except Exception:
+                pass
+        if mid and mid not in seen_mid:
+            seen_mid.add(mid)
+            mids.append((mid, "uploader"))
     # 过滤已挖
     fresh = []
     for mid, st in mids:
@@ -213,6 +231,26 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
 
     # 2) 每用户：收藏夹列表 → 挑夹 → 条目 → 抽样补 view
     users, videos = [], []
+    no_folder_streak = 0  # 风控熔断：连续无夹 = IP 被静默封堵的特征（自然漏斗 ~45% 有夹）
+    # 落盘路径前置 + 检查点增量落盘（2026-09-03 交接修复：熔断 exit 3 不再丢整轮数据）
+    stamp = time.strftime("%Y%m%d_%H%M%S")
+    path = os.path.join(out_dir, f"favmine_{stamp}.json")
+
+    def dump_now(partial: bool):
+        json.dump({
+            "meta": {
+                "mined_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "users": len(users), "videos": len(videos),
+                "arm": seed_mode,
+                "weights": {"fav": W_FAV, "coin": W_COIN, "like": W_LIKE},
+                "baseline": "cbi_baseline.json n=6734 fit_at=2026-09-01（与扩展 core.ts 同源）",
+                "privacy": "用户身份入库即 sha1 匿名；仅公开收藏夹；仅 API 元数据",
+                "partial": partial,
+            },
+            "users": users,
+            "videos": videos,
+        }, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        json.dump(mid2hash, open(map_path, "w", encoding="utf-8"), ensure_ascii=False)
     for ui, (mid, stype) in enumerate(mids, 1):
         h = mid2hash.get(str(mid))
         anon = h or anon_mid(mid)
@@ -292,26 +330,19 @@ def mine(cli: BiliClient, n_users: int, per_folder: int, sample_ratio: float, ou
                 break
         if not got_folder:
             print(f"[user {ui}/{len(mids)}] {anon} 无可用公开收藏夹")
+            no_folder_streak += 1
+            if no_folder_streak >= 50:
+                print(f"[FUSE] 连续 {no_folder_streak} 用户无公开收藏夹——疑似 IP 风控封堵"
+                      f"或候选池枯竭（2026-09-03 教训：两者签名相同，先查 dedupe 余量再定冷却策略），"
+                      f"中止本轮（已落盘至最近检查点，重跑 dedupe 自动跳过）", flush=True)
+                sys.exit(3)
+        else:
+            no_folder_streak = 0
+        if ui % 50 == 0:
+            dump_now(True)
 
     os.makedirs(out_dir, exist_ok=True)
-    stamp = time.strftime("%Y%m%d_%H%M%S")
-    path = os.path.join(out_dir, f"favmine_{stamp}.json")
-    payload = {
-        "meta": {
-            "mined_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "users": len(users), "videos": len(videos),
-            "arm": seed_mode,
-            "weights": {"fav": W_FAV, "coin": W_COIN, "like": W_LIKE},
-            "baseline": "cbi_baseline.json n=6734 fit_at=2026-09-01（与扩展 core.ts 同源）",
-            "privacy": "用户身份入库即 sha1 匿名；仅公开收藏夹；仅 API 元数据",
-        },
-        "users": users,
-        "videos": videos,
-    }
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-    os.makedirs(out_dir, exist_ok=True)
-    json.dump(mid2hash, open(map_path, "w", encoding="utf-8"), ensure_ascii=False)
+    dump_now(False)
     print(f"[done] users={len(users)} videos={len(videos)} -> {path}")
     return path
 
