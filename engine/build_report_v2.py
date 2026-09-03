@@ -62,21 +62,28 @@ def section_metrics(d):
     这个混杂后，流的高分定向仍有净增益——③ 是整场实验的灵魂对照。</p>"""
 
 
-def section_hops(d):
+def section_hops(d, base=0.0):
     if not d:
         return "<div class='pending'>数据未就绪</div>"
     rows = ""
-    base = d.get("base_rate", 0)
+    h1 = d.get("hop1_rate")
+    if h1 is not None:
+        rows += (f"<tr><td>第一层（臂①）</td><td>{h1}</td>"
+                 f"<td>{round(h1/base,2) if base else '—'}×</td><td>—</td><td>—</td><td>→ 起点</td></tr>")
     for v in d.get("verdicts") or []:
-        stop = "⛔ 停流" if v.get("stop") else "→ 继续"
-        rows += (f"<tr><td>第 {v['hop']} 跳</td><td>{v['rate']}</td>"
+        stop = "⛔ 停流：" + (v.get("reason") or "") if v.get("stop") else "→ 继续"
+        rows += (f"<tr><td>流第 {v['hop']} 跳</td><td>{v['rate']}</td>"
                  f"<td>{round(v['rate']/base,2) if base else '—'}×</td>"
                  f"<td>{v.get('rho') or '—'}</td><td>{v.get('efficiency') or '—'}</td>"
                  f"<td>{stop}</td></tr>")
     return f"""
-    <p>基线（uploader 臂）神作率 {base}。停流准则：边际神作率 &lt; 1.3×基线 ∨ ρ&lt;0.5 ∨ 种子池&lt;10 ∨ hop&gt;6。</p>
-    <table><tr><th>跳</th><th>神作率</th><th>vs 基线</th><th>保留率 ρ</th><th>边际效率</th><th>裁定</th></tr>{rows}</table>
-    <div class="verdict"><b>裁定：共流 {d.get('final_hops','-')} 跳。</b> {d.get('conclusion','')}</div>"""
+    <p>协议：无偏统计链——每跳候选简单随机抽样 + 随机种子补足，剪枝不混入神作率（Elabation 准则修订）。
+    停流准则（Elabation 定）：跳间相对下滑 &gt;5%（ρ&lt;0.95）∨ 本跳 &lt; 第一跳 80% ∨ 种子池&lt;10 ∨ hop&gt;6。
+    基线 = uploader 臂用户级神作率 {base}。</p>
+    <table><tr><th>层</th><th>神作率</th><th>vs 基线</th><th>保留率 ρ</th><th>α=0.5 效率</th><th>裁定</th></tr>{rows}</table>
+    <div class="verdict"><b>裁定：共流 {d.get('final_hops','-')} 跳。</b> {d.get('conclusion','')}</div>
+    <p class="note">hop4 的 27% 下滑含贡献用户聚簇方差（每跳仅 19-29 个贡献用户），且绝对水平仍为基线
+    3.1×——衰减≠死亡；按准则停流是协议裁定，机理归因见诚实边界。</p>"""
 
 
 def section_deep(d):
@@ -170,7 +177,7 @@ TPL = """<!DOCTYPE html>
 <div class="quote">「找到高分作品，去高分评论区筛用户，看收藏……<br>像一股流一样，流到哪里流不动了就大胆剪枝。」—— Elabation</div>
 
 <div class="kv">
-  <div class="kpi"><b>__NVID__</b><span>全库视频（2010-2026）</span></div>
+  <div class="kpi"><b>__NVID__</b><span>全库视频（bvid 去重）</span></div>
   <div class="kpi"><b>__E1__</b><span>第一跳 / 基线</span></div>
   <div class="kpi"><b>__E2__</b><span>扣除混杂后净增益</span></div>
   <div class="kpi"><b>__HOPS__</b><span>流深度（准则裁定）</span></div>
@@ -196,13 +203,18 @@ TPL = """<!DOCTYPE html>
 __METRICS__
 
 <h2>三 · 流的深度：跳数裁定</h2>
-__HOPS__
+__HOPTABLE__
 
-<h2>四 · 剪枝：流强度 = 所评种子的 CBI 浓度</h2>
-<p>第一版剪枝信号（被指向的种子计数）在每人只评论一个种子的采样设计下恒为 1——信号死亡，
-截断沦为任意砍（Elabation 抓出的重大缺陷）。修复后的流强度是<b>连续信号</b>：用户所评种子的
-CBI 总和——在 CBI 15.7 的神作下评论的人与在 3.1 下评论的人不同权。剪枝在挖掘时带真信号执行，
-每跳候选按强度降序、预算截断——砍掉的是低浓度候选。</p>
+<h2>四 · 剪枝：假说、证伪与「掐头去尾」的下一轮</h2>
+<p>第一版剪枝信号（被指向的种子计数）在每人只评论一个种子的采样设计下恒为 1——信号死亡（Elabation
+抓出的重大缺陷）。修复后的流强度 = 用户所评种子的 CBI 总和（连续信号）。但本轮重采给出了更冷的答案：
+<b>无偏对照下，浓度排序剪枝不成立</b>——工程链上「按强度取 top80」的神作率 23.9%，而剩余候选的随机
+探针 41.9%（n=191，CI [0.35, 0.49]），增益 <b>0.57×</b>；汇集全部 103 个流挖掘用户按强度分带，
+神作率在 24-26% 间平坦，无倒 U 结构。</p>
+<p><b>解读</b>：臂级筛选（去哪类视频的评论区）真实有效（E1/E2），但臂内「评论了更高 CBI 视频」
+不等于「更有品」——超级神作（CBI 18.3）的评论区聚集的是泛化路人。Elabation 据此提出下一轮假说
+<b>「掐头去尾」</b>：强度两端都剪、只挖中带。本轮回顾数据仅给弱方向（中带 26.6% vs 两端 24-25%），
+不足以立论——列入下一轮前瞻验证协议（强度分层随机抽样 + 探针对照），结论留待新数据。</p>
 
 <h2>五 · F7 几何：数据结构如何启发算法</h2>
 <div class="geo">
@@ -213,7 +225,7 @@ CBI 总和——在 CBI 15.7 的神作下评论的人与在 3.1 下评论的人�
 二部图保留它——汇流度即<b>无监督置信度加权</b>。剪枝因此是图上按流量剪边，不是树上剪枝。</p>
 <p><b>动力系统的视角</b>：流是二部图上的马尔可夫扩散——每跳一次转移，保留率 ρ 是扩散的
 衰减因子；停流准则 ρ&lt;0.5 的几何含义是<b>测度在品味簇内尚未均匀化之前收手</b>。
-实测 ρ 接近甚至大于 1（CBI 浓度种子池补充下），意味着品味圈层的混合时间远长于流的实际深度——
+实测 ρ 在随机补足的无偏协议下仍达 0.97-1.20，意味着品味圈层的混合时间远长于流的实际深度——
 <b>B 站的收藏夹文化是强同配的</b>，信号能在圈层内走很远。品味簇是吸引子，汇流点是测度集中的
 奇点，剪枝是相空间收缩——这不是比喻，是同一套数学。</p>
 </div>
@@ -222,11 +234,14 @@ CBI 总和——在 CBI 15.7 的神作下评论的人与在 3.1 下评论的人�
 __DEEP__
 
 <h2>七 · 诚实边界</h2>
-<p class="note">① 三臂/多跳判定基于用户级分布与 MWU 检验，样本量为数百级——效应方向可信，
-精确倍数有置信区间；② 汇流度作为剪枝信号在当前采样密度下尚无区分度（每人单源），其有效性
-待更密采样检验；③ 第三跳的反增部分来自 CBI 补足机制对种子池的浓缩，非纯粹同配增益；
-④ 收藏行为只能看见用户主动公开的部分，约 45% 用户无公开收藏夹——这是流的结构性漏斗；
-⑤ 全部判据、脚本与数据档案随仓库开源，欢迎复算。</p>
+<p class="note">① 三臂/多跳判定基于用户级分布与 MWU 检验，臂级样本 19-102 用户——效应方向可信，
+精确倍数有置信区间；② <b>浓度剪枝叙事撤回</b>：无偏对照 0.57×（见第四节），流的价值在臂级筛选而非臂内排序；
+③ hop4 的 27% 下滑含贡献用户聚簇方差（每跳 19-29 人），「3 跳」是准则裁定，衰减与噪声不可完全分解；
+④ 本轮凌晨曾把「候选池枯竭」误诊为「IP 风控封堵」并空转四轮冷却——两者签名相同（连续用户无夹），
+已写入工程教训：熔断前先查 dedupe 余量；⑤ flowmap（种子→评论者拓扑）本轮记录缺陷，评论边仅部分
+入档，墨流动画的评论边层因此降级（代码已修，数据不可恢复）；⑥ 收藏行为只能看见用户主动公开的部分，
+约 45% 用户无公开收藏夹——流的结构性漏斗；⑦ 全部判据、脚本（含全部诊断脚本）与数据档案随仓库开源，
+欢迎复算。</p>
 
 <h2>八 · 从报告到算法的路标</h2>
 <p>若本报告通过验收（封神门），转化路径已在库中就位：时间机器页（年代校正排行，V5c 的 73%
@@ -243,22 +258,23 @@ def main():
     e1 = load("e1_homophily_summary.json")
     hops = load("hop_verdict.json")
     deep = load("deep_mining_summary.json")
+    # 全库视频数：取最新 merged（bvid 去重后）——逐文件累加会把跨档案重复视频算重
     n_vid = 0
-    for fn in os.listdir(MINE):
-        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn and "merged" not in fn:
-            try:
-                n_vid += len(json.load(open(os.path.join(MINE, fn), encoding="utf-8")).get("videos") or [])
-            except Exception:
-                pass
+    mfs = sorted((f for f in os.listdir(MINE)
+                  if f.startswith("favmine_merged_") and f.endswith(".json") and "_analysis" not in f),
+                 key=lambda f: os.path.getmtime(os.path.join(MINE, f)))
+    if mfs:
+        n_vid = len(json.load(open(os.path.join(MINE, mfs[-1]), encoding="utf-8")).get("videos") or [])
+    base = (((e1 or {}).get("metrics") or {}).get("神作率") or {}).get("means", {}).get("uploader") or 0.0
     e1r = (e1 or {}).get("e1") or {}
     e2r = (e1 or {}).get("e2") or {}
     html = (TPL.replace("__DATE__", time.strftime("%Y-%m-%d"))
                .replace("__NVID__", f"{n_vid}")
                .replace("__E1__", f"{e1r.get('ratio','-')}×" if e1r else "—")
                .replace("__E2__", f"{e2r.get('ratio','-')}×" if e2r else "—")
-               .replace("__HOPS__", str((hops or {}).get("final_hops", "—")))
+               .replace("__HOPTABLE__", section_hops(hops, base))
                .replace("__METRICS__", section_metrics(e1))
-               .replace("__HOPS__", section_hops(hops))
+               .replace("__HOPS__", str((hops or {}).get("final_hops", "—")))
                .replace("__DEEP__", section_deep(deep)))
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(html)
