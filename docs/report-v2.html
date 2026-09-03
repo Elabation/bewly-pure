@@ -48,10 +48,10 @@
 <div class="quote">「找到高分作品，去高分评论区筛用户，看收藏……<br>像一股流一样，流到哪里流不动了就大胆剪枝。」—— Elabation</div>
 
 <div class="kv">
-  <div class="kpi"><b>691</b><span>全库视频（2010-2026）</span></div>
-  <div class="kpi"><b>—</b><span>第一跳 / 基线</span></div>
-  <div class="kpi"><b>—</b><span>扣除混杂后净增益</span></div>
-  <div class="kpi"><b>—</b><span>流深度（准则裁定）</span></div>
+  <div class="kpi"><b>7639</b><span>全库视频（2010-2026）</span></div>
+  <div class="kpi"><b>3.785×</b><span>第一跳 / 基线</span></div>
+  <div class="kpi"><b>1.485×</b><span>扣除混杂后净增益</span></div>
+  <div class="kpi"><b>3</b><span>流深度（准则裁定）</span></div>
 </div>
 
 <h2>〇 · 方法论：一条视频的旅程</h2>
@@ -71,10 +71,21 @@
 （年代行为漂移：硬币率十年 -60%，收藏率 ×2.8）——不校正的排行榜是一台时间机器，永远偏向离现在更近的视频。</p>
 
 <h2>二 · 三臂判定：流的前提与净效果（统计学的主战场）</h2>
-<div class='pending'>数据未就绪</div>
+
+    <table>
+      <tr><th>指标（用户级均值）</th><th>臂①流引导</th><th>臂②基线</th><th>臂③评论对照</th></tr>
+      <tr><td>神作率</td><td>0.2614495323057832</td><td>0.06906938795208296</td><td>0.17605836779953649</td></tr><tr><td>优秀率</td><td>0.45217724670061116</td><td>0.17396828103627057</td><td>0.3231294164534726</td></tr><tr><td>平均CBI</td><td>2.297223657429753</td><td>1.2349239516866644</td><td>1.8932068691548927</td></tr><tr><td>中位CBI</td><td>1.90505</td><td>1.0535263157894734</td><td>1.5047441860465118</td></tr>
+    </table>
+    <div class="verdict">
+      <span class="ok">E1 ✓</span> 臂①/基线 = <b>3.785×</b>（p=3.0e-06）
+      &nbsp;·&nbsp;
+      <span class="ok">E2 ✓</span> 臂①/臂③ = <b>1.485×</b>（p=0.0128）
+    </div>
+    <p class="note">12 组两两 MWU 检验全部显著（详见附录数据文件）。臂③的意义：扣除「评论行为本身」
+    这个混杂后，流的高分定向仍有净增益——③ 是整场实验的灵魂对照。</p>
 
 <h2>三 · 流的深度：跳数裁定</h2>
-—
+3
 
 <h2>四 · 剪枝：流强度 = 所评种子的 CBI 浓度</h2>
 <p>第一版剪枝信号（被指向的种子计数）在每人只评论一个种子的采样设计下恒为 1——信号死亡，
@@ -97,7 +108,7 @@ CBI 总和——在 CBI 15.7 的神作下评论的人与在 3.1 下评论的人�
 </div>
 
 <h2>六 · 统计深挖八件套</h2>
-<div class='pending'>数据未就绪</div>
+<h4>S1 · 三连绑定的松紧史（coin-fav 相关系数逐年）</h4><table><tr><th>年份</th><th>r(硬币,收藏)</th><th>样本</th></tr><tr><td>2019</td><td>0.2425</td><td>192</td></tr><tr><td>2020</td><td>0.3317</td><td>245</td></tr><tr><td>2021</td><td>0.4018</td><td>322</td></tr><tr><td>2022</td><td>0.2458</td><td>475</td></tr><tr><td>2023</td><td>0.1896</td><td>504</td></tr><tr><td>2024</td><td>0.2564</td><td>672</td></tr><tr><td>2025</td><td>0.1798</td><td>1133</td></tr><tr><td>2026</td><td>0.2264</td><td>3108</td></tr></table><h4>S2 · CBI 分布形态学（偏度：正=右尾神作延伸）</h4><table><tr><th>年份</th><th>均值</th><th>偏度</th><th>P90</th><th>神作率</th></tr><tr><td>2019</td><td>1.627</td><td>1.8703</td><td>3.21</td><td>0.12</td></tr><tr><td>2020</td><td>1.7</td><td>1.8101</td><td>3.5</td><td>0.147</td></tr><tr><td>2021</td><td>1.512</td><td>1.855</td><td>3.26</td><td>0.127</td></tr><tr><td>2022</td><td>1.63</td><td>2.6237</td><td>3.27</td><td>0.128</td></tr><tr><td>2023</td><td>1.722</td><td>1.2628</td><td>3.52</td><td>0.143</td></tr><tr><td>2024</td><td>1.917</td><td>3.041</td><td>3.83</td><td>0.173</td></tr><tr><td>2025</td><td>2.082</td><td>1.7221</td><td>4.38</td><td>0.213</td></tr><tr><td>2026</td><td>2.347</td><td>2.3998</td><td>5.03</td><td>0.276</td></tr></table><h4>S3 · 幸存者偏差量化（收藏行为的选择效应）</h4><table><tr><th>播放段</th><th>挖掘组CBI</th><th>对照组CBI</th><th>选择效应差</th></tr><tr><td>3000-30000</td><td>1.293</td><td>1.26</td><td><b>0.032</b></td></tr><tr><td>30000-300000</td><td>2.056</td><td>1.109</td><td><b>0.948</b></td></tr><tr><td>300000-1000000000</td><td>2.326</td><td>1.343</td><td><b>0.983</b></td></tr></table><h4>S5 · 宝藏 UP 主（同一作者多部神作被独立收藏）</h4><table><tr><th>作者(匿名)</th><th>被收藏数</th><th>其中神作</th><th>神作率</th></tr><tr><td>c3c0e1</td><td>6</td><td>5</td><td>0.833</td></tr><tr><td>8bf28a</td><td>13</td><td>4</td><td>0.308</td></tr><tr><td>914d38</td><td>5</td><td>1</td><td>0.2</td></tr><tr><td>3176d1</td><td>5</td><td>1</td><td>0.2</td></tr><tr><td>010ac3</td><td>5</td><td>1</td><td>0.2</td></tr><tr><td>876a22</td><td>5</td><td>1</td><td>0.2</td></tr><tr><td>7cc1a5</td><td>19</td><td>0</td><td>0.0</td></tr><tr><td>e437a7</td><td>16</td><td>0</td><td>0.0</td></tr></table><h4>S6 · 抗衰老类型学（CBI vs log 年龄 相关：越接近 0 越抗衰老）</h4><table><tr><th>最抗衰老</th><th>r</th><th>最快衰减</th><th>r</th></tr><tr><td>?</td><td>-0.1323</td><td>?</td><td>-0.1323</td></tr></table>
 
 <h2>七 · 诚实边界</h2>
 <p class="note">① 三臂/多跳判定基于用户级分布与 MWU 检验，样本量为数百级——效应方向可信，
