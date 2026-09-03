@@ -1,130 +1,131 @@
 {
   "meta": {
-    "points": 2443,
-    "valid_ag": 907,
-    "mined": 879,
+    "points": 6940,
+    "valid_ag": 3187,
+    "mined": 3161,
     "dirs": 38,
     "min_nb": 15
   },
   "v2": {
-    "ag_only_n": 20,
-    "ag_only_rate": 0.0228,
-    "cbi_only_n": 109,
-    "both_n": 383,
+    "ag_only_n": 698,
+    "ag_only_rate": 0.2208,
+    "cbi_only_n": 140,
+    "both_n": 1376,
     "ag_only_profile": {
-      "coin-+": 5,
-      "danmaku-+": 4,
-      "danmaku-": 3,
-      "share-+": 2,
-      "fav-+": 2,
-      "like-+": 2,
-      "coin-": 2
+      "coin-+": 133,
+      "danmaku-+": 108,
+      "fav-+": 106,
+      "like-+": 86,
+      "share-+": 76,
+      "coin-": 59,
+      "danmaku-": 44,
+      "fav-": 42
     },
     "ag_only_examples": [
       {
-        "bvid": "BV1eB4y1N79E",
-        "title": "新番最渣男主！女友成双，竟然和2个女朋友一起同居了",
+        "bvid": "BV1Mf4y1g7TT",
+        "title": "男主的后宫居然是一只粉毛大猩猩？看完当场裂开！",
         "year": "2021",
         "ag": 1.0,
-        "cbi": 0.992,
+        "cbi": 0.969,
         "u": "coin-+"
       },
       {
-        "bvid": "BV1JM53zmELD",
-        "title": "新西兰是成年人的巨大游乐场!82岁也能玩爽!骑马/开小飞机/跳伞最好玩的居然是这个?",
-        "year": "2025",
+        "bvid": "BV1Cz4y167Qe",
+        "title": "新番最渣海王！同时跟7个女朋友交往，结果因太渣下面变成了……",
+        "year": "2021",
         "ag": 1.0,
-        "cbi": 0.753,
-        "u": "share-+"
-      },
-      {
-        "bvid": "BV1X24y1K7iU",
-        "title": "30岁以后，你的妈妈：",
-        "year": "2023",
-        "ag": 1.0,
-        "cbi": 0.961,
+        "cbi": 1.281,
         "u": "fav-+"
       },
       {
-        "bvid": "BV1dK4y1d7eU",
-        "title": "[爱尔兰爱国歌曲]The Wearing of the Green身着绿衣者",
+        "bvid": "BV1FX4y1c7ab",
+        "title": "新番最爽男主！开局一条龙，一集收一个妹子",
         "year": "2021",
         "ag": 1.0,
-        "cbi": 0.729,
-        "u": "danmaku-"
+        "cbi": 1.553,
+        "u": "fav-+"
       },
       {
-        "bvid": "BV1E64y1m7Yg",
-        "title": "《毒师》最精彩的一集，一直期待却又不忍看的结局，忍不住泪奔了",
-        "year": "2021",
+        "bvid": "BV15K4y1E7J6",
+        "title": "恋爱福利番？狗粮？女装？【读评论20】",
+        "year": "2020",
         "ag": 1.0,
-        "cbi": 0.753,
+        "cbi": 2.378,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV1tt41137g1",
+        "title": "男女之间有纯友谊吗？【读评论09】",
+        "year": "2019",
+        "ag": 1.0,
+        "cbi": 2.369,
         "u": "like-+"
       },
       {
-        "bvid": "BV1fU4y1a7rJ",
-        "title": "小粉出逃，老白即将被取代，二人即将面临生死考验《绝命毒师》第三季大结局",
-        "year": "2021",
-        "ag": 1.0,
-        "cbi": 0.73,
-        "u": "coin-"
-      },
-      {
-        "bvid": "BV1Y5411e7hz",
-        "title": "世上最哲♂学的乌萨奇❤️",
-        "year": "2024",
-        "ag": 1.0,
-        "cbi": 0.936,
-        "u": "danmaku-+"
-      },
-      {
-        "bvid": "BV1nb411r7Tc",
-        "title": "［FATE］Lancer库丘林战斗合集",
+        "bvid": "BV1MJ411P7SJ",
+        "title": "分手后要拉黑前任吗？【读评论11】",
         "year": "2019",
         "ag": 1.0,
-        "cbi": 0.67,
+        "cbi": 2.061,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV1Zb411b7PY",
+        "title": "我没女朋友，因为我是Gay？？？【读评论01】",
+        "year": "2019",
+        "ag": 1.0,
+        "cbi": 1.29,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV16S4y1t7w4",
+        "title": "【特效向】华 山 论 剑 一",
+        "year": "2022",
+        "ag": 1.0,
+        "cbi": 2.587,
         "u": "share-+"
       },
       {
-        "bvid": "BV1GzmEBxENZ",
-        "title": "苍雾世界】内测福利服，一键解锁全图鉴全皮肤，无限资源随便刷，感兴趣一键三连评论“已三连”免费领",
-        "year": "2025",
-        "ag": 1.0,
-        "cbi": 0.844,
-        "u": "coin-+"
-      },
-      {
-        "bvid": "BV1FB4y1c793",
-        "title": "【想念拟人化】孟慧圆开口跪，独特的嗓音简直绝了！",
+        "bvid": "BV1cS4y1R7gp",
+        "title": "⚡️青藏瓜原⚡️",
         "year": "2021",
         "ag": 1.0,
-        "cbi": 0.803,
-        "u": "coin-+"
-      },
-      {
-        "bvid": "BV19t411W74H",
-        "title": "《诗句》-音乐剧《蝶》07年北京保利剧院沙宝亮林静珍藏版",
-        "year": "2019",
-        "ag": 1.0,
-        "cbi": 0.896,
+        "cbi": 1.383,
         "u": "danmaku-+"
       },
       {
-        "bvid": "BV1KMf2YcE2V",
-        "title": "25岁，新年快乐",
+        "bvid": "BV1SuysBbEL7",
+        "title": "免费本地AI改歌词翻唱|支持整首歌修改|旋律不变，歌词任意修改|无需midi|改歌词不改曲",
         "year": "2025",
         "ag": 1.0,
-        "cbi": 0.709,
-        "u": "like-+"
+        "cbi": 0.917,
+        "u": "fav-+"
+      },
+      {
+        "bvid": "BV1Pz4y1h7Ub",
+        "title": "鸡你太美和月下三兄贵竟是同一首歌",
+        "year": "2023",
+        "ag": 1.0,
+        "cbi": 2.495,
+        "u": "danmaku-+"
+      },
+      {
+        "bvid": "BV16XhXz1EbL",
+        "title": "3d星球动画之小卤蛋吃播",
+        "year": "2025",
+        "ag": 1.0,
+        "cbi": 2.357,
+        "u": "like-"
       }
     ]
   },
   "v3": {
-    "n_boost": 181,
-    "rank_gain_cbi": 37.35,
-    "rank_gain_ag": 64.54,
-    "resid_lift": 0.23,
-    "resid_median_all": 0.7734,
-    "detect": false
+    "n_boost": 637,
+    "rank_gain_cbi": 169.9,
+    "rank_gain_ag": 238.86,
+    "resid_lift": 0.2994,
+    "resid_median_all": 0.7167,
+    "detect": true
   }
 }
