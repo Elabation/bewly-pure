@@ -67,9 +67,9 @@ def main():
                                       "like": st.get("like", 0) / view}
     hs = json.load(open(os.path.join(SDIR, "sample_20260903_185231.json"), encoding="utf-8"))
     for v in (hs.get("videos") or []):
-        if (v.get("view") or 0) >= 3000 and v.get("bvid"):
-            st = v.get("stat") or {}
-            view = max(1, v.get("view") or 1)
+        st = v.get("stat") or {}
+        view = st.get("view") or 0  # collect_stats 样本：view 在 stat 里层
+        if view >= 3000 and v.get("bvid"):
             pop.setdefault(v["bvid"], {"view": view,
                                        "coin": st.get("coin", 0) / view,
                                        "fav": st.get("favorite", 0) / view,
