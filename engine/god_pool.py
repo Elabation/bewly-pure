@@ -75,7 +75,7 @@ def _load_pop():
 
 def _load_flow_nodes():
     nodes = {}
-    for pat in ("godflow_2*.json", "godflowdeep_*.json", "godflowbnopad_*.json", "godflowretro_*.json"):
+    for pat in ("godflow_2*.json", "godflowdeep_*.json", "godflowbnopad_*.json", "godflowretro_*.json", "godflowdaily_*.json"):
         p = latest(pat)
         if not p:
             continue
@@ -97,6 +97,16 @@ def _load_flow_nodes():
 def latest(pattern):
     fs = sorted(glob.glob(os.path.join(FG, pattern)), key=lambda p: os.path.basename(p))
     return fs[-1] if fs else None
+
+
+def load_blacklist():
+    p = os.path.join(os.path.dirname(FG), "ml", "blacklist.json")
+    if os.path.exists(p):
+        try:
+            return json.load(open(p, encoding="utf-8"))
+        except Exception:
+            return {}
+    return {"owners": [], "bvids": []}
 
 
 def build_pool():
@@ -184,7 +194,18 @@ def build_pool():
             r["fav_rate"] = round(r["fav"] / vr, 5)
             r["like_rate"] = round(r["like"] / vr, 5)
             out[b] = r
-    return out, {"pop_n": len(pop), "bands": {k: len(v) for k, v in BANDS.items()}}
+    # 黑名单过滤（Elabation 2026-09-04：fan人张 等不推荐）
+    bl = load_blacklist()
+    bl_names = {o.get("name") for o in (bl.get("owners") or []) if o.get("name")}
+    bl_mids = {str(o.get("mid")) for o in (bl.get("owners") or []) if o.get("mid")}
+    bl_bvids = set(bl.get("bvids") or [])
+    n_bl = 0
+    for b in list(out.keys()):
+        r = out[b]
+        if (r.get("owner") in bl_names) or (str(r.get("owner_mid") or "") in bl_mids) or (b in bl_bvids):
+            del out[b]
+            n_bl += 1
+    return out, {"pop_n": len(pop), "bands": {k: len(v) for k, v in BANDS.items()}, "n_black": n_bl}
 
 
 def load_backfill():

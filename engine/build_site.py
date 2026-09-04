@@ -304,7 +304,7 @@ function undoLast(){
   if(last.prev){ann[last.b]=JSON.parse(last.prev);}else{delete ann[last.b];}
   save();render();
 }
-function reshuffle(){state.seed=Math.floor(Math.random()*1e9);if(state.sec!=='shuffle')go('shuffle');else render();}
+function reshuffle(){state.seed=Math.floor(Math.random()*1e9);state.shuffleOn=true;render();}
 function exportAnn(){
   const blob=new Blob([JSON.stringify({exported:Date.now(),ann},null,1)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='godshelf_annotations.json';a.click();
@@ -323,7 +323,7 @@ $('q').addEventListener('input',e=>{state.q=e.target.value;clearTimeout(qtimer);
 $('cat').addEventListener('change',e=>{state.cat=e.target.value;render();});
 $('sort').addEventListener('change',e=>{state.sort=e.target.value;render();});
 function setTier(t){state.tier=t;$('t-god').classList.toggle('on',t==='god');$('t-all').classList.toggle('on',t==='all');render();}
-function go(sec){if(state.sec!==sec)history.pushState({sec:state.sec},'');state.sec=sec;state.shown=60;render();}
+function go(sec){if(state.sec!==sec)history.pushState({sec:state.sec},'');state.sec=sec;state.shown=60;state.shuffleOn=(sec==='shuffle');render();}
 function goBack(){const prev=history.state&&history.state.sec;if(prev){state.sec=prev;history.replaceState(null,'');state.shown=60;render();}else if(SECTIONS.some(s=>s.id===state.sec)){render();}}
 window.addEventListener('popstate',e=>{if(e.state&&e.state.sec){state.sec=e.state.sec;render();}});
 function render(){
@@ -335,7 +335,8 @@ function render(){
   let arr=secArr(state.sec);
   const q=state.q.trim().toLowerCase();
   if(state.cat!=='all'||q){arr=applyFilters(arr);}
-  $('sec-sub').textContent=sec.sub+' ｜ 本区 '+arr.length+' 支';
+  if(state.shuffleOn){const rnd=mulberry32(state.seed);for(let i=arr.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+  $('sec-sub').textContent=sec.sub+' ｜ 本区 '+arr.length+' 支'+(state.shuffleOn?'（乱序）':'');
   $('grid').innerHTML=arr.slice(0,state.shown).map(cardHTML).join('')||'<div class="empty">这一区暂时空空如也。</div>';
   $('more').style.display=arr.length>state.shown?'inline-block':'none';
 }
