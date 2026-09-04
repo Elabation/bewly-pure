@@ -93,10 +93,10 @@ ul.tight li{margin:6px 0}
     <span id="badge-n">样本 — 条</span><span>可信层 <b id="badge-t">—</b></span><span>七个地层</span><span>2020–2026 七年跨度</span><span id="badge-date">—</span><span>仅公开API元数据 · 未下载视频</span>
   </div>
   <div class="install-row">
-    <a class="install-btn" href="https://github.com/Elabation/clean-bilibili-report/blob/main/docs/tutorial.md">⚡ 安装浏览器扩展（网格版）</a>
-    <a class="install-doc" href="https://github.com/Elabation/clean-bilibili-report/blob/main/extension/README-INSTALL.md">扩展安装说明</a>
-    <a class="install-doc" href="https://github.com/Elabation/clean-bilibili-report/blob/main/docs/tutorial.md">完整教程 · docs/tutorial.md</a>
-    <a class="install-doc" href="https://github.com/Elabation/clean-bilibili-report">GitHub 仓库</a>
+    <a class="install-btn" href="https://github.com/Elabation/bewly-pure/blob/main/docs/tutorial.md">⚡ 安装浏览器扩展（网格版）</a>
+    <a class="install-doc" href="https://github.com/Elabation/bewly-pure/blob/main/extension/README-INSTALL.md">扩展安装说明</a>
+    <a class="install-doc" href="https://github.com/Elabation/bewly-pure/blob/main/docs/tutorial.md">完整教程 · docs/tutorial.md</a>
+    <a class="install-doc" href="https://github.com/Elabation/bewly-pure">GitHub 仓库</a>
   </div>
 </header>
 
@@ -284,7 +284,7 @@ ul.tight li{margin:6px 0}
     <li><b>币决定上限</b>：含币的组合占据社交相关前列；纯收藏 + log 分母是全场最差组合。</li>
     <li><b>跨层抓取力</b>：投币率的最低 50 条里约 <span id="cross-c">24%</span> 来自非榜单层（真·跨层抓垃圾）；而单一点赞信号的最低 50 条几乎全是榜单视频——抓的全是被规模稀释的大热门。</li>
   </ul>
-  <div class="quote">最终裁决——过滤场景冠军：<b>投币率 F2</b>；综合场景亚军：<b>加权感谢率 F7</b>（先生的原始公式，结构均衡）；<b>全部 log 分母组合废弃</b>。</div>
+  <div class="quote">最终裁决——过滤场景冠军：<b>投币率 F2</b>；综合场景亚军：<b>加权感谢率 F7</b>（原始公式，结构均衡）；<b>全部 log 分母组合废弃</b>。</div>
 </section>
 
 <!-- ============ §10 时间维度 ============ -->
@@ -407,9 +407,11 @@ ul.tight li{margin:6px 0}
   </ul>
   <h3>工具链（全部开源可复跑）</h3>
   <p class="note">engine/ecosystem_collect*.py 采集（含 v5 大采样）→ engine/ecosystem_analysis.py 基础分析 → engine/deep_analysis.py 十三项深度实验（numpy 2.2.6 / scipy 1.15.3）→ data/analysis/*.json → engine/build_report.py 构建本页。过滤引擎与手调参数见项目 README 与 config/clean.config.json。</p>
+  <h3>开发说明</h3>
+  <p class="note">本项目由 Elabation 开发，<b>GLM-5.3-Flash（Z.ai）</b>作为 AI 结对开发者参与——采样管线、统计实验与本报告的撰写均为「人定方向与结论、AI 执行与实现」的人机协作产物；全部数字由仓库内开源脚本在公开 API 数据上复跑得出，方法与局限如上。浏览器扩展的 UI 框架基于 BewlyBewly（MIT, © Hakadao）增量改造，见仓库 THIRD_PARTY_NOTICES.md。</p>
 </section>
 
-<div class="foot">洁净 B 站 · 看过却不给 · 第三版 · 用统计夺回注意力</div>
+<div class="foot">BewlyBewly Pure · 看过却不给 · 第三版 · 用统计夺回注意力</div>
 </div>
 
 <script>

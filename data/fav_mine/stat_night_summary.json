@@ -1,0 +1,166 @@
+{
+  "N1_confluence_quality": {
+    "conf_n": 40,
+    "conf_mean": 5.132,
+    "single_n": 1176,
+    "single_mean": 4.835,
+    "mwu_z": 0.814,
+    "p_one": 0.20774669639743307
+  },
+  "N2_layer_alluvial": [
+    {
+      "layer": "arm1",
+      "total": 1449,
+      "new": 1449,
+      "novelty": 1.0
+    },
+    {
+      "layer": "hop2",
+      "total": 784,
+      "new": 780,
+      "novelty": 0.995
+    },
+    {
+      "layer": "hop3",
+      "total": 654,
+      "new": 649,
+      "novelty": 0.992
+    },
+    {
+      "layer": "hop4",
+      "total": 905,
+      "new": 888,
+      "novelty": 0.981
+    }
+  ],
+  "N3_edge_gods": [
+    {
+      "bvid": "BV1Us421w7gN",
+      "title": "【4k】恩公要和小女子一起过520嘛~今天穿了旗袍~崩坏星穹",
+      "cbi": 10.092,
+      "inflow": 1,
+      "view": 177584
+    },
+    {
+      "bvid": "BV1w4hP6FERH",
+      "title": "长期久坐办公的 三个动作每天就这么练上一分钟 坚持一段时间你",
+      "cbi": 9.27,
+      "inflow": 1,
+      "view": 91990
+    },
+    {
+      "bvid": "BV1xzK56eEs5",
+      "title": "哈基光不语，只是一味教学AI替换舞蹈",
+      "cbi": 6.324,
+      "inflow": 1,
+      "view": 89916
+    },
+    {
+      "bvid": "BV1UptW6XE28",
+      "title": "这个视频，送给被生命厌恶着的我们。| 被生命所厌恶。(命に嫌",
+      "cbi": 5.322,
+      "inflow": 1,
+      "view": 99651
+    },
+    {
+      "bvid": "BV1cZxGzpEey",
+      "title": "举铁十年第一次跳舞｜动作基础，身材就不基础",
+      "cbi": 3.202,
+      "inflow": 1,
+      "view": 586178
+    },
+    {
+      "bvid": "BV18X6oByE5m",
+      "title": "真发cos吗 那很权威了",
+      "cbi": 3.09,
+      "inflow": 1,
+      "view": 267217
+    },
+    {
+      "bvid": "BV13JM16iEVx",
+      "title": "我可是有好好练习跳舞的",
+      "cbi": 3.018,
+      "inflow": 1,
+      "view": 686058
+    },
+    {
+      "bvid": "BV1XM4o67EFt",
+      "title": "1000万以内最好的cos服",
+      "cbi": 3.012,
+      "inflow": 1,
+      "view": 3532
+    }
+  ],
+  "N4_top_confluence": [
+    {
+      "bvid": "BV1G48M6XEBt",
+      "inflow": 6,
+      "tier": "high",
+      "cbi": 3.632,
+      "title": "\"复活吧！我的（ ）\""
+    },
+    {
+      "bvid": "BV1P24y1a7Lt",
+      "inflow": 3,
+      "tier": "high",
+      "cbi": 3.33,
+      "title": "【原神新春会】我不曾忘记 | 致旅行中的你"
+    },
+    {
+      "bvid": "BV1Jb411U7u2",
+      "inflow": 3,
+      "tier": "good",
+      "cbi": 2.092,
+      "title": "洛天依，原创《勾指起誓》"
+    },
+    {
+      "bvid": "BV1CGtp66EEM",
+      "inflow": 3,
+      "tier": "high",
+      "cbi": 3.126,
+      "title": "全程高能！队友接连失踪？活着并逃离这里！！！「逃离疯人院」"
+    },
+    {
+      "bvid": "BV1eKu46xEW8",
+      "inflow": 3,
+      "tier": "high",
+      "cbi": 12.681,
+      "title": "⚡️赛博开箱⚡️ 【B站AI创造公开赛】"
+    },
+    {
+      "bvid": "BV1JrgA6MEMG",
+      "inflow": 3,
+      "tier": "high",
+      "cbi": 5.964,
+      "title": "【本家投稿】分かっちゃいないね（还真是什么都不懂呢）/ monet "
+    },
+    {
+      "bvid": "BV15HFVz1EvM",
+      "inflow": 3,
+      "tier": "good",
+      "cbi": 2.598,
+      "title": "【本家】月が綺麗ねと言われたい！ - 初音ミク【カササギ】"
+    },
+    {
+      "bvid": "BV1DCNq6TEsD",
+      "inflow": 2,
+      "tier": "good",
+      "cbi": 2.341,
+      "title": "【中字熟肉/FroggyDude】“用100天杀死grox”（上集）"
+    },
+    {
+      "bvid": "BV1d93p69EkP",
+      "inflow": 2,
+      "tier": "high",
+      "cbi": 3.59,
+      "title": "自行避雷"
+    },
+    {
+      "bvid": "BV1jF411m7jh",
+      "inflow": 2,
+      "tier": "low",
+      "cbi": 0.96,
+      "title": "【无损HiRes】《苦茶子》“我什么都做不到，除非忘掉你的所有”-4"
+    }
+  ]
+}

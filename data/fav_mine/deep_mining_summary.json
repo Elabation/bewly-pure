@@ -1,0 +1,456 @@
+{
+  "merged": "favmine_merged_20260903_124315.json",
+  "n_qual": 6835,
+  "S1_coin_fav_by_year": {
+    "2019": 0.2425,
+    "2020": 0.3317,
+    "2021": 0.4018,
+    "2022": 0.2458,
+    "2023": 0.1896,
+    "2024": 0.2564,
+    "2025": 0.1798,
+    "2026": 0.2264
+  },
+  "S1_full": {
+    "2019": {
+      "n": 192,
+      "coin-fav": 0.2425,
+      "coin-like": 0.7742,
+      "coin-danmaku": 0.2886,
+      "coin-share": 0.2224,
+      "fav-like": 0.1808,
+      "fav-danmaku": -0.0804,
+      "fav-share": 0.389,
+      "like-danmaku": 0.2768,
+      "like-share": 0.0242,
+      "danmaku-share": -0.0196
+    },
+    "2020": {
+      "n": 245,
+      "coin-fav": 0.3317,
+      "coin-like": 0.6352,
+      "coin-danmaku": 0.0734,
+      "coin-share": 0.2642,
+      "fav-like": 0.1364,
+      "fav-danmaku": -0.2298,
+      "fav-share": 0.2085,
+      "like-danmaku": 0.0877,
+      "like-share": 0.0674,
+      "danmaku-share": -0.1671
+    },
+    "2021": {
+      "n": 322,
+      "coin-fav": 0.4018,
+      "coin-like": 0.5419,
+      "coin-danmaku": 0.1564,
+      "coin-share": 0.3322,
+      "fav-like": 0.2964,
+      "fav-danmaku": -0.0225,
+      "fav-share": 0.3334,
+      "like-danmaku": 0.0191,
+      "like-share": 0.2348,
+      "danmaku-share": -0.037
+    },
+    "2022": {
+      "n": 475,
+      "coin-fav": 0.2458,
+      "coin-like": 0.3346,
+      "coin-danmaku": 0.1554,
+      "coin-share": 0.3366,
+      "fav-like": 0.5158,
+      "fav-danmaku": -0.048,
+      "fav-share": 0.0893,
+      "like-danmaku": -0.0942,
+      "like-share": 0.1909,
+      "danmaku-share": -0.0052
+    },
+    "2023": {
+      "n": 504,
+      "coin-fav": 0.1896,
+      "coin-like": 0.3597,
+      "coin-danmaku": 0.2573,
+      "coin-share": 0.3614,
+      "fav-like": 0.3133,
+      "fav-danmaku": -0.0602,
+      "fav-share": 0.1215,
+      "like-danmaku": 0.0285,
+      "like-share": 0.2199,
+      "danmaku-share": 0.0692
+    },
+    "2024": {
+      "n": 672,
+      "coin-fav": 0.2564,
+      "coin-like": 0.2799,
+      "coin-danmaku": 0.299,
+      "coin-share": 0.3408,
+      "fav-like": 0.5937,
+      "fav-danmaku": -0.0121,
+      "fav-share": 0.1316,
+      "like-danmaku": 0.0027,
+      "like-share": 0.1757,
+      "danmaku-share": 0.1991
+    },
+    "2025": {
+      "n": 1133,
+      "coin-fav": 0.1798,
+      "coin-like": 0.34,
+      "coin-danmaku": 0.2362,
+      "coin-share": 0.0559,
+      "fav-like": 0.5609,
+      "fav-danmaku": -0.0242,
+      "fav-share": 0.0029,
+      "like-danmaku": 0.0758,
+      "like-share": 0.1131,
+      "danmaku-share": 0.05
+    },
+    "2026": {
+      "n": 3108,
+      "coin-fav": 0.2264,
+      "coin-like": 0.344,
+      "coin-danmaku": 0.1329,
+      "coin-share": 0.0144,
+      "fav-like": 0.6309,
+      "fav-danmaku": -0.0215,
+      "fav-share": 0.0397,
+      "like-danmaku": 0.0507,
+      "like-share": 0.1207,
+      "danmaku-share": 0.0646
+    }
+  },
+  "S2_cbi_morphology": {
+    "2019": {
+      "n": 192,
+      "mean": 1.627,
+      "skew": 1.8703,
+      "p90": 3.21,
+      "high_rate": 0.12
+    },
+    "2020": {
+      "n": 245,
+      "mean": 1.7,
+      "skew": 1.8101,
+      "p90": 3.5,
+      "high_rate": 0.147
+    },
+    "2021": {
+      "n": 322,
+      "mean": 1.512,
+      "skew": 1.855,
+      "p90": 3.26,
+      "high_rate": 0.127
+    },
+    "2022": {
+      "n": 475,
+      "mean": 1.63,
+      "skew": 2.6237,
+      "p90": 3.27,
+      "high_rate": 0.128
+    },
+    "2023": {
+      "n": 504,
+      "mean": 1.722,
+      "skew": 1.2628,
+      "p90": 3.52,
+      "high_rate": 0.143
+    },
+    "2024": {
+      "n": 672,
+      "mean": 1.917,
+      "skew": 3.041,
+      "p90": 3.83,
+      "high_rate": 0.173
+    },
+    "2025": {
+      "n": 1133,
+      "mean": 2.082,
+      "skew": 1.7221,
+      "p90": 4.38,
+      "high_rate": 0.213
+    },
+    "2026": {
+      "n": 3108,
+      "mean": 2.347,
+      "skew": 2.3998,
+      "p90": 5.03,
+      "high_rate": 0.276
+    }
+  },
+  "S3_survivorship": {
+    "note": "对照组 = uploader 臂（收藏即选择效应的对照组）",
+    "bands": {
+      "view_3000-30000": {
+        "mined_mean": 1.293,
+        "ctrl_mean": 1.26,
+        "mined_high": 0.082,
+        "ctrl_high": 0.089,
+        "selection_gap": 0.032
+      },
+      "view_30000-300000": {
+        "mined_mean": 2.056,
+        "ctrl_mean": 1.109,
+        "mined_high": 0.222,
+        "ctrl_high": 0.063,
+        "selection_gap": 0.948
+      },
+      "view_300000-1000000000": {
+        "mined_mean": 2.326,
+        "ctrl_mean": 1.343,
+        "mined_high": 0.254,
+        "ctrl_high": 0.064,
+        "selection_gap": 0.983
+      }
+    }
+  },
+  "S4_archaeo_top": [],
+  "S5_treasure_ups": [
+    {
+      "up": "c3c0e1",
+      "videos": 6,
+      "high": 5,
+      "high_rate": 0.833
+    },
+    {
+      "up": "8bf28a",
+      "videos": 13,
+      "high": 4,
+      "high_rate": 0.308
+    },
+    {
+      "up": "914d38",
+      "videos": 5,
+      "high": 1,
+      "high_rate": 0.2
+    },
+    {
+      "up": "3176d1",
+      "videos": 5,
+      "high": 1,
+      "high_rate": 0.2
+    },
+    {
+      "up": "010ac3",
+      "videos": 5,
+      "high": 1,
+      "high_rate": 0.2
+    },
+    {
+      "up": "876a22",
+      "videos": 5,
+      "high": 1,
+      "high_rate": 0.2
+    },
+    {
+      "up": "7cc1a5",
+      "videos": 19,
+      "high": 0,
+      "high_rate": 0.0
+    },
+    {
+      "up": "e437a7",
+      "videos": 16,
+      "high": 0,
+      "high_rate": 0.0
+    },
+    {
+      "up": "2f7d67",
+      "videos": 15,
+      "high": 0,
+      "high_rate": 0.0
+    },
+    {
+      "up": "0b7b49",
+      "videos": 13,
+      "high": 0,
+      "high_rate": 0.0
+    },
+    {
+      "up": "549600",
+      "videos": 13,
+      "high": 0,
+      "high_rate": 0.0
+    },
+    {
+      "up": "939b84",
+      "videos": 11,
+      "high": 0,
+      "high_rate": 0.0
+    }
+  ],
+  "S6_aging": {
+    "most_anti_aging": [
+      {
+        "zone": "?",
+        "cbi_vs_logage_r": -0.1323,
+        "n": 6835
+      }
+    ],
+    "fastest_decaying": [
+      {
+        "zone": "?",
+        "cbi_vs_logage_r": -0.1323,
+        "n": 6835
+      }
+    ]
+  },
+  "S7_ag_cbi": {
+    "ag_only_rate": 0.2208,
+    "cbi_only_rate": null,
+    "both_rate": null
+  },
+  "S8_flow": {
+    "e1": {
+      "min_videos": 5,
+      "scale": {
+        "low": 0.5,
+        "normal": 1.0,
+        "good": 2.0,
+        "high": 3.0
+      },
+      "n_users": {
+        "flow_high": 40,
+        "uploader": 19,
+        "comment_low": 43
+      },
+      "metrics": {
+        "神作率": {
+          "means": {
+            "flow_high": 0.2614495323057832,
+            "uploader": 0.06906938795208296,
+            "comment_low": 0.17605836779953649
+          },
+          "tests": {
+            "flow_high>uploader": {
+              "z": 4.526,
+              "p": 3.0058466856862923e-06
+            },
+            "flow_high>comment_low": {
+              "z": 2.233,
+              "p": 0.012780556416752659
+            },
+            "comment_low>uploader": {
+              "z": 3.397,
+              "p": 0.0003402186910456796
+            }
+          }
+        },
+        "优秀率": {
+          "means": {
+            "flow_high": 0.45217724670061116,
+            "uploader": 0.17396828103627057,
+            "comment_low": 0.3231294164534726
+          },
+          "tests": {
+            "flow_high>uploader": {
+              "z": 4.266,
+              "p": 9.93158361793632e-06
+            },
+            "flow_high>comment_low": {
+              "z": 2.98,
+              "p": 0.0014406529888437234
+            },
+            "comment_low>uploader": {
+              "z": 2.802,
+              "p": 0.00254049883458487
+            }
+          }
+        },
+        "平均CBI": {
+          "means": {
+            "flow_high": 2.297223657429753,
+            "uploader": 1.2349239516866644,
+            "comment_low": 1.8932068691548927
+          },
+          "tests": {
+            "flow_high>uploader": {
+              "z": 4.396,
+              "p": 5.508108872644103e-06
+            },
+            "flow_high>comment_low": {
+              "z": 2.151,
+              "p": 0.01574624254844956
+            },
+            "comment_low>uploader": {
+              "z": 3.29,
+              "p": 0.0005001188931407541
+            }
+          }
+        },
+        "中位CBI": {
+          "means": {
+            "flow_high": 1.90505,
+            "uploader": 1.0535263157894734,
+            "comment_low": 1.5047441860465118
+          },
+          "tests": {
+            "flow_high>uploader": {
+              "z": 3.885,
+              "p": 5.11222016970193e-05
+            },
+            "flow_high>comment_low": {
+              "z": 2.57,
+              "p": 0.005084687622377165
+            },
+            "comment_low>uploader": {
+              "z": 2.573,
+              "p": 0.005043698128423379
+            }
+          }
+        }
+      },
+      "e1": {
+        "ratio": 3.785,
+        "p": 3.0058466856862923e-06,
+        "pass": true
+      },
+      "e2": {
+        "ratio": 1.485,
+        "p": 0.012780556416752659,
+        "pass": true
+      }
+    },
+    "hops": {
+      "hop1_rate": 0.253,
+      "protocol": "draw=random fill=random（无偏统计链；剪枝归工程叙事不入神作率——Elabation 2026-09-03 准则修订）",
+      "criteria": {
+        "rho_floor": 0.95,
+        "abs_floor": 0.8,
+        "min_seeds": 10,
+        "max_hop": 6
+      },
+      "verdicts": [
+        {
+          "hop": 2,
+          "rate": 0.246,
+          "rho": null,
+          "n_seeds": 18,
+          "stop": false,
+          "reason": "",
+          "vs_hop1": 0.973,
+          "efficiency": 0.1731
+        },
+        {
+          "hop": 3,
+          "rate": 0.296,
+          "rho": 1.203,
+          "n_seeds": 18,
+          "stop": false,
+          "reason": "",
+          "vs_hop1": 1.171,
+          "efficiency": 0.2043
+        },
+        {
+          "hop": 4,
+          "rate": 0.216,
+          "rho": 0.73,
+          "n_seeds": 18,
+          "stop": true,
+          "reason": "跳间相对下滑 27.0% > 5%（信号传递失真）",
+          "vs_hop1": 0.855,
+          "efficiency": 0.1619
+        }
+      ],
+      "final_hops": 3,
+      "conclusion": "无偏统计链共流 3 跳（含第一跳共 4 层节点），终跳神作率 0.216"
+    }
+  }
+}

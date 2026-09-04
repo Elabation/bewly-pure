@@ -1,0 +1,93 @@
+{
+  "manifest_version": 3,
+  "name": "BewlyBewly · 洁净B站版",
+  "version": "0.41.1",
+  "version_name": "0.41.1-cb17",
+  "description": "基于 BewlyBewly (MIT, hakadao) 的增量版：CBI×F7 双重过滤，四档性能（并行/闪滑/标准/极速），刷新首屏严格判定，胶囊实时过滤比率。见仓库 THIRD_PARTY_NOTICES.md。",
+  "homepage_url": "https://github.com/hakadao/BewlyBewly",
+  "background": {
+    "service_worker": "./dist/background/index.js"
+  },
+  "icons": {
+    "16": "./assets/icon-512.png",
+    "48": "./assets/icon-512.png",
+    "128": "./assets/icon-512.png"
+  },
+  "permissions": [
+    "storage",
+    "declarativeNetRequest",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.bilibili.com/*",
+    "*://*.hdslb.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.bilibili.com/*",
+        "*://search.bilibili.com/*",
+        "*://t.bilibili.com/*",
+        "*://space.bilibili.com/*",
+        "*://message.bilibili.com/*",
+        "*://member.bilibili.com/*",
+        "*://account.bilibili.com/*",
+        "*://www.hdslb.com/*",
+        "*://passport.bilibili.com/*",
+        "*://music.bilibili.com/*"
+      ],
+      "js": [
+        "./dist/contentScripts/index.global.js"
+      ],
+      "css": [
+        "./dist/contentScripts/style.css"
+      ],
+      "run_at": "document_start",
+      "match_about_blank": true,
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://www.bilibili.com/*",
+        "*://search.bilibili.com/*",
+        "*://t.bilibili.com/*",
+        "*://space.bilibili.com/*",
+        "*://message.bilibili.com/*",
+        "*://member.bilibili.com/*",
+        "*://account.bilibili.com/*",
+        "*://www.hdslb.com/*",
+        "*://passport.bilibili.com/*",
+        "*://music.bilibili.com/*"
+      ],
+      "js": [
+        "./dist/inject/index.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "dist/contentScripts/style.css",
+        "assets/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "assets/rules.json"
+      }
+    ]
+  }
+}

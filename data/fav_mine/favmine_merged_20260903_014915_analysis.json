@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "mined_at": "",
+    "users": 0,
+    "n": 0,
+    "tier_scale": "normal>=1 / good>=2 / high(神)>=3"
+  },
+  "overall": {
+    "n": 0,
+    "high": 0,
+    "high_rate": 0,
+    "good_rate": 0,
+    "avg_cbi": 0
+  },
+  "control": {
+    "n": 166,
+    "high_rate": 0.127,
+    "good_rate": 0.247,
+    "avg_cbi": 1.58,
+    "year_dist": {
+      "2026": 166
+    },
+    "note": "对照=现有 samples 采集流（ranking/popular/feed 2020-2026），同一公式同一基线"
+  },
+  "old_vs_new": {
+    "cutoff": "5 年",
+    "old": {
+      "n": 0
+    },
+    "new": {
+      "n": 0
+    }
+  },
+  "by_year": [],
+  "folders": [],
+  "stars": []
+}

@@ -2,16 +2,18 @@
 
 ![report](https://img.shields.io/badge/调查报告-在线阅读-334EAC) ![extension](https://img.shields.io/badge/扩展-Edge·Chrome-081F5C) ![samples](https://img.shields.io/badge/样本-7,537条·2019--2026-7096D1) ![license](https://img.shields.io/badge/立场-过滤低质·不封神-7096D1)
 
-> **📖 调查报告《看过，却不给》在线阅读 → https://elabation.github.io/clean-bilibili-report/web/ecosystem-report.html**
+> **📖 调查报告《看过，却不给》在线阅读 → https://elabation.github.io/bewly-pure/web/ecosystem-report.html**
+> **🕰️ 姊妹报告《给过，却不再被看见》（收藏夹考古 NOSTALGIA 01）→ https://elabation.github.io/bewly-pure/web/nostalgia-report.html**
 >
 > **⚡ 浏览器扩展安装（2 分钟）→ 教程见 [docs/tutorial.md](docs/tutorial.md)**
 
 > 过滤B站首页推荐的：**短视频 / 竖屏视频 / 直播 / 低质量视频**。
-> PC 端：**基于 BewlyBewly（MIT）做增量开发**——UI/网格/无限滚动用它的成熟框架，推荐过滤算法是我们自己的 CBI 感谢指数；版权声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，增量方案见 [docs/bewly-integration-plan.md](docs/bewly-integration-plan.md)。
-> 手机端（免 root）：Via/X（Android）+ Userscripts（iOS）。
+> **PC 端现役版本：BewlyBewly 增量版**（`extension-bewly/`，下载即装）——UI/网格/无限滚动基于 [BewlyBewly](https://github.com/hakadao/BewlyBewly)（MIT）成熟框架，推荐过滤算法是我们自己的 **CBI×F7 双重指标**。
+> 增量版能力（cb17）：同步层砍直播/短视频/切片签名 → CBI×F7 双重判定砍「看过不给」→ 每卡左下角评分角标 → 左下角状态胶囊（实时**过滤比率**/缓存/熔断可视+一键解除）→ **四档性能**（并行·快筛免请求 / 闪滑·判定限时 / 标准·全量 / 极速·零请求）→ 判定缓存持久化（越用越快）→ 全部阈值在设置面板手调。
+> 手机端（免 root）：**尚未完成**，方案评估见 [docs/mobile-plan.md](docs/mobile-plan.md)。
 > 动机：夺回注意力，拒绝「下滑刷视频」的投喂设计。
 >
-> **核心立场（先生定调）：过滤低质，而不是保留高质。**
+> **核心立场：过滤低质，而不是保留高质。**
 > 低质的可操作定义 = **「看过，却不给」**——播放量早已消耗了大量注意力，互动比却低于同播放段基线。
 > 手搓高投入内容比值虽高，但品味因人而异；算法只砍「注意力小偷」，不做「封神判官」。
 
@@ -26,7 +28,7 @@ CBI 感谢指数   = F7 ÷ 同播放段基线中位数（6,734 条样本滑窗�
 - 播放量 < 3000 → 判 `unproven`（比率不可信，新视频保护）
 - 所有权重、阈值、开关集中在 **`config/clean.config.json`** 一个文件里；扩展判定核心与它同步
 
-### 手调指南（先生最关心的部分）
+### 手调指南
 
 | 想调什么 | 改哪个字段 | 默认 | 说明 |
 |---|---|---|---|
@@ -66,12 +68,15 @@ bilibili-clean/
 │   ├── ecosystem_analysis.py     # 生态分析（公式扫描/分位段/四象限/分区画像）
 │   ├── deep_analysis.py          # 深度统计实验：偏相关/CBI基线/洛伦兹/PCA/检验/时代演化/时长分析
 │   ├── simulate_userscript.py    # 判定逻辑离线模拟器（上线前验证过滤率）
-│   └── build_report.py           # 报告网页构建（幂等注入数据）
+│   ├── fav_miner.py              # 收藏夹考古挖掘器（公开收藏夹→CBI打分→匿名入库）
+│   └── build_nostalgia.py        # 怀旧报告构建（幂等注入数据）
 ├── data/
 │   ├── samples/                  # 采集样本（v5 约2万条，2020-2026 跨度）+ 校准报告
+│   ├── fav_mine/                 # 收藏夹考古数据（匿名化：身份入库即 SHA-1）
 │   └── analysis/                 # 生态分析 + 深度分析结果 JSON
 ├── web/
-│   └── ecosystem-report.html     # 《看过，却不给》调查报告 v3（单文件可分享，15章节）
+│   ├── ecosystem-report.html     # 《看过，却不给》调查报告 v3（单文件可分享，15章节）
+│   └── nostalgia-report.html     # 《给过，却不再被看见》收藏夹考古报告 N01（单文件可分享）
 ├── userscript/
 │   └── bilibili-clean-mobile.user.js  # 手机端脚本（m.bilibili.com 三股流过滤）
 └── docs/
@@ -128,8 +133,10 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 | 2.5 | 生态调查《看过，却不给》 | ✅✅ **第三版：十三项统计实验**（偏相关/分位回归/洛伦兹/PCA/χ²/MWU/**时代演化 2020-2026**/**时长×质量**/**层间对比**），单栏可读性重写，报告 web/ecosystem-report.html |
 | 3 | 过滤验证：真实页面验证规则 | ✅ **扩展 v1.0 真机全链路实测**（wbi 签名直连 code 0、网格 17 卡 CBI 角标全亮、砍 3 条）；判定逻辑离线模拟 feed 层砍 32% 卡片收回 54% 播放份额 |
 | 3.5 | 引擎 v2：CBI 相对基线取代全局阈值 | ✅ 设计+参数落地：config 新增 `cbi` 段（threshold 0.5 / min_view 5w）+ 8 条过滤器规则（报告§13），扩展判定核心同步 |
-| 4 | 手机端方案（免 root） | ✅ **机制落地**：`userscript/bilibili-clean-mobile.user.js`（m.bilibili.com 首页热榜 SSR / 频道流 / 视频页相关流三股全过滤），单测 21/21 + 真实样本端到端 23.3% 过滤率验证，安装指南见 docs/mobile-plan.md，待真机实测 |
+| 4 | 手机端方案（免 root） | 🚧 **现役路线 A**：Firefox Android + BewlyBewly(Firefox 版) + 本仓库增量（`extension-bewly-firefox.zip` 已构建），真机验证中；方案与路线取舍见 docs/mobile-plan.md |
 | 5 | 成果发布 | ✅ GitHub 公开仓库 + Pages 报告 + 扩展教程齐备 |
+| 6 | **BewlyBewly 增量版扩展** | ✅ **现役 PC 版（cb17）**：CBI×F7 双重判定、评分角标、四档性能（并行/闪滑/标准/极速）、判定缓存、过滤比率胶囊、熔断可视+一键解除、设置面板全参数手调；预构建产物 `extension-bewly/`（每版归档 `releases/cbN`） |
+| 7 | **收藏夹考古（怀旧方向）** | ✅ **NOSTALGIA 01 完成**：fav_miner 挖掘 48 匿名用户公开收藏夹 645 条视频（2011-2026），同尺 CBI 对照分析；老视频 n=205 中神作 62 条；报告 web/nostalgia-report.html |
 
 ## 现成方案对比（为什么自己写）
 
@@ -141,3 +148,9 @@ python engine\scoring.py --data data\samples\sample_xxx.json
 | [MBGA](https://github.com/Xposed-Modules-Repo/top.trangle.mbga) | 手机 | 需 root（LSPosed）；免root用户用不了 → 我们的差异化空间 |
 
 **差异化**：① PC 网格接管 + 手机免 root；② 收藏/投币/播放比值的质量评分（CBI 相对基线），阈值全手调。
+
+## 仓库命名与开发说明
+
+**为什么叫 bewly-pure**：它是 [BewlyBewly](https://github.com/hakadao/BewlyBewly)（MIT, © Hakadao）的纯净演进版——UI/框架/无限滚动的功劳属于 BewlyBewly；本仓库的增量是一层 CBI 过滤算法（版权划分见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)）。调查报告只是本仓库的成果之一，故不入仓库名。
+
+**AI 辅助开发**：本项目由 [Elabation](https://github.com/Elabation) 开发，**GLM-5.3-Flash（Z.ai）** 作为 AI 结对开发者深度参与——采样管线、统计实验、调查报告与扩展工程均为「人定方向与拍板、AI 执行与实现」的人机协作产物；过滤哲学与产品决策的最终裁量权在 Elabation。

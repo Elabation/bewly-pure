@@ -60,13 +60,21 @@ vendor/ 目录不提交（.gitignore 已加）；上游升级 = git pull 后重�
 
 | 期 | 内容 | 验收 |
 |---|---|---|
-| P1 | 环境就绪 + 原版 BewlyBewly 构建跑通 + 加载进 Edge | 原版体验完整（网格/无限下滑/暗色） |
-| P2 | cleanBili 模块移植（同步过滤 + 懒判定 + 角标）插入 ForYou/VideoCard | 首页 CBI 过滤生效，下滑补位正常，计数可在控制台看 |
-| P3 | 设置面板「洁净B站」分区（阈值/白名单/开关可视化） | 不改代码即可调参 |
-| P4 | CleanBiliHome 独立视图 + 文案/主题微调（洁净B站品牌） | 双模式共存：原版推荐 / CBI 过滤流 |
+| P1 | 环境就绪 + 原版 BewlyBewly 构建跑通 + 加载进 Edge | 原版体验完整（网格/无限下滑/暗色） | ✅ Node v24 + corepack pnpm 9.5，原版 build 通过 |
+| P2 | cleanBili 模块移植（同步过滤 + 懒判定 + 角标）插入 ForYou/VideoCard | 首页 CBI 过滤生效，下滑补位正常，计数可在控制台看 | ✅ 代码完成 + lint 全绿 + build 通过；**待真机加载验证** |
+| P3 | 设置面板「洁净B站」分区（阈值/白名单/开关可视化） | 不改代码即可调参 | ⏳ |
+| P4 | CleanBiliHome 独立视图 + 文案/主题微调（洁净B站品牌） | 双模式共存：原版推荐 / CBI 过滤流 | ⏳ |
+
+## P2 落地记录（2026-09）
+
+- 增量源码：`vendor/BewlyBewly/src/logic/cleanBili/core.ts`（判定核心，纯函数）+ `useCleanBili.ts`（接线层：filterSync / judgeBatch / cleanBiliBadges / 计数）
+- 上游改动仅 1 文件：`ForYou.vue`（同步过滤 1 处 + finally 批次懒判定 1 处 + 模板 wrapper 角标 + 样式），VideoCard 未动
+- 预构建产物：`extension-bewly/`（26.6MB，manifest 标注 `0.41.1-cb1`），下载该文件夹直接「加载解压缩的扩展」即用
+- 调试：F12 控制台 `__CLEAN_BILI_COUNTS` 查看实时过滤计数
+- 上游 ForYou 的无限滚动 / 骨架屏 / 失败重试机制全部原样继承
 
 ## 现状与自研版处置
 
 - 自研 `extension/`（手搓网格版）保留在仓库作对照，但**不再是 PC 主线**；README 主线改为 BewlyBewly 增量版
 - 手机的 `userscript/bilibili-clean-mobile.user.js` 不受影响（m.bilibili.com 场景独立）
-- 待 P1 完成后，用真机过一遍原版功能清单，再动 P2
+- 待用户真机加载 `extension-bewly/` 验证 P2 后，进入 P3（设置面板可视化）

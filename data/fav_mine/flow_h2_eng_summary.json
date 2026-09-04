@@ -1,0 +1,833 @@
+{
+  "hop2_high_rate": 0.239,
+  "hop2_good_rate": 0.403,
+  "n_users": 82,
+  "n_videos": 1254,
+  "n_qual": 1191,
+  "anon_requests": 1295,
+  "auth_requests": 18,
+  "probe": {
+    "n_probe_users": 7,
+    "n_qual_probe": 191,
+    "probe_rate": 0.419,
+    "prune_gain": 0.57,
+    "note": "剪枝组率/随机探针率 = CBI 浓度信号有效性的直接检验"
+  },
+  "alpha_cutoffs": {
+    "0.3": {
+      "users": 16,
+      "requests": 489,
+      "high_n": 170,
+      "high_rate": 0.317,
+      "good_rate": 0.493,
+      "efficiency": 0.3476
+    },
+    "0.5": {
+      "users": 21,
+      "requests": 703,
+      "high_n": 209,
+      "high_rate": 0.282,
+      "good_rate": 0.463,
+      "efficiency": 0.2973
+    },
+    "0.7": {
+      "users": 29,
+      "requests": 1000,
+      "high_n": 278,
+      "high_rate": 0.28,
+      "good_rate": 0.45,
+      "efficiency": 0.278
+    }
+  },
+  "flow_strength_monotonicity": {
+    "强度4+": 0.249
+  },
+  "curve": [
+    {
+      "req": 48,
+      "users": 1,
+      "high": 3,
+      "good": 4,
+      "user_req": 12,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 50,
+      "users": 2,
+      "high": 3,
+      "good": 4,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 52,
+      "users": 3,
+      "high": 3,
+      "good": 4,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 87,
+      "users": 4,
+      "high": 8,
+      "good": 16,
+      "user_req": 35,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 89,
+      "users": 5,
+      "high": 8,
+      "good": 16,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 91,
+      "users": 6,
+      "high": 8,
+      "good": 16,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 145,
+      "users": 7,
+      "high": 12,
+      "good": 26,
+      "user_req": 54,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 193,
+      "users": 8,
+      "high": 12,
+      "good": 29,
+      "user_req": 48,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 195,
+      "users": 9,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 197,
+      "users": 10,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 199,
+      "users": 11,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 201,
+      "users": 12,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 203,
+      "users": 13,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 205,
+      "users": 14,
+      "high": 12,
+      "good": 29,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 252,
+      "users": 15,
+      "high": 24,
+      "good": 47,
+      "user_req": 47,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 302,
+      "users": 16,
+      "high": 32,
+      "good": 67,
+      "user_req": 50,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 327,
+      "users": 17,
+      "high": 44,
+      "good": 83,
+      "user_req": 25,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 377,
+      "users": 18,
+      "high": 70,
+      "good": 121,
+      "user_req": 50,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 431,
+      "users": 19,
+      "high": 85,
+      "good": 142,
+      "user_req": 54,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 433,
+      "users": 20,
+      "high": 85,
+      "good": 142,
+      "user_req": 2,
+      "flow_strength": 18.3
+    },
+    {
+      "req": 435,
+      "users": 21,
+      "high": 85,
+      "good": 142,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 437,
+      "users": 22,
+      "high": 85,
+      "good": 142,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 487,
+      "users": 23,
+      "high": 101,
+      "good": 166,
+      "user_req": 50,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 489,
+      "users": 24,
+      "high": 101,
+      "good": 166,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 491,
+      "users": 25,
+      "high": 101,
+      "good": 166,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 527,
+      "users": 26,
+      "high": 106,
+      "good": 177,
+      "user_req": 36,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 529,
+      "users": 27,
+      "high": 106,
+      "good": 177,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 531,
+      "users": 28,
+      "high": 106,
+      "good": 177,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 533,
+      "users": 29,
+      "high": 106,
+      "good": 177,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 535,
+      "users": 30,
+      "high": 106,
+      "good": 177,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 587,
+      "users": 31,
+      "high": 110,
+      "good": 184,
+      "user_req": 52,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 589,
+      "users": 32,
+      "high": 110,
+      "good": 184,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 591,
+      "users": 33,
+      "high": 110,
+      "good": 184,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 593,
+      "users": 34,
+      "high": 110,
+      "good": 184,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 644,
+      "users": 35,
+      "high": 121,
+      "good": 207,
+      "user_req": 51,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 646,
+      "users": 36,
+      "high": 121,
+      "good": 207,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 697,
+      "users": 37,
+      "high": 129,
+      "good": 227,
+      "user_req": 51,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 699,
+      "users": 38,
+      "high": 129,
+      "good": 227,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 701,
+      "users": 39,
+      "high": 129,
+      "good": 227,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 703,
+      "users": 40,
+      "high": 129,
+      "good": 227,
+      "user_req": 2,
+      "flow_strength": 13.78
+    },
+    {
+      "req": 754,
+      "users": 41,
+      "high": 142,
+      "good": 247,
+      "user_req": 51,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 768,
+      "users": 42,
+      "high": 149,
+      "good": 256,
+      "user_req": 14,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 770,
+      "users": 43,
+      "high": 149,
+      "good": 256,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 772,
+      "users": 44,
+      "high": 149,
+      "good": 256,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 779,
+      "users": 45,
+      "high": 152,
+      "good": 261,
+      "user_req": 7,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 781,
+      "users": 46,
+      "high": 152,
+      "good": 261,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 783,
+      "users": 47,
+      "high": 152,
+      "good": 261,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 818,
+      "users": 48,
+      "high": 169,
+      "good": 283,
+      "user_req": 35,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 835,
+      "users": 49,
+      "high": 174,
+      "good": 290,
+      "user_req": 17,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 890,
+      "users": 50,
+      "high": 187,
+      "good": 304,
+      "user_req": 55,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 892,
+      "users": 51,
+      "high": 187,
+      "good": 304,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 894,
+      "users": 52,
+      "high": 187,
+      "good": 304,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 941,
+      "users": 53,
+      "high": 192,
+      "good": 315,
+      "user_req": 47,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 996,
+      "users": 54,
+      "high": 198,
+      "good": 331,
+      "user_req": 55,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 998,
+      "users": 55,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 1000,
+      "users": 56,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 1002,
+      "users": 57,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 1004,
+      "users": 58,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.68
+    },
+    {
+      "req": 1006,
+      "users": 59,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1008,
+      "users": 60,
+      "high": 198,
+      "good": 331,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1063,
+      "users": 61,
+      "high": 202,
+      "good": 342,
+      "user_req": 55,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1065,
+      "users": 62,
+      "high": 202,
+      "good": 342,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1067,
+      "users": 63,
+      "high": 202,
+      "good": 342,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1069,
+      "users": 64,
+      "high": 202,
+      "good": 342,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1071,
+      "users": 65,
+      "high": 202,
+      "good": 342,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1073,
+      "users": 66,
+      "high": 202,
+      "good": 342,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1123,
+      "users": 67,
+      "high": 210,
+      "good": 357,
+      "user_req": 50,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1125,
+      "users": 68,
+      "high": 210,
+      "good": 357,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1127,
+      "users": 69,
+      "high": 210,
+      "good": 357,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1179,
+      "users": 70,
+      "high": 228,
+      "good": 384,
+      "user_req": 52,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1226,
+      "users": 71,
+      "high": 233,
+      "good": 392,
+      "user_req": 47,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1279,
+      "users": 72,
+      "high": 239,
+      "good": 403,
+      "user_req": 53,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1281,
+      "users": 73,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1283,
+      "users": 74,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1285,
+      "users": 75,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1287,
+      "users": 76,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1289,
+      "users": 77,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1291,
+      "users": 78,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.38
+    },
+    {
+      "req": 1293,
+      "users": 79,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.16
+    },
+    {
+      "req": 1295,
+      "users": 80,
+      "high": 239,
+      "good": 403,
+      "user_req": 2,
+      "flow_strength": 12.16
+    }
+  ],
+  "seeds": [
+    {
+      "bvid": "BV1CGtp66EEM",
+      "aid": 117185833867271,
+      "inflow": 3,
+      "cbi": 3.076,
+      "tier": "high",
+      "title": "全程高能！队友接连失踪？活着并逃离这里！！！「逃离疯人院」"
+    },
+    {
+      "bvid": "BV1By8V61ESM",
+      "aid": 117117399799639,
+      "inflow": 2,
+      "cbi": 6.467,
+      "tier": "high",
+      "title": "【FX】家产七夕快乐啊！！"
+    },
+    {
+      "bvid": "BV1bq426mEhZ",
+      "aid": 117178737104735,
+      "inflow": 2,
+      "cbi": 5.497,
+      "tier": "high",
+      "title": "Today, I’m going to be a squished Hina"
+    },
+    {
+      "bvid": "BV1os4U6eEQp",
+      "aid": 117179777356277,
+      "inflow": 2,
+      "cbi": 4.193,
+      "tier": "high",
+      "title": "我求你看看这个节目吧！！！"
+    },
+    {
+      "bvid": "BV1Ti421C79r",
+      "aid": 1454319255,
+      "inflow": 18.3,
+      "cbi": 18.3,
+      "tier": "high",
+      "title": "不会打光的进来吃细糠！"
+    },
+    {
+      "bvid": "BV13M4m1D7eL",
+      "aid": 1303194278,
+      "inflow": 13.78,
+      "cbi": 13.784,
+      "tier": "high",
+      "title": "关于手的究极理解（大概）一个视频教你理解手~"
+    },
+    {
+      "bvid": "BV1eKu46xEW8",
+      "aid": 117052807316964,
+      "inflow": 12.68,
+      "cbi": 12.681,
+      "tier": "high",
+      "title": "⚡️赛博开箱⚡️ 【B站AI创造公开赛】"
+    },
+    {
+      "bvid": "BV1fWh365EjU",
+      "aid": 117153890110600,
+      "inflow": 12.3,
+      "cbi": 12.38,
+      "tier": "high",
+      "title": "新手学电脑，从认识键盘功能开始"
+    },
+    {
+      "bvid": "BV1GtfzBCE3d",
+      "aid": 116120010887423,
+      "inflow": 12.16,
+      "cbi": 12.164,
+      "tier": "high",
+      "title": "收下吧我的毕生所学"
+    },
+    {
+      "bvid": "BV1LThM6bEvr",
+      "aid": 117151742563347,
+      "inflow": 11.99,
+      "cbi": 11.995,
+      "tier": "high",
+      "title": "PLC天阶功法丨一个视频免费带你从0到1学会PLC，60小时速通PLC编程，项目"
+    },
+    {
+      "bvid": "BV1FtuF64EuQ",
+      "aid": 117035006689895,
+      "inflow": 11.68,
+      "cbi": 11.679,
+      "tier": "high",
+      "title": "其实你不得不承认现在的年轻人都不会看水电表"
+    },
+    {
+      "bvid": "BV1yUEQ6KEZe",
+      "aid": 116724040996134,
+      "inflow": 11.59,
+      "cbi": 11.586,
+      "tier": "high",
+      "title": "“Checklist”"
+    },
+    {
+      "bvid": "BV11Z4y1a7te",
+      "aid": 385621756,
+      "inflow": 11.21,
+      "cbi": 11.208,
+      "tier": "high",
+      "title": "女性体重在110~140之间，如何快速下百？《无跑跳燃脂操》珍藏版"
+    },
+    {
+      "bvid": "BV1ze4y1r736",
+      "aid": 558592630,
+      "inflow": 10.51,
+      "cbi": 10.512,
+      "tier": "high",
+      "title": "一键变美图的宝藏滤镜，妈妈再也不用担心我不会p图了"
+    },
+    {
+      "bvid": "BV124Vg6rEQz",
+      "aid": 116661696861557,
+      "inflow": 10.49,
+      "cbi": 10.491,
+      "tier": "high",
+      "title": "电脑刚开机就卡顿发热？快去关闭这个设置！"
+    },
+    {
+      "bvid": "BV1nW4y1y77Q",
+      "aid": 941372351,
+      "inflow": 10.22,
+      "cbi": 10.225,
+      "tier": "high",
+      "title": "眼妆画的好，大脸都显小！"
+    },
+    {
+      "bvid": "BV15CbNz8ETc",
+      "aid": 115005097778188,
+      "inflow": 9.91,
+      "cbi": 9.914,
+      "tier": "high",
+      "title": "我的世界！"
+    },
+    {
+      "bvid": "BV1yFcQzMEQh",
+      "aid": 116220791693029,
+      "inflow": 9.58,
+      "cbi": 9.576,
+      "tier": "high",
+      "title": "那些爆火全网神级间奏."
+    }
+  ]
+}

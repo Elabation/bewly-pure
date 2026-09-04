@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "points": 6940,
+    "valid_ag": 3187,
+    "mined": 3161,
+    "dirs": 38,
+    "min_nb": 15
+  },
+  "v2": {
+    "ag_only_n": 698,
+    "ag_only_rate": 0.2208,
+    "cbi_only_n": 140,
+    "both_n": 1376,
+    "ag_only_profile": {
+      "coin-+": 133,
+      "danmaku-+": 108,
+      "fav-+": 106,
+      "like-+": 86,
+      "share-+": 76,
+      "coin-": 59,
+      "danmaku-": 44,
+      "fav-": 42
+    },
+    "ag_only_examples": [
+      {
+        "bvid": "BV1Mf4y1g7TT",
+        "title": "男主的后宫居然是一只粉毛大猩猩？看完当场裂开！",
+        "year": "2021",
+        "ag": 1.0,
+        "cbi": 0.969,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV1Cz4y167Qe",
+        "title": "新番最渣海王！同时跟7个女朋友交往，结果因太渣下面变成了……",
+        "year": "2021",
+        "ag": 1.0,
+        "cbi": 1.281,
+        "u": "fav-+"
+      },
+      {
+        "bvid": "BV1FX4y1c7ab",
+        "title": "新番最爽男主！开局一条龙，一集收一个妹子",
+        "year": "2021",
+        "ag": 1.0,
+        "cbi": 1.553,
+        "u": "fav-+"
+      },
+      {
+        "bvid": "BV15K4y1E7J6",
+        "title": "恋爱福利番？狗粮？女装？【读评论20】",
+        "year": "2020",
+        "ag": 1.0,
+        "cbi": 2.378,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV1tt41137g1",
+        "title": "男女之间有纯友谊吗？【读评论09】",
+        "year": "2019",
+        "ag": 1.0,
+        "cbi": 2.369,
+        "u": "like-+"
+      },
+      {
+        "bvid": "BV1MJ411P7SJ",
+        "title": "分手后要拉黑前任吗？【读评论11】",
+        "year": "2019",
+        "ag": 1.0,
+        "cbi": 2.061,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV1Zb411b7PY",
+        "title": "我没女朋友，因为我是Gay？？？【读评论01】",
+        "year": "2019",
+        "ag": 1.0,
+        "cbi": 1.29,
+        "u": "coin-+"
+      },
+      {
+        "bvid": "BV16S4y1t7w4",
+        "title": "【特效向】华 山 论 剑 一",
+        "year": "2022",
+        "ag": 1.0,
+        "cbi": 2.587,
+        "u": "share-+"
+      },
+      {
+        "bvid": "BV1cS4y1R7gp",
+        "title": "⚡️青藏瓜原⚡️",
+        "year": "2021",
+        "ag": 1.0,
+        "cbi": 1.383,
+        "u": "danmaku-+"
+      },
+      {
+        "bvid": "BV1SuysBbEL7",
+        "title": "免费本地AI改歌词翻唱|支持整首歌修改|旋律不变，歌词任意修改|无需midi|改歌词不改曲",
+        "year": "2025",
+        "ag": 1.0,
+        "cbi": 0.917,
+        "u": "fav-+"
+      },
+      {
+        "bvid": "BV1Pz4y1h7Ub",
+        "title": "鸡你太美和月下三兄贵竟是同一首歌",
+        "year": "2023",
+        "ag": 1.0,
+        "cbi": 2.495,
+        "u": "danmaku-+"
+      },
+      {
+        "bvid": "BV16XhXz1EbL",
+        "title": "3d星球动画之小卤蛋吃播",
+        "year": "2025",
+        "ag": 1.0,
+        "cbi": 2.357,
+        "u": "like-"
+      }
+    ]
+  },
+  "v3": {
+    "n_boost": 637,
+    "rank_gain_cbi": 169.9,
+    "rank_gain_ag": 238.86,
+    "resid_lift": 0.2994,
+    "resid_median_all": 0.7167,
+    "detect": true
+  }
+}
