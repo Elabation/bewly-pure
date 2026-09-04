@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """神作货架 v2 —— 分区条一区一页 · 封面卡 · 年代桶 · 乱序重排 · 回退/撤销 · 众包标注。
 
 修订（Elabation 十条 · 2026-09-04）：
@@ -159,8 +159,8 @@ a{color:var(--data1)}
     <div class="kpi"><div class="n" id="k-cov"></div><div class="d">封面覆盖</div></div>
     <div class="kpi"><div class="n" id="k-yr"></div><div class="d">年代跨度</div></div>
     <div class="kpi"><div class="n" id="k-r10"></div><div class="d">R10 博同情降档</div></div>
-    <div class="kpi"><div class="n" id="k-ml"></div><div class="d">ML 自动分类（置信≥0.65）</div></div>
-    <div class="kpi"><div class="n" id="k-queue"></div><div class="d">待分类 · 求助</div></div>
+    <div class="kpi"><div class="n" id="k-ml">暂停</div><div class="d">ML 分类（等用户标注积累）</div></div>
+    <div class="kpi"><div class="n" id="k-queue"></div><div class="d">待用户分类（全池）</div></div>
     <div class="kpi"><div class="n" id="k-ann"></div><div class="d">我的标注（本地）</div></div>
   </div>
 </header>
@@ -190,7 +190,7 @@ a{color:var(--data1)}
 <div class="pagen"><button id="more" onclick="moreGrid()">加载更多</button></div>
 <div class="foot">
   <p><b>方法论</b>：候选池 = 参照库 + related 图五臂遍历（定向/随机/纵深/无补位/时光回溯）合并去重；判档 = 带内投币百分位（Δlog₁₀=0.2 排位）+ 行为指纹（R2 时长 / R3 吃灰 / R4 擦边 / R9 声援提档：币&gt;赞或币&gt;藏直升一档 / R10 博同情降档：求助·众筹·苦难类标题特征过强降一级并逐出声援之选）。百分位基线 7,672 条冻结。</p>
-  <p><b>训练-监督闭环</b>：分类由标题 n-gram 朴素贝叶斯自动完成（官方分区种子训练，留出集 71%，高置信精确率 77%）。置信度 ≥0.65 自动上架，其余进「待分类」等你帮忙。你的门类修正导出 JSON 交回 → 重训模型 → 换架，闭环完成。</p>
+  <p><b>分类策略（v2 修订）</b>：关键词自动分类已证明不可信，已全部清零——<b>全池待分类，由用户完成第一轮人工分类</b>。积累带标签数据（标题+tag）后再训练 ML，置信度低的持续进队列，形成「用户标注 → 训练 → 置信分流 → 用户纠错」的完整闭环。你的每一次门类选择都是训练数据。</p>
   <p><b>补货管线</b>：首页爬取 → 新种子 L1 图遍历（一铲 11+ 神）→ 高密度物种 C′/E 纵深 → build_site.py 一键换架。</p>
   <p>数据日期 __DATE__ · 全部匿名通道 · 主账号零重请求 · 封面与视频版权归原作者所有</p>
 </div>
@@ -276,7 +276,7 @@ function cardHTML(r){
       <div class="badges"><span class="badge${god?' god':''}">${god?'神作':'优秀'}</span>
         ${r10?'<span class="badge r10">R10 已降档</span>':''}
         ${r.src==='home'?'<span class="badge home">首页新声</span>':''}
-        <span class="badge">${esc(r.category)}</span>${r.cat_src!==`ml`?`<span class="badge" style="border-color:#C2803A;color:#9A6428">待分类</span>`:``}</div>
+        <span class="badge">${esc(r.category)}</span></div>
       <div class="t"><a href="https://www.bilibili.com/video/${r.bvid}" target="_blank" rel="noopener">${esc(r.title)}</a></div>
       <div class="m"><span class="yr">${r.year||'年代待考'}</span> · ${fmtW(r.view)}播放 · <span class="cr">币率 ${(r.coin_rate*100).toFixed(2)}%</span>${r.owner?' · '+esc(r.owner.slice(0,12)):''}</div>
       <div class="tools"><button onclick="toggleAnn('${r.bvid}')">标注 ▾</button>
