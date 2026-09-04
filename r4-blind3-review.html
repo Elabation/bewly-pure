@@ -1,0 +1,446 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R4 盲测第三轮 · 三分法验证台</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F7F2EB;color:#081F5C;
+ font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13.5px}
+.top{position:sticky;top:0;background:#F7F2EB;border-bottom:1px solid #D0E3FF;padding:14px 18px 10px;z-index:9}
+h1{font-family:'KaiTi','STKaiti',serif;font-size:20px;margin:0 0 2px;font-weight:800}
+.lead{font-size:12px;color:#7096D1;margin:0 0 8px;line-height:1.6}
+.barw{height:4px;background:#D0E3FF;border-radius:2px;margin:6px 0 10px}
+#bar{height:4px;background:#081F5C;border-radius:2px;width:0;transition:width .3s}
+.tab{display:inline-block;border:1px dashed #7096D1;border-radius:999px;padding:3px 12px;margin:0 6px 6px 0;
+ font-size:11px;color:#334EAC;cursor:pointer;background:none}
+.tab.on{background:#081F5C;color:#F7F2EB;border-style:solid;border-color:#081F5C}
+.btn{border:1px solid #334EAC;border-radius:6px;background:none;color:#081F5C;padding:4px 12px;
+ font-size:12px;cursor:pointer;margin-right:8px}
+.wrap{max-width:860px;margin:0 auto;padding:14px 16px 60px}
+.card{display:flex;background:#fff;border:1px solid #D0E3FF;border-radius:8px;margin:10px 0;overflow:hidden}
+.cov{flex:0 0 200px}.cov img{width:200px;height:125px;object-fit:cover;display:block}
+.inf{flex:1;padding:9px 12px;min-width:0}
+.ti{font-size:13.5px;font-weight:600;line-height:1.4;transition:filter .4s}
+.ti a{color:#081F5C;text-decoration:none}.ti a:hover{text-decoration:underline dotted #7096D1}
+.ti .up{font-size:11px;color:#7096D1;font-weight:400;margin-left:8px}
+.ti.hid{filter:blur(7px);pointer-events:none;user-select:none}
+.mt{font-size:11px;color:#7096D1;margin:3px 0 6px}
+.ch{margin-bottom:6px}
+.c1,.c0{display:inline-block;border-radius:4px;padding:2px 7px;font-size:11px;margin:0 6px 4px 0;font-variant-numeric:tabular-nums}
+.c1{background:#081F5C;color:#F7F2EB}
+.c0{background:#D0E3FF;color:#334EAC}
+.c1 b,.c0 b{font-weight:700}
+.v1,.v0{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;margin-right:8px}
+.v1{background:#334EAC;color:#fff}.v0{background:none;color:#7096D1;border:1px dashed #7096D1}
+.jd{font-size:12.5px}.jd label{margin-right:12px;cursor:pointer}
+.jd input{accent-color:#081F5C;vertical-align:-2px;margin-right:3px}
+@media(max-width:640px){.card{flex-direction:column}.cov{flex:none}.cov img{width:100%;height:170px}}
+</style></head><body>
+<div class="top"><h1>R4 盲测第三轮 · 三分法验证台</h1>
+<p class="lead">双盲协议：选样=数值+机器视觉（YuNet 真人脸），标题 UP 名模糊，<b>判定后揭示</b>。本轮验证「定向抓擦边」：T1（触发·短·真人）若擦边率≥60% 则方法成立。已判 <b id="prog">0 / 38</b></p>
+<div class="barw"><div id="bar"></div></div>
+<button class="tab on" data-f="ALL" onclick="setF('ALL')">全部 </button><button class="tab" data-f="T1" onclick="setF('T1')">T1 触发·短·真人 12</button><button class="tab" data-f="T2" onclick="setF('T2')">T2 触发·短·非真人 6</button><button class="tab" data-f="T3" onclick="setF('T3')">T3 触发·长·赦免 4</button><button class="tab" data-f="C1" onclick="setF('C1')">C1 真人·非R4基线 6</button><button class="tab" data-f="H1" onclick="setF('H1')">H1 高带·低诚·真人 4</button><button class="tab" data-f="G" onclick="setF('G')">G 随机对照 6</button><button class="tab" data-f="TODO" onclick="setF('TODO')">未判 </button>
+<button class="btn" onclick="exportJ()">导出判定JSON</button>
+<button class="btn" onclick="revealAll()">揭示全部</button>
+<button class="btn" onclick="wipe()">清空本地</button>
+</div><div class="wrap"><p class="lead" style="margin:18px 0 0">细胞 T1 · 触发·短·真人 —— 定向抓擦边候选：若擦边率≥60%，方法成立</p><div class="card" data-g="T1" id="c_BV1VPHNzrE3v">
+<a class="cov" href="https://www.bilibili.com/video/BV1VPHNzrE3v" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/16c858bd99dac3da66677c2a406d093658378f6c.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1VPHNzrE3v"><a href="https://www.bilibili.com/video/BV1VPHNzrE3v" target="_blank" rel="noreferrer">和我组一辈子星核猎手，好不好？</a><span class="up">UP：分享美图的凤九祥</span></div>
+<div class="mt">— · 播放 8,526 · 2025-10-02 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 50.8%</b>｜超线30.8%</span><span class="c1"><b>币 0.4%</b>｜低于2%线</span><span class="c1"><b>藏 50.8%</b>｜超线40.8%</span><span class="c0"><b>sinc</b>｜0.008</span><span class="c0"><b>时长</b>｜12s</span><span class="c1"><b>真脸</b>｜有(0.61)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1VPHNzrE3v" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1VPHNzrE3v" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1VPHNzrE3v" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1f8bv66EH8">
+<a class="cov" href="https://www.bilibili.com/video/BV1f8bv66EH8" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/b63a24f3efc266ccce1f49a30bc6fa7cf7c86895.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1f8bv66EH8"><a href="https://www.bilibili.com/video/BV1f8bv66EH8" target="_blank" rel="noreferrer">天城妈妈</a><span class="up">UP：离谱_ripuppp</span></div>
+<div class="mt">— · 播放 71,445 · 2026-08-17 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 50.6%</b>｜超线30.6%</span><span class="c1"><b>币 1.3%</b>｜低于2%线</span><span class="c1"><b>藏 28.8%</b>｜超线18.8%</span><span class="c0"><b>sinc</b>｜0.046</span><span class="c0"><b>时长</b>｜15s</span><span class="c1"><b>真脸</b>｜有(0.93)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1f8bv66EH8" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1f8bv66EH8" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1f8bv66EH8" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1sUMy6oExD">
+<a class="cov" href="https://www.bilibili.com/video/BV1sUMy6oExD" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/2b79c539095cd2dd8e36424bb736e3b4af3d67c6.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1sUMy6oExD"><a href="https://www.bilibili.com/video/BV1sUMy6oExD" target="_blank" rel="noreferrer">独自伤心的小鱼仔哦</a><span class="up">UP：太平洋搬运工</span></div>
+<div class="mt">— · 播放 30,006 · 2026-08-05 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 47.2%</b>｜超线27.2%</span><span class="c1"><b>币 0.3%</b>｜低于2%线</span><span class="c1"><b>藏 31.7%</b>｜超线21.7%</span><span class="c0"><b>sinc</b>｜0.009</span><span class="c0"><b>时长</b>｜13s</span><span class="c1"><b>真脸</b>｜有(0.90)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1sUMy6oExD" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1sUMy6oExD" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1sUMy6oExD" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1emMC6BEi3">
+<a class="cov" href="https://www.bilibili.com/video/BV1emMC6BEi3" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/d8d3e5dd69fbb58ae647ae680a9579bba751cde0.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1emMC6BEi3"><a href="https://www.bilibili.com/video/BV1emMC6BEi3" target="_blank" rel="noreferrer">速写姿势参考</a><span class="up">UP：繆斯之淚_开学周更</span></div>
+<div class="mt">— · 播放 31,351 · 2026-08-05 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 38.5%</b>｜超线18.5%</span><span class="c1"><b>币 0.6%</b>｜低于2%线</span><span class="c1"><b>藏 41.0%</b>｜超线31.0%</span><span class="c0"><b>sinc</b>｜0.015</span><span class="c0"><b>时长</b>｜11s</span><span class="c1"><b>真脸</b>｜有(0.91)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1emMC6BEi3" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1emMC6BEi3" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1emMC6BEi3" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1VxuG67Ejw">
+<a class="cov" href="https://www.bilibili.com/video/BV1VxuG67Ejw" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/6fd02409d4ce94d09685194320b8788386ecca43.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1VxuG67Ejw"><a href="https://www.bilibili.com/video/BV1VxuG67Ejw" target="_blank" rel="noreferrer">小流萤做好战斗准备</a><span class="up">UP：守萤大师</span></div>
+<div class="mt">— · 播放 27,862 · 2026-08-08 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 34.5%</b>｜超线14.5%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 22.2%</b>｜超线12.2%</span><span class="c0"><b>sinc</b>｜0.043</span><span class="c0"><b>时长</b>｜12s</span><span class="c1"><b>真脸</b>｜有(0.57)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1VxuG67Ejw" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1VxuG67Ejw" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1VxuG67Ejw" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1hu4y1G7NZ">
+<a class="cov" href="https://www.bilibili.com/video/BV1hu4y1G7NZ" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/8d571d89e68ed7129716ae1ff32e55ea5f0d4081.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1hu4y1G7NZ"><a href="https://www.bilibili.com/video/BV1hu4y1G7NZ" target="_blank" rel="noreferrer">好耶是魔术小桃桃</a><span class="up">UP：从未渴望爱情</span></div>
+<div class="mt">— · 播放 12,375 · 2023-12-12 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 33.2%</b>｜超线13.2%</span><span class="c1"><b>币 1.1%</b>｜低于2%线</span><span class="c1"><b>藏 16.6%</b>｜超线6.6%</span><span class="c0"><b>sinc</b>｜0.066</span><span class="c0"><b>时长</b>｜17s</span><span class="c1"><b>真脸</b>｜有(0.83)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1hu4y1G7NZ" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1hu4y1G7NZ" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1hu4y1G7NZ" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1GS8n6sEMC">
+<a class="cov" href="https://www.bilibili.com/video/BV1GS8n6sEMC" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/854d8cfcc16632e75c4be704c168acc1e0e397a3.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1GS8n6sEMC"><a href="https://www.bilibili.com/video/BV1GS8n6sEMC" target="_blank" rel="noreferrer">看云璃跳的都得电</a><span class="up">UP：吉平欧尼酱</span></div>
+<div class="mt">— · 播放 35,609 · 2026-08-20 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 32.5%</b>｜超线12.5%</span><span class="c1"><b>币 0.3%</b>｜低于2%线</span><span class="c1"><b>藏 18.6%</b>｜超线8.5%</span><span class="c0"><b>sinc</b>｜0.016</span><span class="c0"><b>时长</b>｜17s</span><span class="c1"><b>真脸</b>｜有(0.88)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1GS8n6sEMC" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1GS8n6sEMC" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1GS8n6sEMC" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV18A8j6gEG6">
+<a class="cov" href="https://www.bilibili.com/video/BV18A8j6gEG6" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/ba70d269ad5f9bb0be024c7360f3d28dd6219abd.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV18A8j6gEG6"><a href="https://www.bilibili.com/video/BV18A8j6gEG6" target="_blank" rel="noreferrer">这一刻和小梓一起度过吧</a><span class="up">UP：起司在线爆肝</span></div>
+<div class="mt">— · 播放 7,613 · 2026-08-19 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 32.2%</b>｜超线12.2%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 21.8%</b>｜超线11.8%</span><span class="c0"><b>sinc</b>｜0.041</span><span class="c0"><b>时长</b>｜13s</span><span class="c1"><b>真脸</b>｜有(0.93)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV18A8j6gEG6" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV18A8j6gEG6" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV18A8j6gEG6" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV153g56tE57">
+<a class="cov" href="https://www.bilibili.com/video/BV153g56tE57" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/f8fabf6dabb062a49b6e00e15c5c85b0db9378f0.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV153g56tE57"><a href="https://www.bilibili.com/video/BV153g56tE57" target="_blank" rel="noreferrer">琪猫猫驾到！通通闪开！</a><span class="up">UP：芷雪睡不醒</span></div>
+<div class="mt">— · 播放 43,645 · 2026-08-12 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 24.6%</b>｜超线4.6%</span><span class="c1"><b>币 1.4%</b>｜低于2%线</span><span class="c1"><b>藏 16.6%</b>｜超线6.6%</span><span class="c0"><b>sinc</b>｜0.081</span><span class="c0"><b>时长</b>｜16s</span><span class="c1"><b>真脸</b>｜有(0.89)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV153g56tE57" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV153g56tE57" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV153g56tE57" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1wuFszWE6f">
+<a class="cov" href="https://www.bilibili.com/video/BV1wuFszWE6f" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/4f5fafc983f7b5cffd5511bf745ae7b5ea8610bf.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1wuFszWE6f"><a href="https://www.bilibili.com/video/BV1wuFszWE6f" target="_blank" rel="noreferrer">一些设定</a><span class="up">UP：3QAQ并不Q</span></div>
+<div class="mt">— · 播放 26,251 · 2026-02-07 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 22.9%</b>｜超线2.9%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c1"><b>藏 18.1%</b>｜超线8.1%</span><span class="c0"><b>sinc</b>｜0.010</span><span class="c0"><b>时长</b>｜12s</span><span class="c1"><b>真脸</b>｜有(0.76)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1wuFszWE6f" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1wuFszWE6f" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1wuFszWE6f" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1U38E6kEBj">
+<a class="cov" href="https://www.bilibili.com/video/BV1U38E6kEBj" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/d4aa00c9c135f37d8a4030b40e81874e3cac6b1f.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1U38E6kEBj"><a href="https://www.bilibili.com/video/BV1U38E6kEBj" target="_blank" rel="noreferrer">我真的特别爱你！</a><span class="up">UP：柏虞柒柒柒柒</span></div>
+<div class="mt">— · 播放 4,123 · 2026-08-19 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 22.7%</b>｜超线2.7%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 12.9%</b>｜超线2.9%</span><span class="c0"><b>sinc</b>｜0.073</span><span class="c0"><b>时长</b>｜14s</span><span class="c1"><b>真脸</b>｜有(0.86)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1U38E6kEBj" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1U38E6kEBj" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1U38E6kEBj" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T1" id="c_BV1iBtK6UE1a">
+<a class="cov" href="https://www.bilibili.com/video/BV1iBtK6UE1a" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/549eae8634e907d96e71661cd267cc9bce0a23a1.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1iBtK6UE1a"><a href="https://www.bilibili.com/video/BV1iBtK6UE1a" target="_blank" rel="noreferrer">这个拉菲呆呆的</a><span class="up">UP：九九今天变娃没</span></div>
+<div class="mt">— · 播放 6,609 · 2026-08-29 · 细胞 T1（触发·短·真人）</div>
+<div class="ch"><span class="c1"><b>赞 20.3%</b>｜超线0.3%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c1"><b>藏 12.5%</b>｜超线2.5%</span><span class="c0"><b>sinc</b>｜0.019</span><span class="c0"><b>时长</b>｜12s</span><span class="c1"><b>真脸</b>｜有(0.58)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1iBtK6UE1a" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1iBtK6UE1a" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1iBtK6UE1a" value="存疑">存疑</label>
+</div></div></div><p class="lead" style="margin:18px 0 0">细胞 T2 · 触发·短·非真人 —— 预期低擦边率（对照）</p><div class="card" data-g="T2" id="c_BV1ys6iBVEsv">
+<a class="cov" href="https://www.bilibili.com/video/BV1ys6iBVEsv" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/f718d0c98a6bcc4be5f4c78bcaae69dafc738577.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1ys6iBVEsv"><a href="https://www.bilibili.com/video/BV1ys6iBVEsv" target="_blank" rel="noreferrer">电次君，我们一起去上学吧</a><span class="up">UP：EYeager</span></div>
+<div class="mt">— · 播放 3,341 · 2026-01-30 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 46.8%</b>｜超线26.8%</span><span class="c1"><b>币 1.8%</b>｜低于2%线</span><span class="c1"><b>藏 15.8%</b>｜超线5.8%</span><span class="c0"><b>sinc</b>｜0.112</span><span class="c0"><b>时长</b>｜21s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1ys6iBVEsv" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1ys6iBVEsv" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1ys6iBVEsv" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T2" id="c_BV1fENy6iExA">
+<a class="cov" href="https://www.bilibili.com/video/BV1fENy6iExA" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/042e3cf0cf6254a3503f5737cefcaac8268716bb.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1fENy6iExA"><a href="https://www.bilibili.com/video/BV1fENy6iExA" target="_blank" rel="noreferrer">佳代子：咖啡泡好了哦~老师</a><span class="up">UP：海绵呐QAQ</span></div>
+<div class="mt">— · 播放 29,913 · 2026-07-13 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 46.0%</b>｜超线25.9%</span><span class="c1"><b>币 1.7%</b>｜低于2%线</span><span class="c1"><b>藏 16.5%</b>｜超线6.5%</span><span class="c0"><b>sinc</b>｜0.103</span><span class="c0"><b>时长</b>｜15s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1fENy6iExA" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1fENy6iExA" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1fENy6iExA" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T2" id="c_BV1oQuH6JEUE">
+<a class="cov" href="https://www.bilibili.com/video/BV1oQuH6JEUE" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/f1bb34ba28af8474e22472edd12d2b7bf7681ffb.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1oQuH6JEUE"><a href="https://www.bilibili.com/video/BV1oQuH6JEUE" target="_blank" rel="noreferrer">丹恒单人向</a><span class="up">UP：衡一讨厌花生</span></div>
+<div class="mt">— · 播放 14,390 · 2026-08-06 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 40.1%</b>｜超线20.1%</span><span class="c1"><b>币 1.7%</b>｜低于2%线</span><span class="c1"><b>藏 14.4%</b>｜超线4.4%</span><span class="c0"><b>sinc</b>｜0.120</span><span class="c0"><b>时长</b>｜19s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1oQuH6JEUE" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1oQuH6JEUE" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1oQuH6JEUE" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T2" id="c_BV148gq6CEJp">
+<a class="cov" href="https://www.bilibili.com/video/BV148gq6CEJp" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/e0d70cc0c1a1038e9b151dfc34c698683e929610.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV148gq6CEJp"><a href="https://www.bilibili.com/video/BV148gq6CEJp" target="_blank" rel="noreferrer">【LookOut3D/meme】小伙子你很牛逼吗？Tipo Nino Vs Kabrinha</a><span class="up">UP：雪凌大少爷</span></div>
+<div class="mt">— · 播放 10,571 · 2026-07-25 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 34.7%</b>｜超线14.7%</span><span class="c1"><b>币 0.4%</b>｜低于2%线</span><span class="c1"><b>藏 17.5%</b>｜超线7.5%</span><span class="c0"><b>sinc</b>｜0.022</span><span class="c0"><b>时长</b>｜18s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV148gq6CEJp" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV148gq6CEJp" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV148gq6CEJp" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T2" id="c_BV1V5g56xE1S">
+<a class="cov" href="https://www.bilibili.com/video/BV1V5g56xE1S" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/edb5c30496f3f2a7697504a0d70a38906b30ff96.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1V5g56xE1S"><a href="https://www.bilibili.com/video/BV1V5g56xE1S" target="_blank" rel="noreferrer">超时空辉夜姬×请批准吧灯神先生/彩叶反守为攻版</a><span class="up">UP：川字符</span></div>
+<div class="mt">— · 播放 10,068 · 2026-08-12 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 28.3%</b>｜超线8.3%</span><span class="c1"><b>币 1.1%</b>｜低于2%线</span><span class="c1"><b>藏 13.3%</b>｜超线3.3%</span><span class="c0"><b>sinc</b>｜0.083</span><span class="c0"><b>时长</b>｜20s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1V5g56xE1S" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1V5g56xE1S" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1V5g56xE1S" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T2" id="c_BV1Ybg36EEYE">
+<a class="cov" href="https://www.bilibili.com/video/BV1Ybg36EEYE" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/2f8d1bd0368083958a87a84d08ed57e3556ed7dd.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1Ybg36EEYE"><a href="https://www.bilibili.com/video/BV1Ybg36EEYE" target="_blank" rel="noreferrer">152cm的白洲梓好像还挺合适的？（有露脸）瓦尼瓦尼</a><span class="up">UP：只选池眠吗</span></div>
+<div class="mt">— · 播放 7,829 · 2026-08-15 · 细胞 T2（触发·短·非真人）</div>
+<div class="ch"><span class="c1"><b>赞 23.5%</b>｜超线3.5%</span><span class="c1"><b>币 1.0%</b>｜低于2%线</span><span class="c1"><b>藏 12.4%</b>｜超线2.4%</span><span class="c0"><b>sinc</b>｜0.084</span><span class="c0"><b>时长</b>｜19s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1Ybg36EEYE" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1Ybg36EEYE" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1Ybg36EEYE" value="存疑">存疑</label>
+</div></div></div><p class="lead" style="margin:18px 0 0">细胞 T3 · 触发·长·赦免 —— 赦免条款：预期零擦边（两轮 16/16）</p><div class="card" data-g="T3" id="c_BV1j9uy67ECP">
+<a class="cov" href="https://www.bilibili.com/video/BV1j9uy67ECP" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/21ee69191aa5a3f873d478889a61ed143e7933de.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1j9uy67ECP"><a href="https://www.bilibili.com/video/BV1j9uy67ECP" target="_blank" rel="noreferrer">（MMT/mmt）砂狼（大）白子❤️乖乖变得越来越爱笑了，我好开心❤️</a><span class="up">UP：米的go</span></div>
+<div class="mt">— · 播放 10,131 · 2026-08-09 · 细胞 T3（触发·长·赦免）</div>
+<div class="ch"><span class="c1"><b>赞 34.6%</b>｜超线14.6%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 27.4%</b>｜超线17.4%</span><span class="c0"><b>sinc</b>｜0.032</span><span class="c0"><b>时长</b>｜243s</span><span class="c1"><b>真脸</b>｜有(0.85)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1j9uy67ECP" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1j9uy67ECP" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1j9uy67ECP" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T3" id="c_BV1e6Ga6EEdN">
+<a class="cov" href="https://www.bilibili.com/video/BV1e6Ga6EEdN" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/60711de84d8fd71bace59852d84ea8a1e87ef1a7.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1e6Ga6EEdN"><a href="https://www.bilibili.com/video/BV1e6Ga6EEdN" target="_blank" rel="noreferrer">这鸟上辈子狗变得</a><span class="up">UP：tcc_crow</span></div>
+<div class="mt">— · 播放 73,628 · 2026-05-23 · 细胞 T3（触发·长·赦免）</div>
+<div class="ch"><span class="c1"><b>赞 32.1%</b>｜超线12.2%</span><span class="c1"><b>币 0.6%</b>｜低于2%线</span><span class="c1"><b>藏 10.1%</b>｜超线0.1%</span><span class="c0"><b>sinc</b>｜0.061</span><span class="c0"><b>时长</b>｜24s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1e6Ga6EEdN" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1e6Ga6EEdN" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1e6Ga6EEdN" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T3" id="c_BV1h12xB6Enu">
+<a class="cov" href="https://www.bilibili.com/video/BV1h12xB6Enu" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/e2584be2bed12bf1942304f1f5a820fd5fc4109b.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1h12xB6Enu"><a href="https://www.bilibili.com/video/BV1h12xB6Enu" target="_blank" rel="noreferrer">如果想抽义勇就进来听（水视频）</a><span class="up">UP：账号已注销</span></div>
+<div class="mt">— · 播放 34,648 · 2025-12-03 · 细胞 T3（触发·长·赦免）</div>
+<div class="ch"><span class="c1"><b>赞 31.2%</b>｜超线11.2%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c1"><b>藏 17.4%</b>｜超线7.4%</span><span class="c0"><b>sinc</b>｜0.046</span><span class="c0"><b>时长</b>｜23s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1h12xB6Enu" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1h12xB6Enu" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1h12xB6Enu" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="T3" id="c_BV17D8B6mE2W">
+<a class="cov" href="https://www.bilibili.com/video/BV17D8B6mE2W" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/375dc8ac9f5e351963395a5f2b4be943c3a1b3df.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV17D8B6mE2W"><a href="https://www.bilibili.com/video/BV17D8B6mE2W" target="_blank" rel="noreferrer">【YiXi/ 奕夕】Devil's Dead Beats【椿】</a><span class="up">UP：精神安定剤</span></div>
+<div class="mt">— · 播放 7,698 · 2026-08-21 · 细胞 T3（触发·长·赦免）</div>
+<div class="ch"><span class="c1"><b>赞 21.0%</b>｜超线1.0%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 18.6%</b>｜超线8.6%</span><span class="c0"><b>sinc</b>｜0.050</span><span class="c0"><b>时长</b>｜163s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV17D8B6mE2W" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV17D8B6mE2W" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV17D8B6mE2W" value="存疑">存疑</label>
+</div></div></div><p class="lead" style="margin:18px 0 0">细胞 C1 · 真人·非R4基线 —— 真人封面单独用应≈无辜（防裸判）</p><div class="card" data-g="C1" id="c_BV1DkFQz1EW5">
+<a class="cov" href="https://www.bilibili.com/video/BV1DkFQz1EW5" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/9db89a552eaeed13b2af8f26b5f8f6a1617c6f80.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1DkFQz1EW5"><a href="https://www.bilibili.com/video/BV1DkFQz1EW5" target="_blank" rel="noreferrer">《泛式の黑神话之旅》【泛式/生贺】</a><span class="up">UP：蓝色日初</span></div>
+<div class="mt">— · 播放 5,210 · 2026-02-10 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 15.0%</b>｜距线5.0%</span><span class="c0"><b>币 9.7%</b>｜超线7.6%</span><span class="c0"><b>藏 4.2%</b>｜距线5.8%</span><span class="c0"><b>sinc</b>｜2.297</span><span class="c0"><b>时长</b>｜963s</span><span class="c1"><b>真脸</b>｜有(0.67)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1DkFQz1EW5" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1DkFQz1EW5" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1DkFQz1EW5" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C1" id="c_BV1iG8b6QExc">
+<a class="cov" href="https://www.bilibili.com/video/BV1iG8b6QExc" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/e6743bbcadf97ce0fd7c454021521a1315370f48.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1iG8b6QExc"><a href="https://www.bilibili.com/video/BV1iG8b6QExc" target="_blank" rel="noreferrer">如何把背阔肌练得掉地上？有一个人没学会就进厂</a><span class="up">UP：挽风不吃冰淇淋</span></div>
+<div class="mt">— · 播放 32,815 · 2026-08-23 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 6.0%</b>｜距线14.0%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c0"><b>藏 4.5%</b>｜距线5.5%</span><span class="c0"><b>sinc</b>｜0.185</span><span class="c0"><b>时长</b>｜157s</span><span class="c1"><b>真脸</b>｜有(0.91)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1iG8b6QExc" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1iG8b6QExc" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1iG8b6QExc" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C1" id="c_BV1kHjo6GEht">
+<a class="cov" href="https://www.bilibili.com/video/BV1kHjo6GEht" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/ab587984eefd23319712750e95f806b0b60b1170.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1kHjo6GEht"><a href="https://www.bilibili.com/video/BV1kHjo6GEht" target="_blank" rel="noreferrer">瑞哥带你读外刊35篇-26年最新暑期 科技 -Space X太空数据中心</a><span class="up">UP：我是瑞斯拜</span></div>
+<div class="mt">— · 播放 49,038 · 2026-06-24 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 3.0%</b>｜距线17.0%</span><span class="c1"><b>币 1.2%</b>｜低于2%线</span><span class="c0"><b>藏 3.7%</b>｜距线6.3%</span><span class="c0"><b>sinc</b>｜0.313</span><span class="c0"><b>时长</b>｜3247s</span><span class="c1"><b>真脸</b>｜有(0.92)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1kHjo6GEht" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1kHjo6GEht" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1kHjo6GEht" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C1" id="c_BV1g44y1674V">
+<a class="cov" href="https://www.bilibili.com/video/BV1g44y1674V" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/b1d7900397ae92abf43a698df153634585451d08.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1g44y1674V"><a href="https://www.bilibili.com/video/BV1g44y1674V" target="_blank" rel="noreferrer">【CSGO开课啦】Inferno oskar一烟两闪上连接大法！</a><span class="up">UP：1700-csgoのPOV频道</span></div>
+<div class="mt">— · 播放 20,719 · 2021-06-06 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 2.9%</b>｜距线17.1%</span><span class="c1"><b>币 1.9%</b>｜低于2%线</span><span class="c0"><b>藏 5.2%</b>｜距线4.8%</span><span class="c0"><b>sinc</b>｜0.362</span><span class="c0"><b>时长</b>｜124s</span><span class="c1"><b>真脸</b>｜有(0.94)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1g44y1674V" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1g44y1674V" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1g44y1674V" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C1" id="c_BV1pG4y1g7CM">
+<a class="cov" href="https://www.bilibili.com/video/BV1pG4y1g7CM" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/3e2d4de9c86ed7b4ad056a1758616c4aa2fccfc1.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1pG4y1g7CM"><a href="https://www.bilibili.com/video/BV1pG4y1g7CM" target="_blank" rel="noreferrer">噗噗一句话让雷纳想遍了这辈子最伤心的事</a><span class="up">UP：Coxonn39</span></div>
+<div class="mt">— · 播放 75,343 · 2022-12-15 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 2.7%</b>｜距线17.3%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 1.6%</b>｜距线8.4%</span><span class="c0"><b>sinc</b>｜0.064</span><span class="c0"><b>时长</b>｜17s</span><span class="c1"><b>真脸</b>｜有(0.93)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1pG4y1g7CM" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1pG4y1g7CM" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1pG4y1g7CM" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C1" id="c_BV1fy4y1g7wr">
+<a class="cov" href="https://www.bilibili.com/video/BV1fy4y1g7wr" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/a9b749848b8872c88c89248b517914ce43b055a3.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1fy4y1g7wr"><a href="https://www.bilibili.com/video/BV1fy4y1g7wr" target="_blank" rel="noreferrer">八极拳—大架</a><span class="up">UP：郭泽儒</span></div>
+<div class="mt">— · 播放 82,237 · 2021-05-27 · 细胞 C1（真人·非R4基线）</div>
+<div class="ch"><span class="c0"><b>赞 1.6%</b>｜距线18.4%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 0.6%</b>｜距线9.4%</span><span class="c0"><b>sinc</b>｜0.119</span><span class="c0"><b>时长</b>｜23s</span><span class="c1"><b>真脸</b>｜有(0.91)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1fy4y1g7wr" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1fy4y1g7wr" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1fy4y1g7wr" value="存疑">存疑</label>
+</div></div></div><p class="lead" style="margin:18px 0 0">细胞 H1 · 高带·低诚·真人 —— 高带+封面能否翻案（第一轮已判死，复核）</p><div class="card" data-g="H1" id="c_BV1ZLT36jE9e">
+<a class="cov" href="https://www.bilibili.com/video/BV1ZLT36jE9e" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/f2806f975482b88c295bedfa36fcedae78ed3707.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1ZLT36jE9e"><a href="https://www.bilibili.com/video/BV1ZLT36jE9e" target="_blank" rel="noreferrer">？</a><span class="up">UP：沧牢湿</span></div>
+<div class="mt">— · 播放 1,422,419 · 2026-06-29 · 细胞 H1（高带·低诚·真人）</div>
+<div class="ch"><span class="c0"><b>赞 13.2%</b>｜距线6.8%</span><span class="c1"><b>币 0.3%</b>｜低于2%线</span><span class="c0"><b>藏 4.2%</b>｜距线5.8%</span><span class="c0"><b>sinc</b>｜0.069</span><span class="c0"><b>时长</b>｜21s</span><span class="c1"><b>真脸</b>｜有(0.56)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1ZLT36jE9e" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1ZLT36jE9e" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1ZLT36jE9e" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="H1" id="c_BV127G36CE1g">
+<a class="cov" href="https://www.bilibili.com/video/BV127G36CE1g" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/98decbf694414531ad3c20953f8847d2f9b8f80f.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV127G36CE1g"><a href="https://www.bilibili.com/video/BV127G36CE1g" target="_blank" rel="noreferrer">“你可能不知道忧郁是什么感觉，但你一定听过这些歌”</a><span class="up">UP：是青橘啦</span></div>
+<div class="mt">— · 播放 2,661,211 · 2026-08-01 · 细胞 H1（高带·低诚·真人）</div>
+<div class="ch"><span class="c0"><b>赞 9.3%</b>｜距线10.7%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c0"><b>藏 9.7%</b>｜距线0.3%</span><span class="c0"><b>sinc</b>｜0.092</span><span class="c0"><b>时长</b>｜1959s</span><span class="c1"><b>真脸</b>｜有(0.73)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV127G36CE1g" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV127G36CE1g" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV127G36CE1g" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="H1" id="c_BV1abLczjErC">
+<a class="cov" href="https://www.bilibili.com/video/BV1abLczjErC" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/1f93277e722fe4378884d21bfc7b77a729b2daf0.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1abLczjErC"><a href="https://www.bilibili.com/video/BV1abLczjErC" target="_blank" rel="noreferrer">【循环歌单】“这真的是人间能出现的曲子吗？” |《4nim0sity|99.999999999%|》</a><span class="up">UP：Yuki_可依</span></div>
+<div class="mt">— · 播放 1,459,665 · 2025-04-20 · 细胞 H1（高带·低诚·真人）</div>
+<div class="ch"><span class="c0"><b>赞 4.5%</b>｜距线15.5%</span><span class="c1"><b>币 0.7%</b>｜低于2%线</span><span class="c0"><b>藏 9.7%</b>｜距线0.3%</span><span class="c0"><b>sinc</b>｜0.076</span><span class="c0"><b>时长</b>｜3684s</span><span class="c1"><b>真脸</b>｜有(0.56)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1abLczjErC" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1abLczjErC" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1abLczjErC" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="H1" id="c_BV1xKXBB7E9a">
+<a class="cov" href="https://www.bilibili.com/video/BV1xKXBB7E9a" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/0e566e87a9cb80f82040856aadcca8a5bf96d5fa.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1xKXBB7E9a"><a href="https://www.bilibili.com/video/BV1xKXBB7E9a" target="_blank" rel="noreferrer">《唐嘉琦の小曲》《荒野大嫖客の小曲》——《MONTAGEM ALQUIMIA》</a><span class="up">UP：山寨的山</span></div>
+<div class="mt">— · 播放 3,305,062 · 2026-03-31 · 细胞 H1（高带·低诚·真人）</div>
+<div class="ch"><span class="c0"><b>赞 3.0%</b>｜距线17.0%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 2.2%</b>｜距线7.8%</span><span class="c0"><b>sinc</b>｜0.057</span><span class="c0"><b>时长</b>｜93s</span><span class="c1"><b>真脸</b>｜有(0.93)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1xKXBB7E9a" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1xKXBB7E9a" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1xKXBB7E9a" value="存疑">存疑</label>
+</div></div></div><p class="lead" style="margin:18px 0 0">细胞 G · 随机对照 —— 盲对照基线</p><div class="card" data-g="G" id="c_BV1V8C2BhEDk">
+<a class="cov" href="https://www.bilibili.com/video/BV1V8C2BhEDk" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/5b9f1c87a7455459a5c2b1bb0efc3ae8b49f9b36.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1V8C2BhEDk"><a href="https://www.bilibili.com/video/BV1V8C2BhEDk" target="_blank" rel="noreferrer">【AI手书/AI翻唱】伊吕波带孩子的一天“这只是一个视角问题”</a><span class="up">UP：阿祖拉达亚贡</span></div>
+<div class="mt">— · 播放 74,017 · 2025-11-16 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c1"><b>赞 26.4%</b>｜超线6.3%</span><span class="c0"><b>币 8.1%</b>｜超线6.0%</span><span class="c1"><b>藏 14.9%</b>｜超线4.9%</span><span class="c0"><b>sinc</b>｜0.538</span><span class="c0"><b>时长</b>｜53s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1V8C2BhEDk" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1V8C2BhEDk" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1V8C2BhEDk" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="G" id="c_BV1gF411Q7PE">
+<a class="cov" href="https://www.bilibili.com/video/BV1gF411Q7PE" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/69afc1b04037eeae277f84b8385edf8b8a518b8c.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1gF411Q7PE"><a href="https://www.bilibili.com/video/BV1gF411Q7PE" target="_blank" rel="noreferrer">【特效向】马保国の复活  （第一集）</a><span class="up">UP：那个默白</span></div>
+<div class="mt">— · 播放 98,458 · 2023-07-14 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c0"><b>赞 7.8%</b>｜距线12.2%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c0"><b>藏 1.8%</b>｜距线8.2%</span><span class="c0"><b>sinc</b>｜0.487</span><span class="c0"><b>时长</b>｜106s</span><span class="c1"><b>真脸</b>｜有(0.91)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1gF411Q7PE" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1gF411Q7PE" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1gF411Q7PE" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="G" id="c_BV1XtBeB1Ef5">
+<a class="cov" href="https://www.bilibili.com/video/BV1XtBeB1Ef5" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/278bbc0a1d372a77821028727626afc41d1c2c76.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1XtBeB1Ef5"><a href="https://www.bilibili.com/video/BV1XtBeB1Ef5" target="_blank" rel="noreferrer">【MEIKO&KAITO】2024魔法未来演唱会《REALITY》{ 字幕 }</a><span class="up">UP：紫vvz</span></div>
+<div class="mt">— · 播放 3,832 · 2025-12-26 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c0"><b>赞 7.4%</b>｜距线12.6%</span><span class="c1"><b>币 0.7%</b>｜低于2%线</span><span class="c0"><b>藏 6.9%</b>｜距线3.1%</span><span class="c0"><b>sinc</b>｜0.105</span><span class="c0"><b>时长</b>｜256s</span><span class="c1"><b>真脸</b>｜有(0.85)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1XtBeB1Ef5" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1XtBeB1Ef5" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1XtBeB1Ef5" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="G" id="c_BV1nU4y1W777">
+<a class="cov" href="https://www.bilibili.com/video/BV1nU4y1W777" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/5840be642403aec52f34e5c62c8b5bd12200d923.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1nU4y1W777"><a href="https://www.bilibili.com/video/BV1nU4y1W777" target="_blank" rel="noreferrer">【回到2049】直播录屏 刘夫斯基首场直播暨2049新春演唱会</a><span class="up">UP：回到2O49</span></div>
+<div class="mt">— · 播放 5,160 · 2021-02-10 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c0"><b>赞 4.4%</b>｜距线15.6%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c0"><b>藏 1.6%</b>｜距线8.5%</span><span class="c0"><b>sinc</b>｜0.487</span><span class="c0"><b>时长</b>｜6183s</span><span class="c1"><b>真脸</b>｜有(0.90)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1nU4y1W777" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1nU4y1W777" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1nU4y1W777" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="G" id="c_BV1o44y1i7ac">
+<a class="cov" href="https://www.bilibili.com/video/BV1o44y1i7ac" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/0a86ed690a1727ea4467b6d6df1c7913089f01a2.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1o44y1i7ac"><a href="https://www.bilibili.com/video/BV1o44y1i7ac" target="_blank" rel="noreferrer">《青花瓷》— 孙悟空</a><span class="up">UP：武圣白</span></div>
+<div class="mt">— · 播放 67,390 · 2021-06-30 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c0"><b>赞 2.3%</b>｜距线17.7%</span><span class="c1"><b>币 0.3%</b>｜低于2%线</span><span class="c0"><b>藏 1.9%</b>｜距线8.1%</span><span class="c0"><b>sinc</b>｜0.159</span><span class="c0"><b>时长</b>｜51s</span><span class="c1"><b>真脸</b>｜无(0.00)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1o44y1i7ac" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1o44y1i7ac" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1o44y1i7ac" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="G" id="c_BV1rKHBzEE98">
+<a class="cov" href="https://www.bilibili.com/video/BV1rKHBzEE98" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/b40ef415acfccb4d3cb51ff78188609fa4350096.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti hid" id="ti_BV1rKHBzEE98"><a href="https://www.bilibili.com/video/BV1rKHBzEE98" target="_blank" rel="noreferrer">勇闯四季城33：我该反思反思了</a><span class="up">UP：付烨萌</span></div>
+<div class="mt">— · 播放 44,833 · 2025-09-14 · 细胞 G（随机对照）</div>
+<div class="ch"><span class="c0"><b>赞 1.9%</b>｜距线18.1%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c0"><b>藏 1.5%</b>｜距线8.5%</span><span class="c0"><b>sinc</b>｜0.137</span><span class="c0"><b>时长</b>｜980s</span><span class="c1"><b>真脸</b>｜有(0.52)</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1rKHBzEE98" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1rKHBzEE98" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1rKHBzEE98" value="存疑">存疑</label>
+</div></div></div></div><script>
+var KEY="r4_blind3_review_20260905", TOTAL=38;
+var J={};try{J=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(J));prog()}
+function prog(){var n=Object.keys(J).length;document.getElementById('prog').textContent=n+' / '+TOTAL;
+ var b=document.getElementById('bar');b.style.width=(100*n/TOTAL)+'%'}
+function reveal(id){var t=document.getElementById('ti_'+id);if(t)t.classList.remove('hid')}
+document.querySelectorAll('input[type=radio]').forEach(function(r){
+ var id=r.name.slice(2);
+ if(J[id]&&J[id].v===r.value){r.checked=true;reveal(id)}
+ r.addEventListener('change',function(){J[id]={v:r.value,t:Date.now()};save();reveal(id)})});
+function setF(f){document.querySelectorAll('.card').forEach(function(c){
+ var id=c.id.slice(2);
+ var show=f==='ALL'||c.dataset.g===f||(f==='TODO'&&!J[id]);
+ c.style.display=show?'':'none'});
+ document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.f===f)})}
+function revealAll(){document.querySelectorAll('.card').forEach(function(c){reveal(c.id.slice(2))})}
+function exportJ(){var out={date:'2026-09-05',page:'r4-blind3-review',protocol:'blind3-ternary',total:TOTAL,judgments:J};
+ var b=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
+ var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='r4_blind3_review_judged_2026-09-05.json';a.click()}
+function wipe(){if(confirm('清空本页全部判定？')){localStorage.removeItem(KEY);location.reload()}}
+prog();
+</script></body></html>
