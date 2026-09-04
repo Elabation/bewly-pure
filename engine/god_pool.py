@@ -143,6 +143,13 @@ def build_pool():
                    "pct": pct_of(n.get("view") or 0, coin_rate), "src": "flow:" + (n.get("arm") or "")}
     # 判档 + 过滤（pool_view_backfill 优先：最新计数 + 封面 + pubdate + UP 名）
     vbf = load_view_backfill()
+    ml_path = os.path.join(os.path.dirname(FG), "ml", "pool_categories.json")
+    ml_cat = {}
+    try:
+        ml_cat = json.load(open(ml_path, encoding="utf-8"))
+    except Exception:
+        pass
+    REN = {"擦边颜值": "颜值/舞蹈/cos", "时尚颜值": "颜值/舞蹈/cos", "舞蹈": "颜值/舞蹈/cos"}
     out = {}
     for b, r in pool.items():
         v = vbf.get(b) or {}
@@ -161,6 +168,13 @@ def build_pool():
             r["owner"] = v["owner"]
         if v.get("pic"):
             r["pic"] = v["pic"]
+        # ML 自动分类覆盖（置信度达标时），并统一门类命名
+        m = ml_cat.get(b)
+        if m and m.get("cat") and m["cat"] != "待分类":
+            r["category"] = m["cat"]
+            r["cat_src"] = "ml"
+            r["cat_conf"] = m.get("conf")
+        r["category"] = REN.get(r["category"], r["category"])
         vr = max(1, r["view"])
         tier, fir = _rules.v3_tier(r["pct"], r["dur"], r["fav"] / vr, r["coin"] / vr, r["like"] / vr, r["title"])
         r["firings"] = fir

@@ -67,12 +67,14 @@ for r in rows:
     cats[r["category"]] += 1
 top_cats = [c for c, _ in sorted(cats.items(), key=lambda kv: -kv[1]) if c != "其他"][:12]
 n_home = sum(1 for r in rows if r.get("src") == "home")
+n_ml = sum(1 for r in rows if r.get("cat_src") == "ml")
+n_queue = len(rows) - n_ml
 DATA = {"rows": rows, "cats": top_cats,
         "meta": {"date": time.strftime("%Y-%m-%d"), "n_god": n_god, "n_pool": len(rows),
-                 "n_cov": n_cov, "n_r10": n_r10, "n_home": n_home,
+                 "n_cov": n_cov, "n_r10": n_r10, "n_home": n_home, "n_ml": n_ml, "n_queue": n_queue,
                  "yr_min": years[-1] if years else 0, "yr_max": years[0] if years else 0,
                  "pop_n": meta["pop_n"]}}
-print(f"[site] 池 {len(rows)}（神 {n_god}）｜ 封面 {n_cov} ｜ R10 降档 {n_r10} ｜ 首页源 {n_home}")
+print(f"[site] 池 {len(rows)}（神 {n_god}）｜ 封面 {n_cov} ｜ R10 降档 {n_r10} ｜ 首页源 {n_home} ｜ ML {n_ml} / 待分类 {n_queue}")
 
 TPL = r"""<!DOCTYPE html>
 <html lang="zh">
@@ -157,6 +159,8 @@ a{color:var(--data1)}
     <div class="kpi"><div class="n" id="k-cov"></div><div class="d">封面覆盖</div></div>
     <div class="kpi"><div class="n" id="k-yr"></div><div class="d">年代跨度</div></div>
     <div class="kpi"><div class="n" id="k-r10"></div><div class="d">R10 博同情降档</div></div>
+    <div class="kpi"><div class="n" id="k-ml"></div><div class="d">ML 自动分类（置信≥0.65）</div></div>
+    <div class="kpi"><div class="n" id="k-queue"></div><div class="d">待分类 · 求助</div></div>
     <div class="kpi"><div class="n" id="k-ann"></div><div class="d">我的标注（本地）</div></div>
   </div>
 </header>
@@ -186,7 +190,7 @@ a{color:var(--data1)}
 <div class="pagen"><button id="more" onclick="moreGrid()">加载更多</button></div>
 <div class="foot">
   <p><b>方法论</b>：候选池 = 参照库 + related 图五臂遍历（定向/随机/纵深/无补位/时光回溯）合并去重；判档 = 带内投币百分位（Δlog₁₀=0.2 排位）+ 行为指纹（R2 时长 / R3 吃灰 / R4 擦边 / R9 声援提档：币&gt;赞或币&gt;藏直升一档 / R10 博同情降档：求助·众筹·苦难类标题特征过强降一级并逐出声援之选）。百分位基线 7,672 条冻结。</p>
-  <p><b>你的标注很重要</b>：门类修正喂养挖矿分类器；盖章与纠错是下一轮阈值校准的人工标注。全部标注仅存于你的浏览器，可导出 JSON 交回合并。</p>
+  <p><b>训练-监督闭环</b>：分类由标题 n-gram 朴素贝叶斯自动完成（官方分区种子训练，留出集 71%，高置信精确率 77%）。置信度 ≥0.65 自动上架，其余进「待分类」等你帮忙。你的门类修正导出 JSON 交回 → 重训模型 → 换架，闭环完成。</p>
   <p><b>补货管线</b>：首页爬取 → 新种子 L1 图遍历（一铲 11+ 神）→ 高密度物种 C′/E 纵深 → build_site.py 一键换架。</p>
   <p>数据日期 __DATE__ · 全部匿名通道 · 主账号零重请求 · 封面与视频版权归原作者所有</p>
 </div>
@@ -208,6 +212,7 @@ const SECTIONS=[
  {id:'mix',name:'精选混合',sub:'百分位与声援度混合 curated——降低同质化的一页'},
  {id:'home',name:'新声 · 来自首页',sub:'由首页爬取入选的新面孔（src=home）'},
  {id:'shout',name:'声援之选',sub:'币大于藏且未触发 R10 博同情降档的视频'},
+ {id:'queue',name:'待分类',sub:'机器置信度不足——请帮忙把它们放上正确的货架'},
  {id:'shuffle',name:'乱序宇宙',sub:'全站乱序，每次重排随机展示——切断图游走的可见线索'},
  {id:'e2024',name:'2024–2026',sub:'近三年（三年一桶）'},
  {id:'e2021',name:'2021–2023',sub:'三年一桶'},
@@ -220,6 +225,7 @@ function secArr(id){
   let arr=POOL.filter(r=>state.tier==='god'?r.tier==='神作候选':true);
   if(id==='home') arr=arr.filter(r=>r.src==='home');
   if(id==='shout') arr=arr.filter(r=>r.coin_rate>r.fav_rate && !isR10(r));
+  if(id==='queue') arr=arr.filter(r=>r.cat_src!=='ml');
   if(id==='e2024') arr=arr.filter(r=>r.year&&r.year>=2024);
   if(id==='e2021') arr=arr.filter(r=>r.year&&r.year>=2021&&r.year<=2023);
   if(id==='e2018') arr=arr.filter(r=>r.year&&r.year>=2018&&r.year<=2020);
@@ -270,7 +276,7 @@ function cardHTML(r){
       <div class="badges"><span class="badge${god?' god':''}">${god?'神作':'优秀'}</span>
         ${r10?'<span class="badge r10">R10 已降档</span>':''}
         ${r.src==='home'?'<span class="badge home">首页新声</span>':''}
-        <span class="badge">${esc(r.category)}</span></div>
+        <span class="badge">${esc(r.category)}</span>${r.cat_src!==`ml`?`<span class="badge" style="border-color:#C2803A;color:#9A6428">待分类</span>`:``}</div>
       <div class="t"><a href="https://www.bilibili.com/video/${r.bvid}" target="_blank" rel="noopener">${esc(r.title)}</a></div>
       <div class="m"><span class="yr">${r.year||'年代待考'}</span> · ${fmtW(r.view)}播放 · <span class="cr">币率 ${(r.coin_rate*100).toFixed(2)}%</span>${r.owner?' · '+esc(r.owner.slice(0,12)):''}</div>
       <div class="tools"><button onclick="toggleAnn('${r.bvid}')">标注 ▾</button>
@@ -343,6 +349,8 @@ $('k-all').textContent=DATA.meta.n_pool;
 $('k-cov').textContent=DATA.meta.n_cov;
 $('k-yr').textContent=(DATA.meta.yr_min||'—')+'–'+(DATA.meta.yr_max||'—');
 $('k-r10').textContent=DATA.meta.n_r10;
+$('k-ml').textContent=DATA.meta.n_ml;
+$('k-queue').textContent=DATA.meta.n_queue;
 $('k-ann').textContent=Object.keys(ann).length;
 CATS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;$('cat').appendChild(o);});
 renderSecbar();
