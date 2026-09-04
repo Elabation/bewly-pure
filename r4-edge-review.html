@@ -1,0 +1,447 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R4 擦边识别率 · 人工审核台</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#F7F2EB;color:#081F5C;
+ font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13.5px}
+.top{position:sticky;top:0;background:#F7F2EB;border-bottom:1px solid #D0E3FF;padding:14px 18px 10px;z-index:9}
+h1{font-family:'KaiTi','STKaiti',serif;font-size:20px;margin:0 0 2px;font-weight:800}
+.lead{font-size:12px;color:#7096D1;margin:0 0 8px}
+.barw{height:4px;background:#D0E3FF;border-radius:2px;margin:6px 0 10px}
+#bar{height:4px;background:#081F5C;border-radius:2px;width:0;transition:width .3s}
+.tab{display:inline-block;border:1px dashed #7096D1;border-radius:999px;padding:3px 12px;margin:0 6px 6px 0;
+ font-size:11px;color:#334EAC;cursor:pointer;background:none}
+.tab.on{background:#081F5C;color:#F7F2EB;border-style:solid;border-color:#081F5C}
+.btn{border:1px solid #334EAC;border-radius:6px;background:none;color:#081F5C;padding:4px 12px;
+ font-size:12px;cursor:pointer;margin-right:8px}
+.wrap{max-width:860px;margin:0 auto;padding:14px 16px 60px}
+.grp{font-size:14px;font-weight:700;margin:22px 0 4px;color:#334EAC;border-left:3px solid #081F5C;padding-left:8px}
+.gnote{font-size:11.5px;color:#7096D1;margin:0 0 8px}
+.card{display:flex;background:#fff;border:1px solid #D0E3FF;border-radius:8px;margin:10px 0;overflow:hidden}
+.cov{flex:0 0 200px}.cov img{width:200px;height:125px;object-fit:cover;display:block}
+.inf{flex:1;padding:9px 12px;min-width:0}
+.ti{font-size:13.5px;font-weight:600;line-height:1.4}
+.ti a{color:#081F5C;text-decoration:none}.ti a:hover{text-decoration:underline dotted #7096D1}
+.mt{font-size:11px;color:#7096D1;margin:3px 0 6px}
+.ch{margin-bottom:6px}
+.c1,.c0{display:inline-block;border-radius:4px;padding:2px 7px;font-size:11px;margin:0 6px 4px 0;font-variant-numeric:tabular-nums}
+.c1{background:#081F5C;color:#F7F2EB}
+.c0{background:#D0E3FF;color:#334EAC}
+.c1 b,.c0 b{font-weight:700}
+.v1,.v0{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;margin-right:8px}
+.v1{background:#334EAC;color:#fff}.v0{background:none;color:#7096D1;border:1px dashed #7096D1}
+.jd{font-size:12.5px}.jd label{margin-right:12px;cursor:pointer}
+.jd input{accent-color:#081F5C;vertical-align:-2px;margin-right:3px}
+@media(max-width:640px){.card{flex-direction:column}.cov{flex:none}.cov img{width:100%;height:170px}}
+</style></head><body>
+<div class="top"><h1>R4 擦边识别率 · 人工审核台</h1>
+<p class="lead">结论先行：R4 对真·擦边物种 18/18 全漏报；一条龙 187/578 触发的是「萌系视觉消费」（cos/MMD/萌图集）。请逐卡点开看内容，判「软擦边 / 无辜 / 存疑」——判定自动存本地，判完点「导出判定JSON」回传合并。已判 <b id="prog">0 / 38</b></p>
+<div class="barw"><div id="bar"></div></div>
+<button class="tab on" data-f="ALL" onclick="setF('ALL')">全部 38</button>
+<button class="tab" data-f="C" onclick="setF('C')">C 重点审核 15</button>
+<button class="tab" data-f="A" onclick="setF('A')">A 漏报对照 18</button>
+<button class="tab" data-f="B" onclick="setF('B')">B 无辜抽查 4</button>
+<button class="tab" data-f="D" onclick="setF('D')">D 边界 1</button>
+<button class="tab" data-f="TODO" onclick="setF('TODO')">未判</button>
+<button class="btn" onclick="exportJ()">导出判定JSON</button>
+<button class="btn" onclick="wipe()">清空本地</button>
+</div><div class="wrap"><div class="grp">C组 · 15 支</div><p class="gnote">R4触发 · 重点审核：软擦边还是萌系/同人被冤枉？</p><div class="card" data-g="C" id="c_BV13sHVzFEby">
+<a class="cov" href="https://www.bilibili.com/video/BV13sHVzFEby" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/cdf0f186233512be1e90f7daa929c0e0a7d60fc2.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV13sHVzFEby" target="_blank" rel="noreferrer">吉隆坡的天气它是翻云又覆雨</a></div>
+<div class="mt">羊早- · — · 播放 5,048 · 0:16 · 2025-10-03 · 池内极端签名种子</div>
+<div class="ch"><span class="c1"><b>赞 76.8%</b>｜超线56.8%</span><span class="c1"><b>币 1.2%</b>｜低于2%线</span><span class="c1"><b>藏 29.5%</b>｜超线19.5%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV13sHVzFEby" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV13sHVzFEby" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV13sHVzFEby" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV18H4MzsEFm">
+<a class="cov" href="https://www.bilibili.com/video/BV18H4MzsEFm" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/79a2630d9b829d77ae8efcd55a13cac9f7fd63b2.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV18H4MzsEFm" target="_blank" rel="noreferrer">“我看着你的脸”</a></div>
+<div class="mt">芝麻凛研究所 · — · 播放 6,968 · 0:20 · 2025-10-12 · 池内极端签名种子</div>
+<div class="ch"><span class="c1"><b>赞 63.5%</b>｜超线43.5%</span><span class="c1"><b>币 1.6%</b>｜低于2%线</span><span class="c1"><b>藏 30.0%</b>｜超线20.0%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV18H4MzsEFm" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV18H4MzsEFm" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV18H4MzsEFm" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1uLth6rErU">
+<a class="cov" href="https://www.bilibili.com/video/BV1uLth6rErU" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/78c6eab462f434c741fc55a260e37731627b387d.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1uLth6rErU" target="_blank" rel="noreferrer">【教程】小白速通cos道具建模！</a></div>
+<div class="mt">牛奶团子QAQ · — · 播放 21,884 · 0:46 · 2026-08-31 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 57.2%</b>｜超线37.2%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c1"><b>藏 10.8%</b>｜超线0.8%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1uLth6rErU" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1uLth6rErU" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1uLth6rErU" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1FhGR69EXK">
+<a class="cov" href="https://www.bilibili.com/video/BV1FhGR69EXK" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/dd223eccc439fd1b0a927b5ce8f0d11b2b1e7475.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1FhGR69EXK" target="_blank" rel="noreferrer">谁家的小女友呢</a></div>
+<div class="mt">江南の書斎の客 · — · 播放 8,206 · 0:12 · 2026-05-25 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 53.6%</b>｜超线33.6%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c1"><b>藏 26.8%</b>｜超线16.8%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1FhGR69EXK" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1FhGR69EXK" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1FhGR69EXK" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1fqtJ6dEu8">
+<a class="cov" href="https://www.bilibili.com/video/BV1fqtJ6dEu8" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/76a17901d4030afcd26d0c3ee20786f69450b75d.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1fqtJ6dEu8" target="_blank" rel="noreferrer">最喜欢小萝莉了！我的胆子真是肥嘟嘟的啊⚡️</a></div>
+<div class="mt">半糖织雪 · — · 播放 20,587 · 0:10 · 2026-09-02 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 53.0%</b>｜超线33.0%</span><span class="c1"><b>币 0.7%</b>｜低于2%线</span><span class="c1"><b>藏 19.1%</b>｜超线9.2%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1fqtJ6dEu8" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1fqtJ6dEu8" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1fqtJ6dEu8" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1ZtTQ68EDk">
+<a class="cov" href="https://www.bilibili.com/video/BV1ZtTQ68EDk" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/7c6010391162d770602266bccda509865b87019b.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1ZtTQ68EDk" target="_blank" rel="noreferrer">雷霆老奶剧情mvp解算画面</a></div>
+<div class="mt">凝干嘛 · — · 播放 21,539 · 0:12 · 2026-07-06 · 池内极端签名种子</div>
+<div class="ch"><span class="c1"><b>赞 52.8%</b>｜超线32.7%</span><span class="c1"><b>币 0.3%</b>｜低于2%线</span><span class="c1"><b>藏 41.2%</b>｜超线31.2%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1ZtTQ68EDk" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1ZtTQ68EDk" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1ZtTQ68EDk" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1w88u6zEFy">
+<a class="cov" href="https://www.bilibili.com/video/BV1w88u6zEFy" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/d3acad3a0710bb08d68a14b2b0cf4e0f97577cfc.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1w88u6zEFy" target="_blank" rel="noreferrer">妄想天使最粉的大姐姐</a></div>
+<div class="mt">轩玖玖玖 · — · 播放 8,523 · 0:13 · 2026-08-18 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 49.1%</b>｜超线29.1%</span><span class="c1"><b>币 0.5%</b>｜低于2%线</span><span class="c1"><b>藏 23.4%</b>｜超线13.4%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1w88u6zEFy" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1w88u6zEFy" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1w88u6zEFy" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1tQ3d6NETw">
+<a class="cov" href="https://www.bilibili.com/video/BV1tQ3d6NETw" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/2861bd8641ac305ae34f1036afe49def9a4816d1.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1tQ3d6NETw" target="_blank" rel="noreferrer">点进来看小爱同学跳舞！</a></div>
+<div class="mt">喜欢吃橘子__ · — · 播放 7,823 · 0:19 · 2026-08-02 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 43.8%</b>｜超线23.8%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c1"><b>藏 24.0%</b>｜超线14.0%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1tQ3d6NETw" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1tQ3d6NETw" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1tQ3d6NETw" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1Sqt369EAh">
+<a class="cov" href="https://www.bilibili.com/video/BV1Sqt369EAh" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/004768df98daad084655d13800765e5705968fd9.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1Sqt369EAh" target="_blank" rel="noreferrer">这萝莉能飞</a></div>
+<div class="mt">咲七七 · — · 播放 7,285 · 0:12 · 2026-09-01 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 41.8%</b>｜超线21.8%</span><span class="c1"><b>币 0.4%</b>｜低于2%线</span><span class="c1"><b>藏 19.9%</b>｜超线9.9%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1Sqt369EAh" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1Sqt369EAh" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1Sqt369EAh" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV16jt36TEyv">
+<a class="cov" href="https://www.bilibili.com/video/BV16jt36TEyv" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/ecfcc17a48c31f6b21eae5255438aea1c842f51c.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV16jt36TEyv" target="_blank" rel="noreferrer">没人能跟姐姐比！！</a></div>
+<div class="mt">半糖织雪 · — · 播放 10,651 · 0:10 · 2026-09-01 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 41.5%</b>｜超线21.5%</span><span class="c1"><b>币 0.9%</b>｜低于2%线</span><span class="c1"><b>藏 15.8%</b>｜超线5.8%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV16jt36TEyv" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV16jt36TEyv" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV16jt36TEyv" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1ya8s6pEyG">
+<a class="cov" href="https://www.bilibili.com/video/BV1ya8s6pEyG" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/760e49ab68ddee59b36c21b81cefcf658f6e5059.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1ya8s6pEyG" target="_blank" rel="noreferrer">【顾言一】殷紫萍cos I 剑修第一课：扎双马尾！</a></div>
+<div class="mt">咕咕顾言一 · — · 播放 5,257 · 0:18 · 2026-08-23 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 39.7%</b>｜超线19.7%</span><span class="c1"><b>币 0.5%</b>｜低于2%线</span><span class="c1"><b>藏 24.3%</b>｜超线14.3%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1ya8s6pEyG" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1ya8s6pEyG" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1ya8s6pEyG" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV12XhF6REVM">
+<a class="cov" href="https://www.bilibili.com/video/BV12XhF6REVM" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/1680ae85b34ce8944bec70352eb958d0538f9c60.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV12XhF6REVM" target="_blank" rel="noreferrer">【洁尔佩塔cos】hirari～do！</a></div>
+<div class="mt">松野月松w · — · 播放 5,719 · 0:12 · 2026-08-27 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 38.1%</b>｜超线18.1%</span><span class="c1"><b>币 0.8%</b>｜低于2%线</span><span class="c1"><b>藏 19.4%</b>｜超线9.4%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV12XhF6REVM" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV12XhF6REVM" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV12XhF6REVM" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1kXt36CEZ9">
+<a class="cov" href="https://www.bilibili.com/video/BV1kXt36CEZ9" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/173a6590d533845839b350f077fddb15e05d89ae.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1kXt36CEZ9" target="_blank" rel="noreferrer">提弗洛斯小萝莉叽里咕噜的说啥呢</a></div>
+<div class="mt">鸠四五945_ · — · 播放 6,332 · 0:21 · 2026-09-01 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 38.0%</b>｜超线18.0%</span><span class="c1"><b>币 0.6%</b>｜低于2%线</span><span class="c1"><b>藏 13.1%</b>｜超线3.1%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1kXt36CEZ9" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1kXt36CEZ9" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1kXt36CEZ9" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1EAuM61Exi">
+<a class="cov" href="https://www.bilibili.com/video/BV1EAuM61Exi" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/a9c54d533379c56a31f54f538842847c973a66fc.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1EAuM61Exi" target="_blank" rel="noreferrer">小爱</a></div>
+<div class="mt">天使ivll · — · 播放 7,851 · 0:14 · 2026-08-08 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 37.0%</b>｜超线17.0%</span><span class="c1"><b>币 0.4%</b>｜低于2%线</span><span class="c1"><b>藏 24.4%</b>｜超线14.4%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1EAuM61Exi" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1EAuM61Exi" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1EAuM61Exi" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="C" id="c_BV1P3tV6nE59">
+<a class="cov" href="https://www.bilibili.com/video/BV1P3tV6nE59" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/151cb7be5a7e058cd06b8c65c757159034a99584.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1P3tV6nE59" target="_blank" rel="noreferrer">黑色？还是白色？/蕾米埃尔</a></div>
+<div class="mt">白大白小 · — · 播放 5,446 · 0:10 · 2026-09-02 · 链上命中</div>
+<div class="ch"><span class="c1"><b>赞 35.5%</b>｜超线15.5%</span><span class="c1"><b>币 0.4%</b>｜低于2%线</span><span class="c1"><b>藏 16.1%</b>｜超线6.1%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1P3tV6nE59" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1P3tV6nE59" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1P3tV6nE59" value="存疑">存疑</label>
+</div></div></div><div class="grp">A组 · 18 支</div><p class="gnote">真·擦边搜索热门 · R4漏报对照：确认内容属性（预期「软擦边」坐实漏报）</p><div class="card" data-g="A" id="c_BV1aZ8L6CEnx">
+<a class="cov" href="https://www.bilibili.com/video/BV1aZ8L6CEnx" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/13d5d6bc68bdc9dadd18a3e4ef59cd59d8cd74aa.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1aZ8L6CEnx" target="_blank" rel="noreferrer">【BerryGood】赵贤直拍17</a></div>
+<div class="mt">淘小亿 · — · 播放 329,876 · 3:25 · 2026-08-19 · 女团 直拍</div>
+<div class="ch"><span class="c0"><b>赞 12.9%</b>｜距线7.1%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c0"><b>藏 9.0%</b>｜距线1.0%</span><span class="c1"><b>R8</b>｜赞/币&gt;50</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1aZ8L6CEnx" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1aZ8L6CEnx" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1aZ8L6CEnx" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1gG4y117nV">
+<a class="cov" href="https://www.bilibili.com/video/BV1gG4y117nV" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/38d94515fe5f6294bf7712d8b26eb049ec3cf627.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1gG4y117nV" target="_blank" rel="noreferrer">这么可爱真是抱歉！❤️（*/∇＼*）天台宅舞</a></div>
+<div class="mt">优联酱uu · — · 播放 2,717,432 · 2:20 · 2023-01-11 · 宅舞</div>
+<div class="ch"><span class="c0"><b>赞 4.4%</b>｜距线15.6%</span><span class="c1"><b>币 1.7%</b>｜低于2%线</span><span class="c0"><b>藏 2.8%</b>｜距线7.2%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1gG4y117nV" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1gG4y117nV" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1gG4y117nV" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1r4irBkEkg">
+<a class="cov" href="https://www.bilibili.com/video/BV1r4irBkEkg" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/4e6166c6053ff345bc8859d25c52a453814261ee.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1r4irBkEkg" target="_blank" rel="noreferrer">风骚一下！</a></div>
+<div class="mt">猫猫大人的b站 · — · 播放 2,247,918 · 0:25 · 2026-01-04 · 热舞</div>
+<div class="ch"><span class="c0"><b>赞 4.2%</b>｜距线15.8%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c0"><b>藏 2.3%</b>｜距线7.7%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1r4irBkEkg" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1r4irBkEkg" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1r4irBkEkg" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1p64y1F7vA">
+<a class="cov" href="https://www.bilibili.com/video/BV1p64y1F7vA" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/4b5b1e36baef850cd4a6d842516e954451f6593a.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1p64y1F7vA" target="_blank" rel="noreferrer">【CY】神的随波逐流 2020ver （miume × melo版）</a></div>
+<div class="mt">Cy_西歪 · — · 播放 4,323,113 · 4:17 · 2020-09-12 · 宅舞</div>
+<div class="ch"><span class="c0"><b>赞 3.6%</b>｜距线16.4%</span><span class="c1"><b>币 1.6%</b>｜低于2%线</span><span class="c0"><b>藏 3.0%</b>｜距线7.0%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1p64y1F7vA" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1p64y1F7vA" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1p64y1F7vA" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1us41137Fd">
+<a class="cov" href="https://www.bilibili.com/video/BV1us41137Fd" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/0ecbec3ef4f307de7760182ee0deab7cdfd44793.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1us41137Fd" target="_blank" rel="noreferrer">【Miume・MARiA・217】极乐净土（極楽浄土）【舞见 第4弹!!!】</a></div>
+<div class="mt">GARNiDELiA · — · 播放 31,398,556 · 3:46 · 2018-08-08 · 宅舞</div>
+<div class="ch"><span class="c0"><b>赞 3.2%</b>｜距线16.8%</span><span class="c1"><b>币 1.8%</b>｜低于2%线</span><span class="c0"><b>藏 2.3%</b>｜距线7.7%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1us41137Fd" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1us41137Fd" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1us41137Fd" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1niAAzTEpi">
+<a class="cov" href="https://www.bilibili.com/video/BV1niAAzTEpi" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/030337fdc28e554b64d2664e668e3b6c9617854e.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1niAAzTEpi" target="_blank" rel="noreferrer">IVE Cover少女时代【说出愿望吧】演唱会舞台饭拍</a></div>
+<div class="mt">pcyxjy · — · 播放 539,369 · 3:34 · 2026-03-21 · 女团 直拍</div>
+<div class="ch"><span class="c0"><b>赞 2.7%</b>｜距线17.3%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c0"><b>藏 1.6%</b>｜距线8.4%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1niAAzTEpi" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1niAAzTEpi" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1niAAzTEpi" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1iD4y1m78o">
+<a class="cov" href="https://www.bilibili.com/video/BV1iD4y1m78o" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/359a2a50b11fb57953a6840b6db54a38d8ffc139.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1iD4y1m78o" target="_blank" rel="noreferrer">男子被关在少女房间，必须穿女装才能离开？！</a></div>
+<div class="mt">圆肥白 · — · 播放 465,052 · 5:19 · 2020-08-26 · 变装 挑战</div>
+<div class="ch"><span class="c0"><b>赞 1.9%</b>｜距线18.1%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 0.5%</b>｜距线9.5%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1iD4y1m78o" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1iD4y1m78o" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1iD4y1m78o" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1k24y127Zx">
+<a class="cov" href="https://www.bilibili.com/video/BV1k24y127Zx" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/2671f406c0c74acae868222e6d1f6b44a867a40c.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1k24y127Zx" target="_blank" rel="noreferrer">“我生来赤裸，思想不正的是你”｜Nxde</a></div>
+<div class="mt">炸炸来了_ · — · 播放 1,336,657 · 2:34 · 2022-11-11 · 女团 直拍</div>
+<div class="ch"><span class="c0"><b>赞 1.9%</b>｜距线18.1%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 0.5%</b>｜距线9.5%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1k24y127Zx" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1k24y127Zx" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1k24y127Zx" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1rwkeBMESS">
+<a class="cov" href="https://www.bilibili.com/video/BV1rwkeBMESS" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/7d9a2d7098299ef2fecfaa7b3b214be1d8ef2081.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1rwkeBMESS" target="_blank" rel="noreferrer">【No.003:童锣烧】高颜值 纯欲——妹子收藏计划第3期</a></div>
+<div class="mt">月拾颜 · — · 播放 690,350 · 2:03 · 2026-01-19 · 纯欲</div>
+<div class="ch"><span class="c0"><b>赞 1.6%</b>｜距线18.4%</span><span class="c1"><b>币 0.2%</b>｜低于2%线</span><span class="c0"><b>藏 2.0%</b>｜距线8.0%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1rwkeBMESS" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1rwkeBMESS" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1rwkeBMESS" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1RcgyzdEyR">
+<a class="cov" href="https://www.bilibili.com/video/BV1RcgyzdEyR" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/546250364ba8ab09cc0538315f04294f8352c557.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1RcgyzdEyR" target="_blank" rel="noreferrer">【主人的任务】  定制粘液+黑丝+安思尔</a></div>
+<div class="mt">兔丝医 · — · 播放 546,309 · 0:16 · 2025-06-30 · 黑丝</div>
+<div class="ch"><span class="c0"><b>赞 1.4%</b>｜距线18.6%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 2.7%</b>｜距线7.3%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1RcgyzdEyR" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1RcgyzdEyR" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1RcgyzdEyR" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1v4mtBsEhR">
+<a class="cov" href="https://www.bilibili.com/video/BV1v4mtBsEhR" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/63720ea2f8826b40a0df08b1b795b07a86200e51.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1v4mtBsEhR" target="_blank" rel="noreferrer">一边呼气一边说嗯？</a></div>
+<div class="mt">纯爱女帝Cc · — · 播放 770,917 · 0:40 · 2025-12-10 · 黑丝</div>
+<div class="ch"><span class="c0"><b>赞 1.3%</b>｜距线18.7%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 2.7%</b>｜距线7.3%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1v4mtBsEhR" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1v4mtBsEhR" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1v4mtBsEhR" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1xKz9BxEes">
+<a class="cov" href="https://www.bilibili.com/video/BV1xKz9BxEes" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/b41136c2869c2c75a323ba7d92b9499723280814.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1xKz9BxEes" target="_blank" rel="noreferrer">【欣赏美】你要放这个，我可不困了啊！</a></div>
+<div class="mt">拖着奶瓶到处浪 · — · 播放 708,745 · 3:15 · 2026-01-28 · 热舞</div>
+<div class="ch"><span class="c0"><b>赞 0.9%</b>｜距线19.1%</span><span class="c1"><b>币 0.1%</b>｜低于2%线</span><span class="c0"><b>藏 1.4%</b>｜距线8.6%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1xKz9BxEes" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1xKz9BxEes" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1xKz9BxEes" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1GMjP6gE9a">
+<a class="cov" href="https://www.bilibili.com/video/BV1GMjP6gE9a" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/b1d435e65d6a2831a2c3ae4bb861865759ed5194.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1GMjP6gE9a" target="_blank" rel="noreferrer">现场换衣</a></div>
+<div class="mt">soyoungsowhat · — · 播放 730,610 · 2:07 · 2026-06-18 · 变装 挑战</div>
+<div class="ch"><span class="c0"><b>赞 0.4%</b>｜距线19.6%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.8%</b>｜距线9.2%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1GMjP6gE9a" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1GMjP6gE9a" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1GMjP6gE9a" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1LsXPBTE4Q">
+<a class="cov" href="https://www.bilibili.com/video/BV1LsXPBTE4Q" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/799f729487a371964abb561c50c0a5e77b97c7ea.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1LsXPBTE4Q" target="_blank" rel="noreferrer">双马尾妹妹和小小酷哥，妹妹：哥哥不要</a></div>
+<div class="mt">SexyCoke · — · 播放 568,158 · 2:22 · 2026-03-27 · 纯欲</div>
+<div class="ch"><span class="c0"><b>赞 0.4%</b>｜距线19.6%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.7%</b>｜距线9.3%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1LsXPBTE4Q" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1LsXPBTE4Q" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1LsXPBTE4Q" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1He4y177Bi">
+<a class="cov" href="https://www.bilibili.com/video/BV1He4y177Bi" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/725a4540f776c12ded465e3c3ca27cc1e51de3e9.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1He4y177Bi" target="_blank" rel="noreferrer">【青春期的荷尔蒙】校草竟然害怕打针，灰姑娘却意外被袭胸！</a></div>
+<div class="mt">初尘Music · — · 播放 588,054 · 2:16 · 2022-10-20 · 纯欲</div>
+<div class="ch"><span class="c0"><b>赞 0.2%</b>｜距线19.8%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.3%</b>｜距线9.7%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1He4y177Bi" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1He4y177Bi" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1He4y177Bi" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1r9QYYiEo2">
+<a class="cov" href="https://www.bilibili.com/video/BV1r9QYYiEo2" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/8f7303c15ee05f1f073801cf256b665eb8e2ef5a.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1r9QYYiEo2" target="_blank" rel="noreferrer">dy 妹妹</a></div>
+<div class="mt">有点看头 · — · 播放 635,347 · 44:58 · 2025-03-17 · 热舞</div>
+<div class="ch"><span class="c0"><b>赞 0.2%</b>｜距线19.8%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.3%</b>｜距线9.7%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1r9QYYiEo2" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1r9QYYiEo2" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1r9QYYiEo2" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1zb41187ME">
+<a class="cov" href="https://www.bilibili.com/video/BV1zb41187ME" target="_blank" rel="noreferrer"><img src="http://i2.hdslb.com/bfs/archive/3c6c4cb2446d28cece1544cf4b3be7ec87ccff86.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1zb41187ME" target="_blank" rel="noreferrer">女生换衣服全过程！！！无剪辑！！！</a></div>
+<div class="mt">闪现回家过年 · — · 播放 637,082 · 2:54 · 2019-02-25 · 变装 挑战</div>
+<div class="ch"><span class="c0"><b>赞 0.1%</b>｜距线19.9%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.2%</b>｜距线9.8%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1zb41187ME" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1zb41187ME" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1zb41187ME" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="A" id="c_BV1L2421M7PW">
+<a class="cov" href="https://www.bilibili.com/video/BV1L2421M7PW" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/9cc88081b8f53c21ff022294d6fa83e328e570c6.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1L2421M7PW" target="_blank" rel="noreferrer">擦边现场 请准备好纸巾观看</a></div>
+<div class="mt">Wuli蛋蛋啊 · — · 播放 696,025 · 0:43 · 2024-02-27 · 黑丝</div>
+<div class="ch"><span class="c0"><b>赞 0.1%</b>｜距线19.9%</span><span class="c1"><b>币 0.0%</b>｜低于2%线</span><span class="c0"><b>藏 0.2%</b>｜距线9.8%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1L2421M7PW" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1L2421M7PW" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1L2421M7PW" value="存疑">存疑</label>
+</div></div></div><div class="grp">B组 · 4 支</div><p class="gnote">R4触发 · 疑似无辜抽查：预期「无辜」</p><div class="card" data-g="B" id="c_BV1qh8z6JEuz">
+<a class="cov" href="https://www.bilibili.com/video/BV1qh8z6JEuz" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/12d1ac0587ffa7da7e2265ffd6bb40c4b547e6b3.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1qh8z6JEuz" target="_blank" rel="noreferrer">【绘画过程】竹林里的真龙！</a></div>
+<div class="mt">桐野野野 · — · 播放 13,691 · 1:05 · 2026-08-21 · 疑似无辜抽查</div>
+<div class="ch"><span class="c1"><b>赞 52.8%</b>｜超线32.8%</span><span class="c1"><b>币 1.1%</b>｜低于2%线</span><span class="c1"><b>藏 22.7%</b>｜超线12.7%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1qh8z6JEuz" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1qh8z6JEuz" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1qh8z6JEuz" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="B" id="c_BV1RCxJevEHe">
+<a class="cov" href="https://www.bilibili.com/video/BV1RCxJevEHe" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/51c65146abea8cc70fd4e4132c0340c1b393d270.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1RCxJevEHe" target="_blank" rel="noreferrer">去年的一些画</a></div>
+<div class="mt">施展一张 · — · 播放 144,580 · 0:47 · 2024-09-27 · 疑似无辜抽查</div>
+<div class="ch"><span class="c1"><b>赞 51.0%</b>｜超线31.0%</span><span class="c1"><b>币 1.8%</b>｜低于2%线</span><span class="c1"><b>藏 11.6%</b>｜超线1.6%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1RCxJevEHe" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1RCxJevEHe" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1RCxJevEHe" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="B" id="c_BV1nWb96tE47">
+<a class="cov" href="https://www.bilibili.com/video/BV1nWb96tE47" target="_blank" rel="noreferrer"><img src="http://i1.hdslb.com/bfs/archive/932d9acb93642d19ef9f8535b6f9ef1c8dfde585.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1nWb96tE47" target="_blank" rel="noreferrer">经典红歌《战斗进行曲》</a></div>
+<div class="mt">库尔斯克方面军 · — · 播放 32,464 · 1:09 · 2026-08-16 · 疑似无辜抽查</div>
+<div class="ch"><span class="c1"><b>赞 42.7%</b>｜超线22.7%</span><span class="c1"><b>币 1.5%</b>｜低于2%线</span><span class="c1"><b>藏 14.0%</b>｜超线4.0%</span></div>
+<div class="jd"><span class="v1">R4 触发</span> 判定：
+<label><input type="radio" name="j_BV1nWb96tE47" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1nWb96tE47" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1nWb96tE47" value="存疑">存疑</label>
+</div></div></div><div class="card" data-g="B" id="c_BV1Qm421G7kh">
+<a class="cov" href="https://www.bilibili.com/video/BV1Qm421G7kh" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/2fe6ecf05361738e48d9abacc78565c8c69603c3.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1Qm421G7kh" target="_blank" rel="noreferrer">不一定用上，但一定要知道的全方位打光</a></div>
+<div class="mt">燕知白 · — · 播放 33,913 · 0:16 · 2024-07-04 · 疑似无辜抽查</div>
+<div class="ch"><span class="c0"><b>赞 19.7%</b>｜距线0.3%</span><span class="c1"><b>币 1.9%</b>｜低于2%线</span><span class="c1"><b>藏 35.2%</b>｜超线25.2%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1Qm421G7kh" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1Qm421G7kh" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1Qm421G7kh" value="存疑">存疑</label>
+</div></div></div><div class="grp">D组 · 1 支</div><p class="gnote">边界贴线未触发：三条件都压线</p><div class="card" data-g="D" id="c_BV1wrcLzeEQw">
+<a class="cov" href="https://www.bilibili.com/video/BV1wrcLzeEQw" target="_blank" rel="noreferrer"><img src="http://i0.hdslb.com/bfs/archive/3d6dd0c3c187b2dd716bab40a5d9dd833d6daf2e.jpg" referrerpolicy="no-referrer" loading="lazy" alt=""></a>
+<div class="inf">
+<div class="ti"><a href="https://www.bilibili.com/video/BV1wrcLzeEQw" target="_blank" rel="noreferrer">【丹恒MMD】说谎的马卡龙</a></div>
+<div class="mt">瑶丸 · — · 播放 7,399 · 0:59 · 2026-02-13 · 边界贴线未触发</div>
+<div class="ch"><span class="c0"><b>赞 20.0%</b>｜距线0.0%</span><span class="c1"><b>币 2.0%</b>｜低于2%线</span><span class="c1"><b>藏 11.8%</b>｜超线1.8%</span></div>
+<div class="jd"><span class="v0">R4 未触发</span> 判定：
+<label><input type="radio" name="j_BV1wrcLzeEQw" value="软擦边">软擦边</label>
+<label><input type="radio" name="j_BV1wrcLzeEQw" value="无辜">无辜</label>
+<label><input type="radio" name="j_BV1wrcLzeEQw" value="存疑">存疑</label>
+</div></div></div></div><script>
+var KEY="r4_edge_review_20260905", TOTAL=38;
+var J={};try{J=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(J));prog()}
+function prog(){var n=Object.keys(J).length;document.getElementById('prog').textContent=n+' / '+TOTAL;
+ var b=document.getElementById('bar');b.style.width=(100*n/TOTAL)+'%'}
+document.querySelectorAll('input[type=radio]').forEach(function(r){
+ var id=r.name.slice(2);
+ if(J[id]&&J[id].v===r.value)r.checked=true;
+ r.addEventListener('change',function(){J[id]={v:r.value,t:Date.now()};save()})});
+function setF(f){document.querySelectorAll('.card').forEach(function(c){
+ var show=f==='ALL'||c.dataset.g===f||(f==='TODO'&&!J[c.id.slice(2)]);
+ c.style.display=show?'':'none'});
+ document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.f===f)})}
+function exportJ(){var out={date:'2026-09-05',page:'r4-edge-review',total:TOTAL,judgments:J};
+ var b=new Blob([JSON.stringify(out,null,1)],{type:'application/json'});
+ var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='r4_review_judged_2026-09-05.json';a.click()}
+function wipe(){if(confirm('清空本页全部判定？')){localStorage.removeItem(KEY);location.reload()}}
+prog();
+</script></body></html>
