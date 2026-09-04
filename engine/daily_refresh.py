@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """每日维护管线——首页多挖 + 货架自动换新（Elabation 2026-09-04 指令）。
 
 流程（约 300 请求 / 4 分钟，全部匿名）：
@@ -78,7 +78,7 @@ def main():
             if (st.get("view") or 0) >= 3000:
                 new_recs.append({"bvid": b, "title": v.get("title") or "", "view": st.get("view") or 0,
                                  "duration": v.get("duration") or 0, "pubdate": v.get("pubdate"),
-                                 "owner": v.get("owner") or "", "pic": v.get("pic") or "",
+                                 "owner": v.get("owner") or "", "pic": v.get("pic") or "", "src": "home",
                                  "tname": v.get("tname") or "",
                                  "stat": {"coin": st.get("coin") or 0, "favorite": st.get("favorite") or 0,
                                           "like": st.get("like") or 0, "share": st.get("share") or 0,

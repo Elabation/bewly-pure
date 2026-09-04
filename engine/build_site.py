@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """神作货架 v2 —— 分区条一区一页 · 封面卡 · 年代桶 · 乱序重排 · 回退/撤销 · 众包标注。
 
 修订（Elabation 十条 · 2026-09-04）：
@@ -206,11 +206,11 @@ const ym=t=>{if(!t)return '—';const d=new Date(t*1000);return d.getFullYear()+
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 let ann={};try{ann=JSON.parse(localStorage.getItem('godshelf_ann')||'{}')}catch(e){ann={}}
 let annHistory=[];
-let state={sec:'best',q:'',cat:'all',sort:'pct',tier:'god',shown:60,seed:Math.floor(Math.random()*1e9)};
+let state={sec:'home',q:'',cat:'all',sort:'new',tier:'god',shown:60,seed:Math.floor(Math.random()*1e9)};
 const SECTIONS=[
+ {id:'home',name:'新声',sub:'来自首页爬取的最新神作——进站先看新货'},
  {id:'best',name:'镇店之宝',sub:'带内百分位顶格的神作，全站最高殿堂'},
  {id:'mix',name:'精选混合',sub:'百分位与声援度混合 curated——降低同质化的一页'},
- {id:'home',name:'新声 · 来自首页',sub:'由首页爬取入选的新面孔（src=home）'},
  {id:'shout',name:'声援之选',sub:'币大于藏且未触发 R10 博同情降档的视频'},
  {id:'queue',name:'待分类',sub:'机器置信度不足——请帮忙把它们放上正确的货架'},
  {id:'shuffle',name:'乱序宇宙',sub:'全站乱序，每次重排随机展示——切断图游走的可见线索'},

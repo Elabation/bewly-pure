@@ -53,6 +53,7 @@ def _load_pop():
                 p = json.load(open(os.path.join(MINE, fn), encoding="utf-8"))
             except Exception:
                 continue
+            src_tag = "home" if "daily" in fn else "mine"
             for v in (p.get("videos") or []):
                 vw = v.get("view") or 0
                 if vw >= 3000 and v.get("bvid"):
@@ -62,7 +63,7 @@ def _load_pop():
                            "coin": st.get("coin") or 0, "fav": st.get("favorite") or 0,
                            "like": st.get("like") or 0,
                            "pubdate": v.get("pubdate"), "owner": v.get("owner") or v.get("up"),
-                           "tname": v.get("tname"), "src": "mine"}
+                           "tname": v.get("tname"), "src": v.get("src") or src_tag}
                     if v["bvid"] in pop:
                         old = pop[v["bvid"]]
                         for k in ("coin", "fav", "like", "view"):
