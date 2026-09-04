@@ -58,7 +58,7 @@ def main():
         try:
             d = cli.get_json("https://api.bilibili.com/x/web-interface/popular",
                              {"ps": 20, "pn": pn}, tries=1)
-            for it in ((d or {}).get("data") or {}).get("list") or []:
+            for it in (d or {}).get("list") or []:
                 b = it.get("bvid")
                 if b:
                     bvids.append(b)
@@ -110,9 +110,18 @@ def main():
     nodes, edges = [], []
     seen = set()
     for r in todays_gods:
+        aid = None
+        try:
+            vv = cli.fetch_view(r["bvid"])
+            aid = vv.get("aid") or (vv.get("stat") or {}).get("aid") or vv.get("id")
+        except Exception:
+            aid = None
+        if not aid:
+            log(f"seed {r['bvid']} 无 aid，跳过")
+            continue
         try:
             d = cli.get_json("https://api.bilibili.com/x/web-interface/archive/related",
-                             {"aid": r["bvid"]}, tries=1)
+                             {"aid": aid, "related": "true"}, tries=1)
             items = d if isinstance(d, list) else []
         except Exception:
             items = []
