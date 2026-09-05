@@ -53,25 +53,10 @@ for b, r in pool.items():
             r["like_rate"] = round(r["like"] / vr, 5)
     pic = covers.get(b)
     if pic:
-        # 封面走 B 站官方缩略图（@480w_270h_1c.webp ≈20KB，原 1080 图 ~350KB）——
-        # 懒加载滚动时不再"图片没跟上"（Elabation 2026-09-05）
-        if "hdslb.com/bfs/archive/" in pic and "@" not in pic:
-            base, ext = pic.rsplit(".", 1)
-            pic = f"{base}@480w_270h_1c.webp"
         r["pic"] = pic
         n_cov += 1
 rows = sorted(pool.values(), key=lambda r: -(r.get("pct") or 0))
 n_cov = sum(1 for r in rows if r.get("pic"))
-# 封面统一走 B 站官方缩略图（@480w_270h_1c.jpg ≈5-30KB，原 1080 图 ~350KB）——
-# 懒加载滚动即时渲染，不再"图片没跟上"（Elabation 2026-09-05）。
-# 注意：webp 变体冷门老图会 404，必须用 jpg 变体；模板里另有 onerror 回退原图。
-for r in rows:
-    pic = r.get("pic")
-    if pic and "hdslb.com/bfs/" in pic and "@" not in pic and "." in pic:
-        base, ext = pic.rsplit(".", 1)
-        if "/" not in ext and len(ext) <= 5:
-            r["picFull"] = pic
-            r["pic"] = f"{base}@480w_270h_1c.jpg"
 for r in rows:
     r["year"] = time.localtime(r["pubdate"]).tm_year if r.get("pubdate") else None
 n_god = sum(1 for r in rows if r["tier"] == "神作候选")
@@ -284,7 +269,7 @@ function cardHTML(r){
   const catNow=a.cat||r.category;
   const r10=isR10(r);
   return `<div class="card${god?' god':''}">
-    <div class="cover">${r.pic?`<img referrerpolicy="no-referrer" src="${esc(r.pic)}" data-full="${esc(r.picFull||'')}" onerror="if(this.dataset.full&&!this.dataset.f){this.dataset.f=1;this.src=this.dataset.full}else{this.style.display='none'}">`:'<div class="notier">'+Math.round((r.pct||0)*100)+'</div>'}
+    <div class="cover">${r.pic?`<img loading="lazy" referrerpolicy="no-referrer" src="${esc(r.pic)}" onerror="this.style.display='none'">`:'<div class="notier">'+Math.round((r.pct||0)*100)+'</div>'}
       <span class="pct">${Math.round((r.pct||0)*100)}</span>
       ${a.stamp?'<span class="annmark">'+(a.stamp==='god'?'已盖章':'已纠错')+'</span>':''}</div>
     <div class="body">
