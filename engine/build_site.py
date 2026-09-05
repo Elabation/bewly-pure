@@ -51,7 +51,9 @@ for b, r in pool.items():
             r["coin_rate"] = round(r["coin"] / vr, 5)
             r["fav_rate"] = round(r["fav"] / vr, 5)
             r["like_rate"] = round(r["like"] / vr, 5)
-    pic = covers.get(b)
+    # 封面：补抓表优先，池记录自带 pic（每日新视频 fetch_view 自带）兜底——
+    # 修复新视频从未进补抓表导致新品永远灰块（Elabation 2026-09-05）
+    pic = covers.get(b) or r.get("pic")
     if pic:
         r["pic"] = pic
         n_cov += 1

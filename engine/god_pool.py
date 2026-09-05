@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """神作货架公共池——合并 参照库(pop) + 五臂 flow 节点，统一 v3+R9 判档。
 
 口径：
@@ -63,13 +63,15 @@ def _load_pop():
                            "coin": st.get("coin") or 0, "fav": st.get("favorite") or 0,
                            "like": st.get("like") or 0,
                            "pubdate": v.get("pubdate"), "owner": v.get("owner") or v.get("up"),
-                           "tname": v.get("tname"), "src": v.get("src") or src_tag}
+                           "tname": v.get("tname"), "src": v.get("src") or src_tag,
+                           "pic": v.get("pic") or ""}
                     if v["bvid"] in pop:
                         old = pop[v["bvid"]]
                         for k in ("coin", "fav", "like", "view"):
                             rec[k] = max(rec[k] or 0, old[k] or 0)
                         rec["pubdate"] = rec.get("pubdate") or old.get("pubdate")
                         rec["owner"] = rec.get("owner") or old.get("owner")
+                        rec["pic"] = rec.get("pic") or old.get("pic")
                     pop[v["bvid"]] = rec
     return pop
 
@@ -137,7 +139,8 @@ def build_pool():
                    "coin": r["coin"], "fav": r["fav"], "like": r["like"],
                    "pubdate": r.get("pubdate") or n.get("pubdate"),
                    "owner": r.get("owner") or "", "category": cat,
-                   "pct": pct_of(r["view"], r["coin"] / vr), "src": r.get("src")}
+                   "pct": pct_of(r["view"], r["coin"] / vr), "src": r.get("src"),
+                   "pic": r.get("pic") or ""}
     for b, n in fnodes.items():
         if b in pool:
             if not pool[b].get("pubdate") and n.get("pubdate"):
@@ -151,7 +154,8 @@ def build_pool():
                    "dur": n.get("dur") or 0,
                    "coin": round(coin_rate * vr), "fav": round(fav_rate * vr), "like": round(like_rate * vr),
                    "pubdate": n.get("pubdate"), "owner": "", "category": n.get("category") or "其他",
-                   "pct": pct_of(n.get("view") or 0, coin_rate), "src": "flow:" + (n.get("arm") or "")}
+                   "pct": pct_of(n.get("view") or 0, coin_rate), "src": "flow:" + (n.get("arm") or ""),
+                   "pic": n.get("pic") or ""}
     # 分类策略（Elabation 2026-09-04 修订）：清空全部机器/关键词标签，全池置「待分类」，
     # 由用户在货架上完成第一轮人工分类；积累带标签数据后再训练（标题+tag）。
     # ml_categorize.py 保留备用（v1 模型已冻结存档），待标注量足够后重启。

@@ -131,7 +131,8 @@ def main():
         nodes.append({"bvid": r["bvid"], "title": r["title"], "view": r["view"], "dur": r["dur"],
                       "coin_rate": r["coin_rate"], "fav_rate": r["fav_rate"], "like_rate": r["like_rate"],
                       "tier": r["tier"], "category": r["category"], "hop": 0, "parent": None,
-                      "pubdate": r.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"], "seed": True})
+                      "pubdate": r.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"], "seed": True,
+                      "pic": r.get("pic") or ""})
         for it in items:
             cb = it.get("bvid")
             if not cb or cb in seen:
@@ -145,7 +146,8 @@ def main():
                           "dur": it.get("duration") or 0,
                           "coin_rate": round(cr, 5), "fav_rate": round(fr, 5), "like_rate": round(lr, 5),
                           "tier": None, "category": None, "hop": 1, "parent": parent,
-                          "pubdate": it.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"]})
+                          "pubdate": it.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"],
+                          "pic": it.get("pic") or ""})
     # 重新判档（node 级）
     import math as _m
     from god_pool import _load_pop, BAND as _B  # 复用基线
