@@ -53,10 +53,23 @@ for b, r in pool.items():
             r["like_rate"] = round(r["like"] / vr, 5)
     pic = covers.get(b)
     if pic:
+        # 封面走 B 站官方缩略图（@480w_270h_1c.webp ≈20KB，原 1080 图 ~350KB）——
+        # 懒加载滚动时不再"图片没跟上"（Elabation 2026-09-05）
+        if "hdslb.com/bfs/archive/" in pic and "@" not in pic:
+            base, ext = pic.rsplit(".", 1)
+            pic = f"{base}@480w_270h_1c.webp"
         r["pic"] = pic
         n_cov += 1
 rows = sorted(pool.values(), key=lambda r: -(r.get("pct") or 0))
 n_cov = sum(1 for r in rows if r.get("pic"))
+# 封面统一走 B 站官方缩略图（@480w_270h_1c.webp ≈5-20KB，原 1080 图 ~350KB）——
+# 懒加载滚动即时渲染，不再"图片没跟上"（Elabation 2026-09-05）
+for r in rows:
+    pic = r.get("pic")
+    if pic and "hdslb.com/bfs/" in pic and "@" not in pic and "." in pic:
+        base, ext = pic.rsplit(".", 1)
+        if "/" not in ext and len(ext) <= 5:
+            r["pic"] = f"{base}@480w_270h_1c.webp"
 for r in rows:
     r["year"] = time.localtime(r["pubdate"]).tm_year if r.get("pubdate") else None
 n_god = sum(1 for r in rows if r["tier"] == "神作候选")
