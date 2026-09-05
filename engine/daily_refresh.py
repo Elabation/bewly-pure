@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """每日维护管线——首页多挖 + 货架自动换新（Elabation 2026-09-04 指令）。
 
 流程（约 300 请求 / 4 分钟，全部匿名）：
@@ -11,6 +11,7 @@
 """
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -177,6 +178,21 @@ def main():
     log("货架重建: " + (res.stdout or "").strip().splitlines()[-1] if (res.stdout or "").strip() else "货架重建: 无输出")
     if res.returncode != 0:
         log(f"货架重建失败: {(res.stderr or '')[:200]}")
+
+    # 6) 发布到 GitHub Pages（根目录副本 + commit + push；Elabation 2026-09-05 指令：新品每天自动换新）
+    try:
+        shutil.copyfile(os.path.join(ROOT, "docs", "god-shelf.html"), os.path.join(ROOT, "god-shelf.html"))
+        git = subprocess.run(["git", "add", "god-shelf.html"], cwd=ROOT, capture_output=True, text=True)
+        c = subprocess.run(["git", "commit", "-m", f"货架每日更新 {DATE}（自动发布）"], cwd=ROOT,
+                           capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if c.returncode == 0:
+            p = subprocess.run(["git", "push", "origin", "main"], cwd=ROOT,
+                               capture_output=True, text=True, encoding="utf-8", errors="replace")
+            log("发布 GitHub Pages: " + ("推送成功" if p.returncode == 0 else f"推送失败 {(p.stderr or '')[:120]}"))
+        else:
+            log("发布跳过: " + ((c.stdout or c.stderr or "").strip().splitlines()[-1][:120] if (c.stdout or c.stderr or "").strip() else "无变更"))
+    except Exception as e:
+        log(f"发布异常: {str(e)[:120]}")
     log("=== 每日维护完成 ===")
 
 
