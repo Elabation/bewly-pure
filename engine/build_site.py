@@ -282,7 +282,7 @@ function cardHTML(r){
   const catNow=a.cat||r.category;
   const r10=isR10(r);
   return `<div class="card${god?' god':''}">
-    <div class="cover">${r.pic?`<img loading="lazy" referrerpolicy="no-referrer" src="${esc(r.pic)}" onerror="this.style.display='none'">`:'<div class="notier">'+Math.round((r.pct||0)*100)+'</div>'}
+    <div class="cover">${r.pic?`<img referrerpolicy="no-referrer" src="${esc(r.pic)}" onerror="this.style.display='none'">`:'<div class="notier">'+Math.round((r.pct||0)*100)+'</div>'}
       <span class="pct">${Math.round((r.pct||0)*100)}</span>
       ${a.stamp?'<span class="annmark">'+(a.stamp==='god'?'已盖章':'已纠错')+'</span>':''}</div>
     <div class="body">
