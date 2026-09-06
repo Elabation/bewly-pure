@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>调研报告 3.0 · V3 评分机制的三轮双盲验证</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F7F2EB;color:#081F5C;font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13.5px;line-height:1.75}
+.top{background:linear-gradient(180deg,#EFE8DA,#F7F2EB);border-bottom:1px solid #D0E3FF;padding:34px 20px 22px;text-align:center}
+.top .badge{display:inline-block;border:1px dashed #7096D1;color:#334EAC;border-radius:999px;padding:3px 14px;font-size:10.5px;letter-spacing:2px}
+h1{font-family:'KaiTi','STKaiti',serif;font-size:27px;font-weight:800;margin:12px 0 6px;letter-spacing:1px}
+.top .sub{font-size:13px;color:#7096D1;font-weight:600}
+.wrap{max-width:860px;margin:0 auto;padding:10px 18px 80px}
+h2{font-family:'KaiTi','STKaiti',serif;font-size:20px;font-weight:800;margin:44px 0 10px;padding-left:10px;border-left:4px solid #081F5C}
+h3{font-size:15px;font-weight:700;color:#334EAC;margin:22px 0 6px}
+p{margin:8px 0}
+.dim{color:#7096D1}
+.small{font-size:11.5px;color:#7096D1}
+.trio{display:flex;border-top:1px solid #D0E3FF;border-bottom:1px solid #D0E3FF;margin:16px 0}
+.trio .c{flex:1;padding:14px 8px;text-align:center;border-left:1px solid #D0E3FF}
+.trio .c:first-child{border-left:none}
+.trio .n{font-size:24px;font-weight:800;color:#081F5C;font-variant-numeric:tabular-nums}
+.trio .m{font-size:24px;font-weight:700;color:#334EAC;font-variant-numeric:tabular-nums}
+.trio .d{font-size:11.5px;color:#7096D1;margin-top:3px}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th{font-size:10.5px;font-weight:600;color:#7096D1;text-align:left;padding:5px 7px;border-bottom:1px solid #BAD6EB;letter-spacing:.5px}
+td{font-size:12.5px;padding:6px 7px;border-bottom:1px solid #D0E3FF;vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;color:#334EAC;white-space:nowrap}
+.ok{color:#081F5C;font-weight:700}
+.dead{color:#7096D1}
+.warn{color:#B8912F;font-weight:700}
+.quote{border-left:3px solid #B8912F;background:#fff;padding:10px 14px;margin:12px 0;font-family:'KaiTi','STKaiti',serif;font-size:14px;color:#081F5C;border-radius:0 6px 6px 0}
+.box{background:#fff;border:1px solid #D0E3FF;border-radius:8px;padding:12px 16px;margin:12px 0}
+.formula{font-family:Georgia,'Times New Roman',serif;background:#081F5C;color:#F7F2EB;border-radius:8px;padding:14px 18px;margin:12px 0;font-size:14px;letter-spacing:.5px}
+.formula .v{color:#BAD6EB}
+.legend{font-size:10.5px;color:#7096D1;margin-top:4px}
+.src{font-size:9.5px;color:#BAD6EB;letter-spacing:1.5px;text-transform:uppercase;margin-top:40px;border-top:1px solid #D0E3FF;padding-top:10px;line-height:2}
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:10.5px;margin-right:4px}
+.t-ok{background:#081F5C;color:#F7F2EB}
+.t-dead{background:#D0E3FF;color:#334EAC}
+.t-hold{background:none;border:1px dashed #7096D1;color:#7096D1}
+ul{margin:6px 0;padding-left:20px}
+li{margin:4px 0}
+.svgwrap{background:#fff;border:1px solid #D0E3FF;border-radius:8px;padding:14px;margin:10px 0}
+@media(max-width:640px){.trio{flex-direction:column}.trio .c{border-left:none;border-top:1px solid #D0E3FF}}
+</style>
+</head>
+<body>
+<div class="top">
+<span class="badge">调研报告 3.0 ｜ 2026-09-05 ｜ 三轮双盲 · 125 卡人工判定 · 全部数字来自实测 JSON</span>
+<h1>V3 评分机制的三轮双盲验证</h1>
+<div class="sub">带内投币百分位 × 行为规则族 × 一场差点被立法的错误定律</div>
+</div>
+<div class="wrap">
+
+<h2>0 · 摘要</h2>
+<div class="trio">
+<div class="c"><div class="n">0 / 18</div><div class="d">R4 对真·擦边物种召回（三轮合计）</div></div>
+<div class="c"><div class="m">76%</div><div class="d">定向法合并精确率（22/29，含捕获 96%）</div></div>
+<div class="c"><div class="n">20 / 20</div><div class="d">赦免条款零冤案（&gt;21s 触发全无辜）</div></div>
+</div>
+<p><b>一句话结论</b>：V3 的带内投币百分位经受住了全部三轮攻击——它不需要为擦边打任何补丁（T1 全部擦边视频里 10/12 被它自动压进垃圾候选）；而"识别擦边"这个任务本身，在纯行为数值层面被证明<b>不可判定</b>，只有「R4 触发 × 短时长 × 真人封面」的定向组合达到 76% 可用精度，且已按 Elabation 裁定封存为离线工具、不入生产管线。</p>
+<p class="small">本报告覆盖：V3 机制本体 → 规则族谱 → 三轮实验全数据 → 两大方法论定律 → 双盲协议规范 → 立法与回滚记录 → 已知边界。</p>
+
+<h2>1 · V3 机制本体</h2>
+<div class="formula">pct = 带内投币率排位 ｜ band = ⌊log₁₀(view) / 0.2⌋ <span class="v">（Δlog₁₀ = 0.2 同量级对垒）</span></div>
+<p>核心思想：<b>不跟全站比，只跟同播放量级比</b>。一支 3 千播放的视频和一支 3 百万播放的视频，投币率的天然水位完全不同；按 Δlog₁₀=0.2 切带后，只有战胜同带中位数的视频才配升档。</p>
+<table>
+<tr><th>参数</th><th>取值</th><th>含义</th></tr>
+<tr><td>档位阈值</td><td class="n">0.93 / 0.85 / 0.72</td><td>神作 / 优秀 / 一般（带内投币百分位）</td></tr>
+<tr><td>时长规则 R2</td><td class="n">&lt;30s 封顶一般 · &lt;90s 斩神</td><td>短平快不给神位</td></tr>
+<tr><td>吃灰规则 R3</td><td class="n">藏/币&gt;8 且 藏&gt;15%</td><td>收藏爆表币归零 = 档案型，封顶优秀</td></tr>
+<tr><td>声援规则 R9</td><td class="n">币&gt;赞 或 币&gt;藏，护栏 pct≥0.50</td><td>升一档（PvZ 案教训：防零总量比率说谎）</td></tr>
+<tr><td>同情规则 R10</td><td class="n">强词单发 / 弱词×2 降档</td><td>触发时压制 R9（博同情的币不是工艺币）</td></tr>
+<tr><td>冻结基线</td><td class="n">11,273 支</td><td>挖矿库 + 首页样本，带内百分位的参照人口</td></tr>
+</table>
+<div class="svgwrap">
+<svg width="100%" viewBox="0 0 640 74" xmlns="http://www.w3.org/2000/svg">
+<line x1="30" y1="46" x2="610" y2="46" stroke="#BAD6EB" stroke-width="2"/>
+<line x1="448.8" y1="30" x2="448.8" y2="62" stroke="#7096D1" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="516.8" y1="30" x2="516.8" y2="62" stroke="#334EAC" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="565.2" y1="30" x2="565.2" y2="62" stroke="#081F5C" stroke-width="1"/>
+<rect x="30" y="42" width="418.8" height="8" fill="#D0E3FF"/>
+<rect x="448.8" y="42" width="68" height="8" fill="#7096D1"/>
+<rect x="516.8" y="42" width="48.4" height="8" fill="#334EAC"/>
+<rect x="565.2" y="42" width="44.8" height="8" fill="#081F5C"/>
+<text x="30" y="24" font-size="10" fill="#7096D1">垃圾 &lt;0.72</text>
+<text x="448.8" y="24" font-size="10" fill="#7096D1" text-anchor="middle">一般 0.72</text>
+<text x="516.8" y="24" font-size="10" fill="#334EAC" text-anchor="middle">优秀 0.85</text>
+<text x="565.2" y="24" font-size="10" fill="#081F5C" text-anchor="middle">神 0.93</text>
+<text x="610" y="70" font-size="10" fill="#7096D1" text-anchor="end">带内投币百分位 pct →</text>
+</svg>
+</div>
+
+<h2>2 · 规则族谱与验证状态</h2>
+<table>
+<tr><th>规则</th><th>内容</th><th>本轮验证</th><th>状态</th></tr>
+<tr><td class="n">R2 时长</td><td>短平快封顶</td><td>未单独攻击（结构性规则）</td><td class="ok">在役</td></tr>
+<tr><td class="n">R3 吃灰</td><td>藏/币&gt;8 且 藏&gt;15%</td><td>档案型识别有效（diag_sincerity 佐证）</td><td class="ok">在役</td></tr>
+<tr><td class="n">R4 视觉消费</td><td>赞&gt;20% &amp; 币&lt;2% &amp; 藏&gt;10%</td><td>擦边召回 0%，池内精确率 14%；作为「萌系视觉消费签名」物种标记有效</td><td><span class="tag t-hold">仅标注</span></td></tr>
+<tr><td class="n">R8 赞币比</td><td>赞/币&gt;50</td><td>感谢 farming 信号，未受攻击</td><td class="ok">在役</td></tr>
+<tr><td class="n">R9 声援</td><td>币&gt;赞 或 币&gt;藏 → 升档</td><td>Neuro 圈实测连环命中（fan 声援币真实存在）</td><td class="ok">在役</td></tr>
+<tr><td class="n">R10 同情</td><td>博同情标题降档</td><td>fan人张 案立法后零复发</td><td class="ok">在役</td></tr>
+<tr><td class="n">R11 定向三分法</td><td>R4&短&真人高嫌疑 / &gt;21s 赦免</td><td>立法次日整体回滚（见 §6）</td><td><span class="tag t-dead">封存</span></td></tr>
+</table>
+<p class="small">R4 名字考据：初名「擦边三连」，三轮实验后正名为「萌系视觉消费签名」未采纳、维持原名——但已明确其语义是<b>物种标记</b>而非擦边指控，且永不改档。</p>
+
+<h2>3 · 三轮双盲实验</h2>
+<h3>3.1 轮一 · 有偏普查（2026-09-05 凌晨）</h3>
+<table>
+<tr><th>路</th><th>样本</th><th>R4 触发</th><th>发现</th></tr>
+<tr><td>首页热门</td><td class="n">240 支</td><td class="n">0</td><td>热门流被策展，擦边物种不上桌</td></tr>
+<tr><td>搜索真·擦边</td><td class="n">18 支</td><td class="n">0</td><td>大热门赞率仅 0.1~4.4%，绝对阈值反向失明</td></tr>
+<tr><td>池内扫描</td><td class="n">9,387 支</td><td class="n">205（2.2%）</td><td>触发面貌以绘画/教程/红歌为主——误伤嫌疑</td></tr>
+<tr><td>相关一条龙</td><td class="n">578 支</td><td class="n">187（32%）</td><td>无辜对照链 32% ≈ 极端链 30~42%，无分离</td></tr>
+</table>
+<p>轮一报告的 56% 精确率与「A 组 sinc 完美二分」让一条定律差点直接立法——随后被轮二击毙。</p>
+
+<h3>3.2 轮二 · 盲测（49 卡，标题双盲）</h3>
+<div class="trio">
+<div class="c"><div class="m">14%</div><div class="d">R4 无偏精确率（3/22）</div></div>
+<div class="c"><div class="n">0 / 10</div><div class="d">高带 sinc≤0.11 → 擦边（定律死亡）</div></div>
+<div class="c"><div class="m">0 擦边</div><div class="d">长触发 12 支全无辜</div></div>
+</div>
+<p>三个假设的判分：<b>H1 短时长=擦边 30%（伤而不死）</b>；<b>H2 长时长=无辜 100%（存活）</b>；<b>H3 高带 sinc≤0.11=擦边 0%（当场死亡）</b>。H3 的死因鉴定排除了年代混杂（2018 前仅 1/10），确认为<b>基率谬误</b>：大播放路人视频（数学动画/合唱/科普）币率藏率双双趋零，sinc 照样趴在 0.03~0.10——轮一的"无辜对照"是宅舞同人社区（会投币的无辜），不是随机的无辜。</p>
+
+<h3>3.3 轮三 · 三分法验证（38 卡，机器视觉入管线）</h3>
+<table>
+<tr><th>细胞</th><th>定义</th><th>擦边率</th><th>预测命中</th></tr>
+<tr><td class="n">T1 触发·短·真人</td><td class="n">R4 &amp; ≤21s &amp; YuNet真脸</td><td class="n ok">83%（10/12）</td><td class="ok">✓ ≥60% 达标</td></tr>
+<tr><td class="n">T2 触发·短·非真人</td><td class="n">R4 &amp; ≤21s &amp; 无真脸</td><td class="n">17%（1/6）</td><td class="ok">✓ 封面有判别力</td></tr>
+<tr><td class="n">T3 触发·长</td><td class="n">R4 &amp; &gt;21s</td><td class="n">0%（0/4）</td><td class="ok">✓ 赦免三轮 20/20</td></tr>
+<tr><td class="n">C1 真人·非R4</td><td class="n">真脸 &amp; 非触发</td><td class="n">0%（0/6）</td><td class="ok">✓ 真人单独不定罪</td></tr>
+<tr><td class="n">H1 高带·低诚·真人</td><td class="n">≥30万 &amp; sinc≤0.11 &amp; 真脸</td><td class="n">0%（0/4）</td><td class="dead">✗ 高带维持死亡</td></tr>
+<tr><td class="n">G 随机对照</td><td class="n">低带随机（seed=43）</td><td class="n">0%（0/6）</td><td class="n">基线干净</td></tr>
+</table>
+<p><b>定向抓擦边法合并成绩</b>：R4 触发 &amp; ≤21s &amp; YuNet 真人脸 = <b>22/29 = 76% 精确率，捕获 22/23 = 96%</b>。T1 与 T2 的 5 倍分离（83% vs 17%）证明封面真人信号在触发集内具备真实判别力。</p>
+
+<h3>3.4 全部轮次的一个隐藏共识</h3>
+<div class="box">对 T1 全部 12 支跑现行 V3：<b>10 支垃圾候选、2 支一般候选、0 支优秀以上</b>。擦边物种在币率轴上天然见底——V3 的带内百分位不用任何补丁就把它们埋得干干净净。这是「原版 V3 就非常强了」这条裁定的数据证据。</div>
+
+<h2>4 · 两大方法论定律</h2>
+<h3>定律一 · 基率谬误</h3>
+<p>P(擦边 | sinc低) ≠ P(sinc低 | 擦边)。sinc 低是擦边的<b>必要色</b>而非<b>充分证</b>：擦边大热门确实 sinc≤0.1，但全宇宙的低币低藏路人视频同样 sinc≤0.1。第一轮从"会投币的无辜"（宅舞同人社区）取对照，得出 12/12 的假完美二分——<b>对照的选择决定了定律的生死</b>。</p>
+<h3>定律二 · 物种同性</h3>
+<p>相关推荐图是物种同性的：种子是什么物种，链就聚什么物种。轮一从 cos/萌系种子出发的链命中天然偏软擦边（56% 假精确率），轮二无偏重测跌到 14%——<b>链样本 ≠ 平台样本</b>。「species &gt; strategy」的另一面：凡是沿相关图得出的覆盖率结论，必须配随机对照重测。</p>
+
+<h2>5 · 差点被立法的定律：sinc 光谱（存档）</h2>
+<div class="svgwrap">
+<svg width="100%" viewBox="0 0 640 86" xmlns="http://www.w3.org/2000/svg">
+<line x1="30" y1="42" x2="600" y2="42" stroke="#D0E3FF" stroke-width="1.5"/>
+<line x1="99.9" y1="18" x2="99.9" y2="66" stroke="#081F5C" stroke-width="1" stroke-dasharray="3 3" opacity="0.55"/>
+<text x="99.9" y="12" font-size="10" fill="#081F5C" text-anchor="middle">轮一建议线 0.11（后被盲测否决）</text>
+<circle cx="37" cy="36" r="4.5" fill="#081F5C"/><circle cx="39.5" cy="48" r="4.5" fill="#081F5C"/><circle cx="46.5" cy="36" r="4.5" fill="#081F5C"/><circle cx="49.1" cy="48" r="4.5" fill="#081F5C"/><circle cx="53.5" cy="36" r="4.5" fill="#081F5C"/><circle cx="54.2" cy="48" r="4.5" fill="#081F5C"/><circle cx="65.6" cy="36" r="4.5" fill="#081F5C"/><circle cx="69.4" cy="48" r="4.5" fill="#081F5C"/><circle cx="80.8" cy="36" r="4.5" fill="#081F5C"/><circle cx="82.7" cy="48" r="4.5" fill="#081F5C"/><circle cx="96.7" cy="36" r="4.5" fill="#081F5C"/>
+<circle cx="104.9" cy="42" r="4.5" fill="#7096D1"/><circle cx="176.8" cy="42" r="4.5" fill="#7096D1"/><circle cx="363.5" cy="42" r="4.5" fill="#7096D1"/><circle cx="410.5" cy="42" r="4.5" fill="#7096D1"/><circle cx="540.7" cy="42" r="4.5" fill="#7096D1"/>
+<circle cx="124.6" cy="42" r="4.5" fill="#F7F2EB" stroke="#334EAC" stroke-width="1.5"/>
+<text x="30" y="80" font-size="10" fill="#7096D1">0</text><text x="157" y="80" font-size="10" fill="#7096D1" text-anchor="middle">0.2</text><text x="284" y="80" font-size="10" fill="#7096D1" text-anchor="middle">0.4</text><text x="411" y="80" font-size="10" fill="#7096D1" text-anchor="middle">0.6</text><text x="600" y="80" font-size="10" fill="#7096D1" text-anchor="end">coin/fav 诚意比 →</text>
+</svg>
+<p class="small">轮一 A 组（大带 18 支）：软擦边 12 支全部 sinc≤0.105（深蓝），无辜 5 支全部 ≥0.118（浅蓝），存疑 1 支 0.149 恰在中间——样本内零重叠。它是一个真实的<b>条件</b>（sinc 低是擦边的必要色），但被误当成<b>充分定律</b>。盲测 D 细胞 10 支无辜者（数学动画/合唱/核电站科普）sinc 全部 ≤0.11，定律当场死亡。</p>
+</div>
+
+<h2>6 · 立法与回滚记录</h2>
+<div class="quote">「原版 V3 就非常强了，后续这些只是为了验证个人猜测。」—— Elabation，2026-09-05</div>
+<table>
+<tr><th>时间</th><th>事件</th><th>commit</th></tr>
+<tr><td class="n">09-04</td><td>R9 声援提档 + R10 博同情降档 立法入 v3_rules（单一定义源）</td><td class="n">—</td></tr>
+<tr><td class="n">09-05 凌晨</td><td>轮一普查：56% 精确率 + sinc 完美二分 → R11 定向三分法提案</td><td class="n">—</td></tr>
+<tr><td class="n">09-05 上午</td><td>轮二盲测：H3 死亡、无偏精确率 14% → R11 一度写入又回滚（aacc77d）</td><td class="n">aacc77d</td></tr>
+<tr><td class="n">09-05 午后</td><td>轮三 T1 83% 达标 → R11 立法入 v3_rules + cover_real.py</td><td class="n">—</td></tr>
+<tr><td class="n">09-05 晚</td><td><b>Elabation 终裁：V3 原版保留</b>——v3_rules 恢复 R9 原版，daily_refresh 撤销接线，cover_real.py 删除；定向法封存为离线脚本</td><td class="n">0f9d477</td></tr>
+</table>
+<p>封存的遗产（离线可复跑）：定向法 76%/96% 的完整标定数据、YuNet 227KB 模型与 coverlab、双盲协议三套审查台（38/49/38 卡）。启用条件：未来若需要「定向挖擦边」产品，T1 细胞即是现成入口。</p>
+
+<h2>7 · 双盲协议 v1（本次最大方法论产出）</h2>
+<div class="box">
+<b>五条铁律</b>：<br>
+① 选样者不可见标题——选样只允许数值与机器视觉信号（率/时长/播放/诚意比/YuNet 真脸）；<br>
+② 页面模糊标题与 UP 名，判定一张揭示一张；<br>
+③ 对照细胞先行——每个假设配预测相反或中性的对照细胞，随机种子固定可复现；<br>
+④ 判定本地暂存 + 导出 JSON 回传，三方对账（人工判定 × 细胞预测 × 机器信号）；<br>
+⑤ 凡下结论，必配盲对照——<b>协议的价值在第二轮得到全额兑现：它拦下了一条差点立法的错误定律</b>。
+</div>
+
+<h2>8 · 边界与已知失败（诚实清单）</h2>
+<ul>
+<li><b>音频盲区</b>：cos 服 + 淫叫类内容，封面与行为数值全不可见（Elabation 指出）；需要 whisper/音频指纹通道，本轮未建。</li>
+<li><b>无脸封面漏网</b>：擦边大热门常用纯字/纯色封面（《擦边现场》赞率 0.1%），4/13 无法被任何视觉通道挽救。</li>
+<li><b>高带判别力为零</b>：≥30 万播放带内，擦边真人率 75% ≈ 无辜真人率 70%，封面信号失效；且 sinc 通道已死。高带擦边识别整体<b>无解</b>，标记为开放问题。</li>
+<li><b>工程坑存档</b>：OpenCV on Windows 读不了中文路径（模型/缓存必须放 ASCII 临时目录）；B 站缩略图 @480w 变体按需生成、冷门图 NoSuchKey（webp 比 jpg 更甚），不可用作生产依赖；python 管道接 Select-Object -First 会中途掐死进程。</li>
+<li><b>n 偏小</b>：所有百分比基于 25+87 张人工判定卡，置信区间宽；定向法 76% 的 95% Wilson 下界约 57%。</li>
+</ul>
+
+<h2>9 · 首个主题化应用 · Neuro-sama 小货架</h2>
+<p>管线修复（pic 全链路透传 + 自动发布第 6 步 + 计划任务重注册）后的第一次主题化实战：12 个外部种子 → 相关两跳聚簇 238 支 → 物种过滤 119 支 → <b>神作 18 / 优秀 18</b>，pct 峰值 1.04。Neuro 圈是 R9 声援提档的天然实验田——粉丝投币率常态性高于带内中位。交付页：<span class="n">/neuro-shelf.html</span>。</p>
+
+<h2>10 · 数据与脚本索引</h2>
+<table>
+<tr><th>产物</th><th>路径</th></tr>
+<tr><td>三轮判定 JSON</td><td class="n">data/fav_mine/r4_review / r4_blindhunt / r4_blind3 _20260905.json</td></tr>
+<tr><td>轮一普查</td><td class="n">data/fav_mine/r4_edgehunt / r4_edgehunt2_20260905.json</td></tr>
+<tr><td>封面标定</td><td class="n">data/fav_mine/r4_coverlab_20260905.json</td></tr>
+<tr><td>Neuro 挖掘</td><td class="n">data/fav_mine/neuro_hunt_20260905.json</td></tr>
+<tr><td>分析脚本</td><td class="n">engine/diag_r4_*.py · build_r4_review.py · diag_neuro_hunt.py</td></tr>
+<tr><td>验证记录</td><td class="n">docs/personal/r4-edgehunt-notes.md（三轮全档）</td></tr>
+</table>
+<p class="dim">机制冻结声明：v3_rules.py 自 09-04 立法后维持 R9 原版，R11 提案已回滚。阈值（0.93/0.85/0.72）与全部规则的合法性继续由人工盲校验逐级授予，不由本报告自封。</p>
+<div class="src">调研报告 3.0 · V3 机制三轮双盲验证 ｜ Elabation × 逐轮对账 ｜ data: r4_edgehunt* · r4_blind* · r4_coverlab · neuro_hunt ｜ report: docs/report-v3.html</div>
+</div>
+</body>
+</html>
