@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
-"""v3 规则引擎 · 单一定义源（R9 版）。
+"""Legacy engagement tiers, retained for compatibility; not content-quality labels.
 
-Elabation 立法（2026-09-04）：R9 声援提档——
-  · 币 > 赞 或 币 > 收藏（计数比较，等价于币率比较）
-  · 护栏：带内币率百分位 ≥ 0.50（不低于带内中位，防零总量比率说谎——PvZ 案教训）
-  · 满足则从基础档升一级（垃圾→一般→优秀→神，神封顶）
-规则次序：pct 定基础档 → R2 时长 → R3 吃灰（fav 系惩罚）→ R9 声援（coin 系奖励）。
-R3 与 R9 条件天然互斥（fav/coin>8 vs coin>fav），不会互相抵消。
-全管线 import 本文件，改口径只改这里。
+2026-11-03: R9 describes support but never raises a tier. In particular it cannot
+undo duration/utility caps. The new craft/resonance workflow is review_miner.py.
 """
 T_GOD, T_GOOD, T_NORMAL = 0.93, 0.85, 0.72
-DUR_EXEC, DUR_CAP = 90, 30
+DUR_EXEC, DUR_CAP = 150, 30
 R_FAVCOIN, R_FAVRATE = 8.0, 0.15
 R_EDGE_LIKE, R_EDGE_COIN, R_EDGE_FAV = 0.20, 0.02, 0.10
 R9_GUARD_PCT = 0.50
@@ -51,7 +46,7 @@ def v3_tier(pct, dur, fav_rate, coin_rate, like_rate, title=""):
         if tier in ("神作候选", "优秀候选"):
             tier = "一般候选"
         firings.append(f"R2a<{DUR_CAP}s")
-    elif dur and dur < DUR_EXEC and tier == "神作候选":
+    elif dur and dur <= DUR_EXEC and tier == "神作候选":
         tier = "优秀候选"
         firings.append(f"R2b<{DUR_EXEC}s斩神")
     fc = fav_rate / max(coin_rate, 1e-6)
@@ -68,10 +63,10 @@ def v3_tier(pct, dur, fav_rate, coin_rate, like_rate, title=""):
             tier = TIERS[TIERS.index(tier) - 1]
         firings.append(r10desc)
         return tier, firings
-    # R9 声援提档（coin 系奖励，与 R3 的 fav 系惩罚互为镜像）
+    # R9 only describes support. Support is not evidence of craft/resonance,
+    # and must never undo the duration/utility caps applied above.
     if coin_rate > fav_rate or coin_rate > like_rate:
-        if pct >= R9_GUARD_PCT and tier != "神作候选":
-            tier = TIERS[TIERS.index(tier) + 1]
+        if pct >= R9_GUARD_PCT:
             why = "币>赞" if coin_rate > like_rate else "币>藏"
-            firings.append(f"R9声援提档({why},pct={pct:.2f})")
+            firings.append(f"R9声援信号({why},不提档)")
     return tier, firings

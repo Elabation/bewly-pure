@@ -1,3 +1,7 @@
+> **每日视频目录 v6**：[打开网页](https://elabation.github.io/bewly-pure/god-shelf.html)。孤独摇滚视觉主题，按日期浏览、全库搜索、结束乐队官方试听与本地音频播放。
+> 本地运行 `run_review.ps1`；重建 `python -X utf8 engine/publish_discovery.py`。本机 `GodShelfDaily` 任务每天北京时间 12:00 采集、重建并推送，需电脑开机联网。
+> 互动负责候选召回，收藏夹只以 10% 权重提供题材提示；不自动认定神作，不展示机器主推大卡。详见 [升级说明](docs/mining-upgrade-20261103.md)。
+
 # 洁净B站 Clean Bilibili
 
 ![report](https://img.shields.io/badge/调查报告-在线阅读-334EAC) ![extension](https://img.shields.io/badge/扩展-Edge·Chrome-081F5C) ![samples](https://img.shields.io/badge/样本-7,537条·2019--2026-7096D1) ![license](https://img.shields.io/badge/立场-过滤低质·不封神-7096D1)
@@ -24,7 +28,7 @@ F7  加权感谢率 = (收藏×3.0 + 投币×2.0 + 点赞×0.3) / 播放
 CBI 感谢指数   = F7 ÷ 同播放段基线中位数（6,734 条样本滑窗拟合，扩展内置曲线）
 ```
 
-- **比值越高 → 视频质量越高**（收藏/投币是强付出行为，刷子视频刷不出来）
+- **比值越高 → 相对互动越强**；不能据此推出制作质量或共鸣，更不能保证排除刷量
 - 播放量 < 3000 → 判 `unproven`（比率不可信，新视频保护）
 - 所有权重、阈值、开关集中在 **`config/clean.config.json`** 一个文件里；扩展判定核心与它同步
 

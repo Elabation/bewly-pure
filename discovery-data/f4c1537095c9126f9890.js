@@ -1,0 +1,1 @@
+window.BiliDiscovery.receive(document.currentScript.dataset.key,[["BV13v4y1g7q4","史上第一RPG究竟讲了个什么故事？  一口气看完不朽名作《时空之轮Chrono Trigger》【游戏故事】","","http://i0.hdslb.com/bfs/archive/28a413b03b2038185490aab6643f6e5825ae0f01.jpg",2976,1655631729,380617,0.7243675099866844,"20261012",[],751,[]]]);

@@ -1,203 +1,127 @@
-# -*- coding: utf-8 -*-
-"""每日维护管线——首页多挖 + 货架自动换新（Elabation 2026-09-04 指令）。
+"""Daily collection -> lightweight Bocchi discovery -> existing GitHub Pages URL.
 
-流程（约 300 请求 / 4 分钟，全部匿名）：
-  1) 首页热门 10 页（popular pn=1..10，约 200 视频）
-  2) 新面孔（不在池内）逐个 fetch_view（计数+pubdate+UP+封面）
-  3) 落盘 data/fav_mine/favmine_daily_YYYYMMDD.json（raw immutable，god_pool 自动收编）
-  4) 今日新神作取 top10 做 L1 related 扩挖 → data/flow_graph/godflowdaily_*.json
-  5) 重建货架 build_site.py
-日志：data/logs/daily_YYYYMMDD.log
+API failures and publishing failures are nonzero exits. Raw captures are append-only.
 """
+from pathlib import Path
+import argparse
 import json
-import os
-import shutil
-import subprocess
 import sys
-import time
+from datetime import datetime, timedelta
 
-try:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
-except Exception:
-    pass
+from collect_stats import BiliClient
+from mining_data import load_population, load_flow_nodes, normalize_video
+from review_miner import catalog
+from publish_discovery import rebuild, publish
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from collect_stats import BiliClient  # noqa: E402
-from god_pool import build_pool  # noqa: E402
-from v3_rules import v3_tier  # noqa: E402
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MINE = os.path.join(ROOT, "data", "fav_mine")
-FG = os.path.join(ROOT, "data", "flow_graph")
-LOGD = os.path.join(ROOT, "data", "logs")
-os.makedirs(LOGD, exist_ok=True)
-DATE = time.strftime("%Y%m%d")
-LOG = os.path.join(LOGD, f"daily_{DATE}.log")
-POP_PAGES = 10
-NEW_CAP = 300
-SEEDS = 10
+ROOT = Path(__file__).resolve().parents[1]
 
 
-def log(msg):
-    line = f"[{time.strftime('%H:%M:%S')}] {msg}"
-    print(line)
-    with open(LOG, "a", encoding="utf-8") as f:
-        f.write(line + "\n")
+def stamp():
+    return (datetime.utcnow() + timedelta(hours=8)).strftime("%Y%m%d_%H%M%S")
+
+
+def log(message):
+    now = stamp()
+    line = "[{}] {}".format(now[9:11]+":"+now[11:13]+":"+now[13:15], message)
+    print(line, flush=True)
+    folder = ROOT / "data/logs"
+    folder.mkdir(parents=True, exist_ok=True)
+    with (folder / ("daily_"+now[:8]+".log")).open("a", encoding="utf-8") as f:
+        f.write(line+"\n")
+
+
+def write_capture(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+
+def collect(client, pages=10, seeds=8):
+    mine, samples, graphs = ROOT/"data/fav_mine", ROOT/"data/samples", ROOT/"data/flow_graph"
+    known = set(load_population(mine, samples)) | set(load_flow_nodes(graphs))
+    videos, failures = {}, []
+    for pn in range(1, pages+1):
+        try:
+            data = client.get_json("https://api.bilibili.com/x/web-interface/popular", {"ps":20,"pn":pn}, tries=1)
+            for video in (data or {}).get("list") or []:
+                if normalize_video(video, "popular"):
+                    videos[video["bvid"]] = video
+        except Exception as error:
+            failures.append(str(error))
+            log("popular page {} failed: {}".format(pn, str(error)[:150]))
+            if len(failures) >= 3 and not videos:
+                break
+    if not videos:
+        raise RuntimeError("首页接口未返回有效视频，本次不覆盖网站。"+"; ".join(failures)[:300])
+    captured = stamp()
+    rows = []
+    for video in videos.values():
+        rec = {key: video.get(key) for key in ("bvid","title","duration","pubdate","owner","pic","tname","stat")}
+        rec["view"] = video["stat"]["view"]
+        rec["src"] = "home"
+        rows.append(rec)
+    write_capture(mine/("favmine_daily_"+captured+".json"), {"meta":{"captured_at":captured,"src":"homepage-daily","n":len(rows)},"videos":rows})
+    fresh = set(videos) - known
+    log("首页有效 {} 条，首次发现 {} 条。".format(len(rows), len(fresh)))
+    pool, meta = catalog(ROOT)
+    choices = sorted([r for r in pool if r["bvid"] in videos and not r.get("motive_cues") and not r.get("screen_flags") and r.get("dur",0)>150
+                      and r.get("reference_n",0)>=30 and r.get("recall_priority") is not None],
+                     key=lambda r:r["recall_priority"], reverse=True)[:seeds]
+    nodes, seen, related_ok = [], set(), 0
+    for candidate in choices:
+        source = videos[candidate["bvid"]]
+        aid = source.get("aid")
+        if not aid:
+            continue
+        try:
+            items = client.get_json("https://api.bilibili.com/x/web-interface/archive/related", {"aid":aid}, tries=1)
+            related_ok += 1
+        except Exception as error:
+            log("related {} failed: {}".format(candidate["bvid"], str(error)[:100]))
+            continue
+        for video in items if isinstance(items, list) else []:
+            rec = normalize_video(video, "related")
+            if not rec or rec["bvid"] in seen or rec["view"]<=0:
+                continue
+            seen.add(rec["bvid"])
+            nodes.append({"bvid":rec["bvid"],"title":rec["title"],"view":rec["view"],"dur":rec["dur"],
+                          "coin_rate":rec["coin"]/rec["view"],"fav_rate":rec["fav"]/rec["view"],
+                          "like_rate":rec["like"]/rec["view"],"stat":video["stat"],"pubdate":rec["pubdate"],
+                          "owner":video.get("owner"),"pic":rec["pic"],"parent":candidate["bvid"],"arm":"daily"})
+    if nodes:
+        write_capture(graphs/("godflowdaily_"+stamp()+".json"),{"meta":{"src":"daily-v6","requests":{"related":len(choices)}},"flows":[{"nodes":nodes}]})
+    return {"finished_at":stamp(),"popular_videos":len(rows),"new_videos":len(fresh),
+            "related_nodes":len(nodes),"related_requests_succeeded":related_ok,"popular_pages_failed":len(failures)}
 
 
 def main():
-    cli = BiliClient(interval=0.6)
-    log("=== 每日维护开始 ===")
-    # 0) 当前池基线
-    pool, _ = build_pool()
-    known = set(pool.keys())
-    log(f"当前池 {len(pool)} 支")
-
-    # 1) 首页热门 10 页
-    bvids = []
-    for pn in range(1, POP_PAGES + 1):
-        try:
-            d = cli.get_json("https://api.bilibili.com/x/web-interface/popular",
-                             {"ps": 20, "pn": pn}, tries=1)
-            for it in (d or {}).get("list") or []:
-                b = it.get("bvid")
-                if b:
-                    bvids.append(b)
-        except Exception as e:
-            log(f"popular pn={pn} fail: {str(e)[:60]}")
-    bvids = list(dict.fromkeys(bvids))
-    log(f"首页热门去重 {len(bvids)} 支（{POP_PAGES} 页）")
-
-    # 2) 新面孔 fetch_view
-    new_recs = []
-    for b in bvids:
-        if b in known or len(new_recs) >= NEW_CAP:
-            continue
-        try:
-            v = cli.fetch_view(b)
-            st = v.get("stat") or {}
-            if (st.get("view") or 0) >= 3000:
-                new_recs.append({"bvid": b, "title": v.get("title") or "", "view": st.get("view") or 0,
-                                 "duration": v.get("duration") or 0, "pubdate": v.get("pubdate"),
-                                 "owner": v.get("owner") or "", "pic": v.get("pic") or "", "src": "home",
-                                 "tname": v.get("tname") or "",
-                                 "stat": {"coin": st.get("coin") or 0, "favorite": st.get("favorite") or 0,
-                                          "like": st.get("like") or 0, "share": st.get("share") or 0,
-                                          "reply": st.get("reply") or 0, "danmaku": st.get("danmaku") or 0}})
-        except Exception:
-            pass
-    log(f"新面孔 {len(new_recs)} 支（view>=3000）")
-
-    # 3) 落盘 raw（god_pool 自动收编；同日重跑覆盖当日文件）
-    daily_path = os.path.join(MINE, f"favmine_daily_{DATE}.json")
-    old = []
-    if os.path.exists(daily_path):
-        try:
-            old = json.load(open(daily_path, encoding="utf-8")).get("videos") or []
-        except Exception:
-            old = []
-    have = {x.get("bvid") for x in old}
-    merged = old + [x for x in new_recs if x["bvid"] not in have]
-    json.dump({"meta": {"date": DATE, "src": "homepage-daily", "n": len(merged)}, "videos": merged},
-              open(daily_path, "w", encoding="utf-8"), ensure_ascii=False)
-    log(f"落盘 {daily_path}（累计 {len(merged)}）")
-
-    # 4) 重建池 → 今日新神作 top10 → L1 扩挖
-    pool2, _ = build_pool()
-    new_keys = [x["bvid"] for x in merged]
-    todays_gods = sorted((pool2[b] for b in new_keys if b in pool2 and pool2[b]["tier"] == "神作候选"),
-                         key=lambda r: -(r.get("pct") or 0))[:SEEDS]
-    log(f"今日新神作 {len(todays_gods)} 支，L1 扩挖...")
-    nodes, edges = [], []
-    seen = set()
-    for r in todays_gods:
-        aid = None
-        try:
-            vv = cli.fetch_view(r["bvid"])
-            aid = vv.get("aid") or (vv.get("stat") or {}).get("aid") or vv.get("id")
-        except Exception:
-            aid = None
-        if not aid:
-            log(f"seed {r['bvid']} 无 aid，跳过")
-            continue
-        try:
-            d = cli.get_json("https://api.bilibili.com/x/web-interface/archive/related",
-                             {"aid": aid, "related": "true"}, tries=1)
-            items = d if isinstance(d, list) else []
-        except Exception:
-            items = []
-        parent = r["bvid"]
-        seen.add(parent)
-        nodes.append({"bvid": r["bvid"], "title": r["title"], "view": r["view"], "dur": r["dur"],
-                      "coin_rate": r["coin_rate"], "fav_rate": r["fav_rate"], "like_rate": r["like_rate"],
-                      "tier": r["tier"], "category": r["category"], "hop": 0, "parent": None,
-                      "pubdate": r.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"], "seed": True,
-                      "pic": r.get("pic") or ""})
-        for it in items:
-            cb = it.get("bvid")
-            if not cb or cb in seen:
-                continue
-            seen.add(cb)
-            cst = it.get("stat") or {}
-            vr = max(1, cst.get("view") or 0)
-            cr, fr, lr = (cst.get("coin") or 0) / vr, (cst.get("favorite") or 0) / vr, (cst.get("like") or 0) / vr
-            edges.append({"src": parent, "dst": cb, "hop": 1})
-            nodes.append({"bvid": cb, "title": (it.get("title") or "")[:60], "view": cst.get("view") or 0,
-                          "dur": it.get("duration") or 0,
-                          "coin_rate": round(cr, 5), "fav_rate": round(fr, 5), "like_rate": round(lr, 5),
-                          "tier": None, "category": None, "hop": 1, "parent": parent,
-                          "pubdate": it.get("pubdate"), "arm": "daily", "flow_seed": r["bvid"],
-                          "pic": it.get("pic") or ""})
-    # 重新判档（node 级）
-    import math as _m
-    from god_pool import _load_pop, BAND as _B  # 复用基线
-    pop = _load_pop()
-    bands = defaultdict(list)
-    for rr in pop.values():
-        bands[round(_m.log10(rr["view"]) / 0.2)].append(rr["coin"] / max(1, rr["view"]))
-    BANDS = {k: sorted(a) for k, a in bands.items()}
-    for n in nodes:
-        if n.get("tier") is not None:
-            continue
-        vw = max(1, n.get("view") or 0)
-        cr = n.get("coin_rate") or 0
-        arr = BANDS.get(round(_m.log10(vw) / 0.2)) if vw >= 3000 else None
-        p = (sum(1 for a in arr if a < cr) / max(1, len(arr) - 1)) if arr else None
-        fr, lr = n.get("fav_rate") or 0, n.get("like_rate") or 0
-        t, _f = v3_tier(p, n.get("dur") or 0, fr, cr, lr, n.get("title"))
-        n["tier"], n["coin_pct"] = t, (round(p, 4) if p is not None else None)
-    ngods = sum(1 for n in nodes if n.get("tier") == "神作候选")
-    flow_path = os.path.join(FG, f"godflowdaily_{time.strftime('%Y%m%d_%H%M%S')}.json")
-    json.dump({"meta": {"date": DATE, "src": "daily-L1", "requests": {"related": len(todays_gods)}},
-               "flows": [{"seed": {"bvid": todays_gods[0]["bvid"], "title": todays_gods[0]["title"], "bucket": "daily"} if todays_gods else {},
-                          "nodes": nodes, "edges": edges, "n_god_total": ngods}]},
-              open(flow_path, "w", encoding="utf-8"), ensure_ascii=False)
-    log(f"L1 扩挖落盘：{len(nodes)} 节点 / {ngods} 神（godflowdaily）")
-
-    # 5) 重建货架
-    res = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_site.py")],
-                         capture_output=True, text=True, encoding="utf-8", errors="replace")
-    log("货架重建: " + (res.stdout or "").strip().splitlines()[-1] if (res.stdout or "").strip() else "货架重建: 无输出")
-    if res.returncode != 0:
-        log(f"货架重建失败: {(res.stderr or '')[:200]}")
-
-    # 6) 发布到 GitHub Pages（根目录副本 + commit + push；Elabation 2026-09-05 指令：新品每天自动换新）
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--no-publish",action="store_true")
+    parser.add_argument("--build-only",action="store_true")
+    args=parser.parse_args()
+    status_path=ROOT/"data/review/last_success.json"
+    status_path.parent.mkdir(parents=True,exist_ok=True)
+    log("=== 每日目录 v6 开始 ===")
     try:
-        shutil.copyfile(os.path.join(ROOT, "docs", "god-shelf.html"), os.path.join(ROOT, "god-shelf.html"))
-        git = subprocess.run(["git", "add", "god-shelf.html"], cwd=ROOT, capture_output=True, text=True)
-        c = subprocess.run(["git", "commit", "-m", f"货架每日更新 {DATE}（自动发布）"], cwd=ROOT,
-                           capture_output=True, text=True, encoding="utf-8", errors="replace")
-        if c.returncode == 0:
-            p = subprocess.run(["git", "push", "origin", "main"], cwd=ROOT,
-                               capture_output=True, text=True, encoding="utf-8", errors="replace")
-            log("发布 GitHub Pages: " + ("推送成功" if p.returncode == 0 else f"推送失败 {(p.stderr or '')[:120]}"))
-        else:
-            log("发布跳过: " + ((c.stdout or c.stderr or "").strip().splitlines()[-1][:120] if (c.stdout or c.stderr or "").strip() else "无变更"))
-    except Exception as e:
-        log(f"发布异常: {str(e)[:120]}")
-    log("=== 每日维护完成 ===")
+        if not args.build_only:
+            result=collect(BiliClient(interval=.8))
+            status_path.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding="utf-8")
+            log("采集成功："+json.dumps(result,ensure_ascii=False))
+        summary=rebuild(ROOT)
+        log("轻量新版生成："+json.dumps(summary,ensure_ascii=False))
+        if not args.no_publish:
+            commit=publish(ROOT,"每日目录更新 "+stamp())
+            log("新版推送成功："+commit)
+        log("=== 每日目录 v6 完成 ===")
+    except Exception as error:
+        (ROOT/"data/review/last_error.json").write_text(json.dumps({"time":stamp(),"error":str(error)},ensure_ascii=False),encoding="utf-8")
+        log("FAILED: "+str(error))
+        raise
 
 
-if __name__ == "__main__":
-    from collections import defaultdict
+if __name__=="__main__":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8",errors="replace")
+    except AttributeError:
+        pass
     main()

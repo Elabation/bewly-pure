@@ -27,6 +27,7 @@ random.seed(20260903)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from collect_stats import BiliClient  # noqa: E402
+from mining_data import load_reference, build_bands, band_percentile, historical_seed_approved
 import v3_rules as _rules  # noqa: E402  单一定义源（R9 版）
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,49 +49,13 @@ TNAME_UNTESTED = True
 
 # ---------------- 参照库（带内币率百分位的固定基线，冻结于发车时） ----------------
 def load_bands():
-    bands = defaultdict(list)
-    for fn in ("sample_20260903_185231.json", "sample_20260903_203054.json"):
-        try:
-            p = json.load(open(os.path.join(SDIR, fn), encoding="utf-8"))
-        except Exception:
-            continue
-        for v in (p.get("videos") or []):
-            st = v.get("stat") or {}
-            vw = st.get("view") or 0
-            if vw >= 3000:
-                bands[round(math.log10(vw) / BAND)].append((st.get("coin") or 0) / vw)
-    for fn in os.listdir(MINE):
-        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn and "merged" not in fn:
-            try:
-                p = json.load(open(os.path.join(MINE, fn), encoding="utf-8"))
-            except Exception:
-                continue
-            for v in (p.get("videos") or []):
-                vw = v.get("view") or 0
-                if vw >= 3000:
-                    st = v.get("stat") or {}
-                    bands[round(math.log10(vw) / BAND)].append((st.get("coin") or 0) / max(1, vw))
-    return {k: sorted(a) for k, a in bands.items()}
-
+    return build_bands(load_reference(MINE, SDIR))
 
 BANDS = load_bands()
 
 
 def band_pct(view, coin_rate):
-    if view < 3000:
-        return None
-    arr = BANDS.get(round(math.log10(view) / BAND))
-    if not arr:
-        return None
-    lo, hi = 0, len(arr) - 1
-    while lo < hi:
-        mid = (lo + hi) // 2
-        if arr[mid] < coin_rate:
-            lo = mid + 1
-        else:
-            hi = mid
-    return lo / max(1, len(arr) - 1)
-
+    return band_percentile(BANDS, view, coin_rate)
 
 def v3_tier(pct, dur, fav_rate, coin_rate, like_rate, title=""):
     """委托单一定义源 v3_rules（R9 声援 + R10 博同情版）。"""
@@ -140,7 +105,7 @@ def categorize(title, tname):
 # ---------------- 种子：round2 用户确认的神作，跨门类取 5 ----------------
 def pick_seeds():
     rows = json.load(open(os.path.join(MINE, "round2_labels.json"), encoding="utf-8"))["rows"]
-    gods = [r for r in rows if r.get("v3") == "神作" and r.get("bvid")]
+    gods = [r for r in rows if historical_seed_approved(r)]
     by_bucket = defaultdict(list)
     for r in gods:
         bucket, _ = categorize(r.get("title") or "", None)

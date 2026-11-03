@@ -1,0 +1,58 @@
+{
+  "cutoff": "20260903",
+  "files": [
+    {
+      "path": "fav_mine/favmine_20260902_190815.json",
+      "sha256": "13e0d9b03586de7377b664fd59eccab79eab005ff95babe9b1d4f88b61289e18"
+    },
+    {
+      "path": "fav_mine/favmine_20260902_203439.json",
+      "sha256": "15b7307e902d79921e8551efa162c6c60fbe1707435862503564294ebc28ea38"
+    },
+    {
+      "path": "fav_mine/favmine_20260903_020202.json",
+      "sha256": "c411d20b9a96b11755777ef78ea46cdc2d17aaa558127a78fe3671ef34e0443c"
+    },
+    {
+      "path": "fav_mine/favmine_20260903_020817.json",
+      "sha256": "c42bce251544b9c57bb7b6510cab35e179eb0e06ef0238322f4e1a943830f4ab"
+    },
+    {
+      "path": "fav_mine/favmine_20260903_102226.json",
+      "sha256": "8155d1cdbbe5626511c072366fa52c2646303d85050ba4d3b36247a77005b264"
+    },
+    {
+      "path": "fav_mine/favmine_20260903_105503.json",
+      "sha256": "f4e2bfc4b64c7a9039f410bc754244b9e01ee06bb884ce7d6f832a22538cf2e5"
+    },
+    {
+      "path": "fav_mine/favmine_flowH2_20260903_113231.json",
+      "sha256": "8756ebf60e1bd5cf65c005739bac6dcb3a1d3022a6890d2a12ca376796a30335"
+    },
+    {
+      "path": "fav_mine/favmine_flowH3_20260903_114437.json",
+      "sha256": "ca54a34a181e61d65e49dea54bcca4519372f39e67fbbcd5e3eac292d24db87c"
+    },
+    {
+      "path": "fav_mine/favmine_flowH4_20260903_115415.json",
+      "sha256": "7837df3b30f3164a8bbff79811193194eb9ac4e313e116cadc12d09868172620"
+    },
+    {
+      "path": "fav_mine/favmine_flowH2_20260903_120735.json",
+      "sha256": "06fa91a6dfdda24d14eb7aba498befefa007804d6c3c5970160f360d81c8631e"
+    },
+    {
+      "path": "fav_mine/favmine_flowH2_20260903_135254.json",
+      "sha256": "747b72a84d921165cd9708a89e7e5aed582c098d2ec946bcc5caef2a12006877"
+    },
+    {
+      "path": "samples/sample_20260903_185231.json",
+      "sha256": "e9cda605ffd6ec292fa75600f7756f1ac56dc6a615ca53bef383d4a84a1a6eca"
+    },
+    {
+      "path": "samples/sample_20260903_203054.json",
+      "sha256": "7ed846471e46d64a38f790b650e4024cc7f010dd406e12aa23aea4f7667a6aec"
+    }
+  ],
+  "meaning": "Frozen selected reference sample; not an unbiased Bilibili population or a quality probability."
+}

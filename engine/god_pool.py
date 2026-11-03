@@ -21,7 +21,9 @@ except Exception:
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import v3_rules as _rules  # noqa: E402
-from godflow_v1 import categorize  # noqa: E402
+from godflow_v1 import categorize
+from mining_data import (load_population, load_reference, load_flow_nodes,
+                         build_bands, band_percentile, owner_fields)  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MINE = os.path.join(ROOT, "data", "fav_mine")
@@ -31,71 +33,10 @@ BAND = 0.2
 
 
 def _load_pop():
-    pop = {}
-    for fn in ("sample_20260903_185231.json", "sample_20260903_203054.json"):
-        try:
-            p = json.load(open(os.path.join(SDIR, fn), encoding="utf-8"))
-        except Exception:
-            continue
-        for v in (p.get("videos") or []):
-            st = v.get("stat") or {}
-            vw = st.get("view") or 0
-            if vw >= 3000 and v.get("bvid"):
-                pop.setdefault(v["bvid"], {"bvid": v["bvid"], "title": v.get("title") or "", "view": vw,
-                                           "dur": v.get("duration") or 0,
-                                           "coin": st.get("coin") or 0, "fav": st.get("favorite") or 0,
-                                           "like": st.get("like") or 0,
-                                           "pubdate": v.get("pubdate"), "owner": v.get("owner"),
-                                           "tname": v.get("tname"), "src": "home"})
-    for fn in os.listdir(MINE):
-        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn and "merged" not in fn:
-            try:
-                p = json.load(open(os.path.join(MINE, fn), encoding="utf-8"))
-            except Exception:
-                continue
-            src_tag = "home" if "daily" in fn else "mine"
-            for v in (p.get("videos") or []):
-                vw = v.get("view") or 0
-                if vw >= 3000 and v.get("bvid"):
-                    st = v.get("stat") or {}
-                    rec = {"bvid": v["bvid"], "title": v.get("title") or "", "view": vw,
-                           "dur": v.get("duration") or 0,
-                           "coin": st.get("coin") or 0, "fav": st.get("favorite") or 0,
-                           "like": st.get("like") or 0,
-                           "pubdate": v.get("pubdate"), "owner": v.get("owner") or v.get("up"),
-                           "tname": v.get("tname"), "src": v.get("src") or src_tag,
-                           "pic": v.get("pic") or ""}
-                    if v["bvid"] in pop:
-                        old = pop[v["bvid"]]
-                        for k in ("coin", "fav", "like", "view"):
-                            rec[k] = max(rec[k] or 0, old[k] or 0)
-                        rec["pubdate"] = rec.get("pubdate") or old.get("pubdate")
-                        rec["owner"] = rec.get("owner") or old.get("owner")
-                        rec["pic"] = rec.get("pic") or old.get("pic")
-                    pop[v["bvid"]] = rec
-    return pop
-
+    return {b: r for b, r in load_population(MINE, SDIR).items() if r['view'] >= 3000}
 
 def _load_flow_nodes():
-    nodes = {}
-    for pat in ("godflow_2*.json", "godflowdeep_*.json", "godflowbnopad_*.json", "godflowretro_*.json", "godflowdaily_*.json"):
-        p = latest(pat)
-        if not p:
-            continue
-        run = json.load(open(p, encoding="utf-8"))
-        flows = run.get("flows") or []
-        for a in (run.get("arms") or {}).values():
-            flows.extend(a.get("flows") or [])
-        for f in flows:
-            for n in (f.get("nodes") or []):
-                b = n.get("bvid")
-                if not b:
-                    continue
-                old = nodes.get(b)
-                if old is None or (n.get("pubdate") and not old.get("pubdate")):
-                    nodes[b] = n
-    return nodes
-
+    return load_flow_nodes(FG)
 
 def latest(pattern):
     fs = sorted(glob.glob(os.path.join(FG, pattern)), key=lambda p: os.path.basename(p))
@@ -115,19 +56,11 @@ def load_blacklist():
 def build_pool():
     pop = _load_pop()
     fnodes = _load_flow_nodes()
-    # 基线带（pop only，冻结口径）
-    bands = defaultdict(list)
-    for r in pop.values():
-        bands[round(math.log10(r["view"]) / BAND)].append((r["coin"]) / max(1, r["view"]))
-    BANDS = {k: sorted(a) for k, a in bands.items()}
+    # Shared reference membership is frozen at 2026-09-03, deduplicated by bvid.
+    BANDS = build_bands(load_reference(MINE, SDIR))
 
     def pct_of(view, coin_rate):
-        if view < 3000:
-            return None
-        arr = BANDS.get(round(math.log10(view) / BAND))
-        if not arr:
-            return None
-        return sum(1 for a in arr if a < coin_rate) / max(1, len(arr) - 1)
+        return band_percentile(BANDS, view, coin_rate)
 
     # 合并池
     pool = {}
@@ -138,7 +71,7 @@ def build_pool():
         pool[b] = {"bvid": b, "title": r["title"], "view": r["view"], "dur": r["dur"],
                    "coin": r["coin"], "fav": r["fav"], "like": r["like"],
                    "pubdate": r.get("pubdate") or n.get("pubdate"),
-                   "owner": r.get("owner") or "", "category": cat,
+                   "owner": r.get("owner") or "", "owner_mid": r.get("owner_mid") or "", "category": cat,
                    "pct": pct_of(r["view"], r["coin"] / vr), "src": r.get("src"),
                    "pic": r.get("pic") or ""}
     for b, n in fnodes.items():
@@ -153,7 +86,7 @@ def build_pool():
         pool[b] = {"bvid": b, "title": n.get("title") or "", "view": n.get("view") or 0,
                    "dur": n.get("dur") or 0,
                    "coin": round(coin_rate * vr), "fav": round(fav_rate * vr), "like": round(like_rate * vr),
-                   "pubdate": n.get("pubdate"), "owner": "", "category": n.get("category") or "其他",
+                   "pubdate": n.get("pubdate"), "owner": owner_fields(n.get("owner"))[0], "owner_mid": owner_fields(n.get("owner"))[1], "category": n.get("category") or "其他",
                    "pct": pct_of(n.get("view") or 0, coin_rate), "src": "flow:" + (n.get("arm") or ""),
                    "pic": n.get("pic") or ""}
     # 分类策略（Elabation 2026-09-04 修订）：清空全部机器/关键词标签，全池置「待分类」，
@@ -163,15 +96,7 @@ def build_pool():
     out = {}
     for b, r in pool.items():
         v = vbf.get(b) or {}
-        if v.get("stat") and not v.get("error"):
-            st = v["stat"]
-            vr0 = max(1, st.get("view") or 1)
-            r["view"] = st.get("view") or r["view"]
-            r["coin"] = st.get("coin") if st.get("coin") is not None else r["coin"]
-            r["fav"] = st.get("fav") if st.get("fav") is not None else r["fav"]
-            r["like"] = st.get("like") if st.get("like") is not None else r["like"]
-            vr = max(1, r["view"])
-            r["pct"] = pct_of(r["view"], r["coin"] / vr)
+        # Undated sidecars may fill metadata, not replace dated counter snapshots.
         if v.get("pubdate") and not r.get("pubdate"):
             r["pubdate"] = v["pubdate"]
         if v.get("owner") and not r.get("owner"):
@@ -179,6 +104,8 @@ def build_pool():
         if v.get("pic"):
             r["pic"] = v["pic"]
         # 分类策略（2026-09-04 修订）：全池置「待分类」，等用户第一轮人工标注
+        if isinstance(r.get("owner"), dict):
+            r["owner"], r["owner_mid"] = owner_fields(r["owner"])
         r["category"] = "待分类"
         r["cat_src"] = "pending"
         vr = max(1, r["view"])

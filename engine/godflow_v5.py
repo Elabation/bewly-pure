@@ -3,7 +3,7 @@
 
 Elabation 设计（2026-09-04 凌晨）：
   · 前沿 2，神=0 才死；神冗余时选发布时间更早的神——链沿深度向历史沉底
-  · 10 个新种子（round2 其余确认神作 6 + 参照库高分诚意神作 4，避开旧 5 种子）
+  · 使用 round2 明确人工正向判词的种子；不再用机器高分补成已确认种子
   · 每跳记录完整候选团（神作池按 pubdate 升序），供交互式展开查看「当时如何选」
   · 深度上限 25、预算 related<=260（加大）；匿名通道
 输出：data/flow_graph/godflowretro_<ts>.json（immutable）
@@ -23,6 +23,7 @@ except Exception:
 random.seed(20260907)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from mining_data import historical_seed_approved
 from collect_stats import BiliClient  # noqa: E402
 from godflow_v1 import (BANDS, band_pct, v3_tier, categorize, pick_seeds,  # noqa: E402
                         OUTDIR, MINE, SDIR)
@@ -35,72 +36,18 @@ OLD_SEEDS = {"BV11bAUzBEqG", "BV1jQ87ziEKZ", "BV147411K7xu", "BV1GS411P74t", "BV
 
 
 def pick_seeds10():
-    """6 个 round2 剩余确认神作 + 4 个参照库高诚意神作（跨门类）。"""
+    """最多6个有明确人工正向判词的种子；保留旧函数名以兼容调用方。"""
     rows = json.load(open(os.path.join(MINE, "round2_labels.json"), encoding="utf-8"))["rows"]
-    gods = [r for r in rows if r.get("v3") == "神作" and r.get("bvid") and r["bvid"] not in OLD_SEEDS]
-    seeds, used = [], set()
+    gods = [r for r in rows if historical_seed_approved(r) and r["bvid"] not in OLD_SEEDS]
+    seeds = []
     for r in sorted(gods, key=lambda r: -float(r.get("coin_pct") or 0))[:6]:
         bucket, _ = categorize(r.get("title") or "", None)
         seeds.append({"bvid": r["bvid"], "title": r.get("title") or "?", "bucket": bucket,
                       "coin_pct": r.get("coin_pct"), "src": "round2"})
-        used.add(r["bvid"])
-    # 参照库补 4：v3 神 + 诚意比达标，按门类分散
-    pop = {}
-    for fn in ("sample_20260903_185231.json", "sample_20260903_203054.json"):
-        try:
-            p = json.load(open(os.path.join(SDIR, fn), encoding="utf-8"))
-        except Exception:
-            continue
-        for v in (p.get("videos") or []):
-            st = v.get("stat") or {}
-            vw = st.get("view") or 0
-            if vw >= 3000 and v.get("bvid"):
-                pop.setdefault(v["bvid"], {"title": v.get("title") or "", "view": vw, "stat": st})
-    for fn in os.listdir(MINE):
-        if fn.startswith("favmine_") and fn.endswith(".json") and "_analysis" not in fn and "merged" not in fn:
-            try:
-                p = json.load(open(os.path.join(MINE, fn), encoding="utf-8"))
-            except Exception:
-                continue
-            for v in (p.get("videos") or []):
-                vw = v.get("view") or 0
-                if vw >= 3000 and v.get("bvid") and v["bvid"] not in pop:
-                    pop[v["bvid"]] = {"title": v.get("title") or "", "view": vw, "stat": v.get("stat") or {}}
-    cands = []
-    for b, r in pop.items():
-        st = r["stat"]
-        vw = max(1, r["view"])
-        cr, fr = (st.get("coin") or 0) / vw, (st.get("favorite") or 0) / vw
-        pct = band_pct(r["view"], cr)
-        if pct is None or pct < 0.93:
-            continue
-        if fr > 0 and cr / fr > 0.202:
-            continue
-        if b in used or b in OLD_SEEDS:
-            continue
-        bucket, _ = categorize(r["title"], None)
-        cands.append({"bvid": b, "title": r["title"], "bucket": bucket, "coin_pct": round(pct, 3),
-                      "src": "refdb", "sinc": round(cr / max(1, fr), 3)})
-    by_bucket = {}
-    for c in sorted(cands, key=lambda c: -c["coin_pct"]):
-        if c["bucket"] not in by_bucket:
-            by_bucket[c["bucket"]] = c
-    covered = {s["bucket"] for s in seeds}
-    for bucket, c in sorted(by_bucket.items(), key=lambda kv: -kv[1]["coin_pct"]):
-        if len(seeds) == 10:
-            break
-        if bucket in covered:
-            continue
-        seeds.append(c)
-        used.add(c["bvid"])
-        covered.add(bucket)
-    for c in sorted(cands, key=lambda c: -c["coin_pct"]):
-        if len(seeds) == 10:
-            break
-        if c["bvid"] not in used:
-            seeds.append(c)
-            used.add(c["bvid"])
+    # Do not silently pad human-confirmed seeds with machine-selected positives.
+    # Fewer explicit seeds are valid; a machine percentile is not confirmation.
     return seeds
+
 
 
 def brief(rec):

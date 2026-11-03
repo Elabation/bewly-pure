@@ -14,3 +14,7 @@ vendor/
 
 data/fav_mine/.sessdata
 data/fav_mine/.mid2hash.json
+
+# Local taste profiles and feedback are not public site artifacts.
+data/preferences/
+data/review/
