@@ -29,7 +29,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .hero {
   --pull: 0;
-  --rest: clamp(205px, 17vw, 280px);
+  --rest: clamp(205px, 17vw, 300px);
   --travel: clamp(120px, 12vw, 220px);
   height: calc(var(--rest) + var(--pull) * var(--travel));
   position: relative; overflow: hidden; overflow-anchor: none;
@@ -38,11 +38,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .hero-art {
   position: absolute; width: 100%; height: 100%; inset: 0;
-  object-fit: cover; object-position: 50% calc(24% + var(--pull) * 13%);
+  object-fit: cover; object-position: 50% calc(38% - var(--pull) * 3%);
 }
 .hero::after {
   position: absolute; content: ""; inset: 0; pointer-events: none;
-  background: linear-gradient(0deg,#24191f 0,#24191f99 15px,transparent 58px),
+  background: linear-gradient(0deg,#24191f 0,#24191f99 12px,transparent 47px),
     linear-gradient(#21192188,transparent 64px);
 }
 .top {
@@ -73,7 +73,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px 5px 25px; background: #20181c; font-size: 12px; }
 .catalog-layout { display: grid; grid-template-columns: minmax(0,1fr) 234px; gap: 18px; align-items: start; }
 .catalog-main, .calendar-panel, .record-panel { border: 1px solid var(--line); }
-.catalog-main { min-width: 0; padding: 14px 17px; background: linear-gradient(90deg,#2119207d,#2119209c 55%); }
+.catalog-main { min-width: 0; padding: 14px 17px; --muted: #ead5db; background: linear-gradient(90deg,#21192059,#21192080 55%); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
 .section-heading h2, .calendar-heading h3, .record-heading h3 { margin: 0; font-weight: 600; }
 .section-heading h2 { font-size: 17px; }
@@ -95,6 +95,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .card-actions { margin-top: 3px; font-size: 10px; }
 .card-actions button { border: 0; background: none; padding: 2px 0 2px 5px; }
 .empty { grid-column: 1 / -1; padding: 28px 0; color: var(--muted); }
+.search-empty { display: grid; justify-items: center; gap: 8px; padding: 24px 0 18px; }
+.search-empty svg { width: 112px; height: auto; }
+.search-empty p { margin: 0; color: var(--ink); }
+.search-empty button { border: 0; background: none; padding: 4px 8px; color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+.search-empty button:hover { color: var(--pink); }
 .pager { display: flex; justify-content: center; align-items: center; margin-top: 18px; gap: 3px; }
 .pager button, .pager span { min-width: 36px; min-height: 34px; display: grid; place-items: center; }
 .pager button { border: 1px solid var(--line); border-radius: 50%; background: #3b2a34; font-size: 17px; }
@@ -240,7 +245,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
 }
 @media (max-width: 670px) {
   .hero { --rest: 180px; --travel: 115px; }
-  .hero-art { object-position: 70% 38%; }
+  .hero-art { object-position: 64% 38%; }
   .top, .shell, .controls { width: calc(100% - 22px); }
   .controls { padding: 0 8px; gap: 8px; }
   .tabs { gap: 9px; font-size: 11px; }

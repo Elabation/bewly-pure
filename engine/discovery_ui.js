@@ -37,10 +37,26 @@ function card(record) {
   </article>`;
 }
 
+const emptySearch = `<div class="empty search-empty">
+  <svg viewBox="0 0 116 82" aria-hidden="true">
+    <ellipse cx="56" cy="73" rx="48" ry="6" fill="#21192060"/>
+    <path d="M14 26 38 11 104 22 85 36Z" fill="#cbaa85" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M85 36 104 22 101 59 82 73Z" fill="#927256" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M14 26 85 36 82 73 17 62Z" fill="#b9906b" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M52 15 63 17 43 30 32 29Z" fill="#ead2aa" opacity=".75"/>
+    <path d="M42 18 93 27" stroke="#73543d" stroke-width=".8"/>
+    <path d="M91 41 97 37" stroke="#3b2926" stroke-width="3" stroke-linecap="round"/>
+    <text x="50" y="53" text-anchor="middle" transform="rotate(9 50 53)" fill="#4b312a" font-size="9" font-weight="600">完熟マンゴー</text>
+  </svg>
+  <p role="status">没找到匹配的作品</p>
+  <button type="button" data-clear-search>清空搜索</button>
+</div>`;
+
 function show(rows, n) {
   currentRows = rows;
   total = n;
-  $('grid').innerHTML = rows.map(card).join('') || '<div class="empty">暂无作品。</div>';
+  $('grid').innerHTML = rows.map(card).join('') ||
+    (BOOT.curated && query ? emptySearch : '<div class="empty">暂无作品。</div>');
   $('count').textContent = n.toLocaleString() + (BOOT.curated ? ' 部' : ' 条');
   $('page-label').textContent = (page + 1) + ' / ' + Math.max(1, Math.ceil(n / 24));
   $('prev').disabled = page === 0;
@@ -61,7 +77,17 @@ function persist(){try{localStorage.setItem(storageKey,JSON.stringify(documentFo
 function documentForExport(){return {schema:SCHEMA,profile_id:PROFILE,catalog_id:BOOT.catalog_id,experiment_id:BOOT.experiment_id,reviews};}
 function remember(){history.push(JSON.stringify(reviews));if(history.length>30)history.shift();}
 function openReview(b){selected=currentRows.find(r=>r.bvid===b);if(!selected)return;const r=reviews[b]||{};$('review-title').textContent=selected.title;$('review-note').textContent=selected.review_note?(selected.review_basis+' · '+selected.review_note):'制作与共鸣各至少2分，并认可表达本身，才加入“我的认可”。';for(const k of ['craft','resonance','reason','evidence'])$(k).value=r[k]??'';$('watched').checked=r.watched===true;$('review-dialog').showModal();}
-$('grid').addEventListener('click',e=>{const b=e.target.closest('[data-review]');if(b)openReview(b.dataset.review);});
+$('grid').addEventListener('click', event => {
+  const review = event.target.closest('[data-review]');
+  if (review) openReview(review.dataset.review);
+  if (event.target.closest('[data-clear-search]')) {
+    clearTimeout(searchTimer);
+    query = $('search').value = '';
+    page = 0;
+    $('search').focus();
+    render();
+  }
+});
 $('review-form').addEventListener('submit',e=>{e.preventDefault();if(!$('review-form').reportValidity())return;remember();reviews[selected.bvid]={craft:Number($('craft').value),resonance:Number($('resonance').value),reason:$('reason').value,evidence:$('evidence').value,watched:$('watched').checked};persist();$('review-dialog').close();show(currentRows,total);});
 $('close-review').addEventListener('click',()=>$('review-dialog').close());$('clear-review').addEventListener('click',()=>{remember();delete reviews[selected.bvid];persist();$('review-dialog').close();if(tab==='saved')render();else show(currentRows,total);});
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;if(tab==='daily'&&BOOT.latest_day){activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);paintCalendar();}page=0;query='';$('search').value='';clearTimeout(searchTimer);render();}));

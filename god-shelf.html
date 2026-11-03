@@ -36,7 +36,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .hero {
   --pull: 0;
-  --rest: clamp(205px, 17vw, 280px);
+  --rest: clamp(205px, 17vw, 300px);
   --travel: clamp(120px, 12vw, 220px);
   height: calc(var(--rest) + var(--pull) * var(--travel));
   position: relative; overflow: hidden; overflow-anchor: none;
@@ -45,11 +45,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .hero-art {
   position: absolute; width: 100%; height: 100%; inset: 0;
-  object-fit: cover; object-position: 50% calc(24% + var(--pull) * 13%);
+  object-fit: cover; object-position: 50% calc(38% - var(--pull) * 3%);
 }
 .hero::after {
   position: absolute; content: ""; inset: 0; pointer-events: none;
-  background: linear-gradient(0deg,#24191f 0,#24191f99 15px,transparent 58px),
+  background: linear-gradient(0deg,#24191f 0,#24191f99 12px,transparent 47px),
     linear-gradient(#21192188,transparent 64px);
 }
 .top {
@@ -80,7 +80,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px 5px 25px; background: #20181c; font-size: 12px; }
 .catalog-layout { display: grid; grid-template-columns: minmax(0,1fr) 234px; gap: 18px; align-items: start; }
 .catalog-main, .calendar-panel, .record-panel { border: 1px solid var(--line); }
-.catalog-main { min-width: 0; padding: 14px 17px; background: linear-gradient(90deg,#2119207d,#2119209c 55%); }
+.catalog-main { min-width: 0; padding: 14px 17px; --muted: #ead5db; background: linear-gradient(90deg,#21192059,#21192080 55%); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
 .section-heading h2, .calendar-heading h3, .record-heading h3 { margin: 0; font-weight: 600; }
 .section-heading h2 { font-size: 17px; }
@@ -102,6 +102,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .card-actions { margin-top: 3px; font-size: 10px; }
 .card-actions button { border: 0; background: none; padding: 2px 0 2px 5px; }
 .empty { grid-column: 1 / -1; padding: 28px 0; color: var(--muted); }
+.search-empty { display: grid; justify-items: center; gap: 8px; padding: 24px 0 18px; }
+.search-empty svg { width: 112px; height: auto; }
+.search-empty p { margin: 0; color: var(--ink); }
+.search-empty button { border: 0; background: none; padding: 4px 8px; color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+.search-empty button:hover { color: var(--pink); }
 .pager { display: flex; justify-content: center; align-items: center; margin-top: 18px; gap: 3px; }
 .pager button, .pager span { min-width: 36px; min-height: 34px; display: grid; place-items: center; }
 .pager button { border: 1px solid var(--line); border-radius: 50%; background: #3b2a34; font-size: 17px; }
@@ -247,7 +252,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
 }
 @media (max-width: 670px) {
   .hero { --rest: 180px; --travel: 115px; }
-  .hero-art { object-position: 70% 38%; }
+  .hero-art { object-position: 64% 38%; }
   .top, .shell, .controls { width: calc(100% - 22px); }
   .controls { padding: 0 8px; gap: 8px; }
   .tabs { gap: 9px; font-size: 11px; }
@@ -265,7 +270,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
 </head>
 <body>
   <header class="hero" id="interactive-hero">
-    <img class="hero-art" src="assets/bocchi-livehouse-v1.webp" alt="结束乐队在排练室" width="2172" height="724" fetchpriority="high" decoding="async">
+    <img class="hero-art" src="assets/bocchi-livehouse-v2.webp" alt="结束乐队在排练室" width="2172" height="724" fetchpriority="high" decoding="async">
     <div class="top">
       <span class="clip-mark" aria-hidden="true"><i></i><i></i></span>
       <time id="updated"></time>
@@ -386,7 +391,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
   </button>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 
-  <script id="payload" type="application/json">{"version":"bocchi-v9","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"192db9c4dba6600ab22261abf918dc829934168bcf0793aaf137953cefefba71","experiment_id":null,"generated_at":"2026-11-04 01:39:51 +08:00","latest_day":"20261104","total":14,"streams":{"daily":{"count":9,"chunks":["discovery-data/0683ef41c42d4cb6aa95.js"]},"archive":{"count":14,"chunks":["discovery-data/8e4073bf657a18e21f5d.js"]},"day:20261103":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV15n5164ErZ","【同人短片】假面骑士空我 - 鏖戦","变成哔头","assets/selected-covers/BV15n5164ErZ.webp",598,1778670971,679889,0.9946524064171123,"20260903",[],748,[],"20261104","《假面骑士空我》的同人翻拍，用一部独立短片重演特摄动作场面。","历史人工复核"],["BV1uKQwBUEcG","所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は","霓虹波NeXzlyn","assets/selected-covers/BV1uKQwBUEcG.webp",169,1775824160,367355,0.9920106524633822,"20260902",["感动"],751,[],"20261104","用 Minecraft 制作《僕は》的动画 MV 开场，旧评明确认可画面制作。","历史人工复核"],["BV1GnKc6gEJM","[Verity手书] PityParty animation","","assets/selected-covers/BV1GnKc6gEJM.webp",201,1784339398,255157,0.9795918367346939,"20260902",[],784,[],"20261104","用《Pity Party》做 Verity 同人手书，以绘制和动画重新诠释角色。","历史人工复核"],["BV1mP396bEhy","“谨以此片，献给每一位依旧热爱原神的玩家”","Ambersinging","assets/selected-covers/BV1mP396bEhy.webp",226,1785673048,709817,0.9679144385026738,"20260903",[],748,[],"20261104","给原神玩家的同人短片，旧评认可的是原创制作。","历史人工复核"],["BV1XWAuzBEwH","【诗岸原创我也不知道算不算摇滚】自由落体","FREEEEEFALL_","assets/selected-covers/BV1XWAuzBEwH.webp",341,1774143909,330533,0.9440745672436751,"20260903",[],751,[],"20261104","用坠落和失重写挣扎，收有诗岸演唱和人声两个版本。","历史人工复核"],["BV1QB8x6TERz","[诗岸/星尘/原创摇滚]十八岁前想做的事都没实现","grassP","assets/selected-covers/BV1QB8x6TERz.webp",151,1787475071,180449,0.9551192145862553,"20260903",[],713,[],"20261104","grassP 作词、作曲和编曲，以诗岸和星尘写下临近成年的落空感。","历史人工复核"],["BV1rDMyzvEvg","【本家投稿】ブラッドドール / フユウ feat. 初音ミク【BLOOD DOLL】","Fuyuuu_Official","assets/selected-covers/BV1rDMyzvEvg.webp",158,1749886263,361055,0.9067909454061251,"20260903",[],751,[],"20261104","フユウ本人发布的《BLOOD DOLL》，由初音未来演唱的原创音乐影像。","历史人工复核"],["BV1X3gd6BES2","【洛天依原创】若夏日终将完结","","assets/selected-covers/BV1X3gd6BES2.webp",175,1785150000,1168513,0.9612068965517241,"20260903",[],696,[],"20261104","借季节流转写夏天结束后的少年心境，洛天依演唱的原创曲。","历史人工复核"],["BV1ohuu6LEBP","【本家投稿】トリックハート(魔术之心) / MIMI feat. 重音テトSV 【Official Video】","MIMI_music","assets/selected-covers/BV1ohuu6LEBP.webp",158,1786179776,594526,0.9598930481283422,"20260903",[],748,[],"20261104","MIMI 本人发布的《魔术之心》MV，重音 Teto 演唱，3774. 负责曲绘和动画。","历史人工复核"]],"worker":"discovery-data/7e52bce6a8612f458cd0.worker.js","calendar":{"20261104":9,"20261103":5},"music":[{"title":"青春コンプレックス","album":"青春コンプレックス","side":"A","number":"01","src":"assets/music/tracks/a01.mp3","art":"assets/music/cover-a01.jpg"},{"title":"ひとりぼっち東京","album":"青春コンプレックス","side":"A","number":"02","src":"assets/music/tracks/a02.mp3","art":"assets/music/cover-a01.jpg"},{"title":"Distortion!!","album":"Distortion!!","side":"A","number":"03","src":"assets/music/tracks/a03.mp3","art":"assets/music/cover-a03.jpg"},{"title":"ギターと孤独と蒼い惑星","album":"ギターと孤独と蒼い惑星","side":"B","number":"01","src":"assets/music/tracks/b01.mp3","art":"assets/music/cover-b01.jpg"},{"title":"あのバンド","album":"あのバンド","side":"B","number":"03","src":"assets/music/tracks/b03.mp3","art":"assets/music/cover-b03.jpg"},{"title":"カラカラ","album":"カラカラ","side":"C","number":"01","src":"assets/music/tracks/c01.mp3","art":"assets/music/cover-c01.jpg"},{"title":"なにが悪い","album":"なにが悪い","side":"C","number":"03","src":"assets/music/tracks/c03.mp3","art":"assets/music/cover-c03.jpg"},{"title":"忘れてやらない","album":"結束バンド","side":"D","number":"01","src":"assets/music/tracks/d01.mp3","art":"assets/music/cover-d01.jpg"},{"title":"星座になれたら","album":"結束バンド","side":"D","number":"02","src":"assets/music/tracks/d02.mp3","art":"assets/music/cover-d01.jpg"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","side":"D","number":"04","src":"assets/music/tracks/d04.mp3","art":"assets/music/cover-d01.jpg"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
+  <script id="payload" type="application/json">{"version":"bocchi-v9","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"f3e47b486ac561790aee861d0b6105c5b9928ea7e6737d8d897bd49c56382ff2","experiment_id":null,"generated_at":"2026-11-04 01:49:08 +08:00","latest_day":"20261104","total":14,"streams":{"daily":{"count":9,"chunks":["discovery-data/0683ef41c42d4cb6aa95.js"]},"archive":{"count":14,"chunks":["discovery-data/8e4073bf657a18e21f5d.js"]},"day:20261103":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV15n5164ErZ","【同人短片】假面骑士空我 - 鏖戦","变成哔头","assets/selected-covers/BV15n5164ErZ.webp",598,1778670971,679889,0.9946524064171123,"20260903",[],748,[],"20261104","《假面骑士空我》的同人翻拍，用一部独立短片重演特摄动作场面。","历史人工复核"],["BV1uKQwBUEcG","所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は","霓虹波NeXzlyn","assets/selected-covers/BV1uKQwBUEcG.webp",169,1775824160,367355,0.9920106524633822,"20260902",["感动"],751,[],"20261104","用 Minecraft 制作《僕は》的动画 MV 开场，旧评明确认可画面制作。","历史人工复核"],["BV1GnKc6gEJM","[Verity手书] PityParty animation","","assets/selected-covers/BV1GnKc6gEJM.webp",201,1784339398,255157,0.9795918367346939,"20260902",[],784,[],"20261104","用《Pity Party》做 Verity 同人手书，以绘制和动画重新诠释角色。","历史人工复核"],["BV1mP396bEhy","“谨以此片，献给每一位依旧热爱原神的玩家”","Ambersinging","assets/selected-covers/BV1mP396bEhy.webp",226,1785673048,709817,0.9679144385026738,"20260903",[],748,[],"20261104","给原神玩家的同人短片，旧评认可的是原创制作。","历史人工复核"],["BV1XWAuzBEwH","【诗岸原创我也不知道算不算摇滚】自由落体","FREEEEEFALL_","assets/selected-covers/BV1XWAuzBEwH.webp",341,1774143909,330533,0.9440745672436751,"20260903",[],751,[],"20261104","用坠落和失重写挣扎，收有诗岸演唱和人声两个版本。","历史人工复核"],["BV1QB8x6TERz","[诗岸/星尘/原创摇滚]十八岁前想做的事都没实现","grassP","assets/selected-covers/BV1QB8x6TERz.webp",151,1787475071,180449,0.9551192145862553,"20260903",[],713,[],"20261104","grassP 作词、作曲和编曲，以诗岸和星尘写下临近成年的落空感。","历史人工复核"],["BV1rDMyzvEvg","【本家投稿】ブラッドドール / フユウ feat. 初音ミク【BLOOD DOLL】","Fuyuuu_Official","assets/selected-covers/BV1rDMyzvEvg.webp",158,1749886263,361055,0.9067909454061251,"20260903",[],751,[],"20261104","フユウ本人发布的《BLOOD DOLL》，由初音未来演唱的原创音乐影像。","历史人工复核"],["BV1X3gd6BES2","【洛天依原创】若夏日终将完结","","assets/selected-covers/BV1X3gd6BES2.webp",175,1785150000,1168513,0.9612068965517241,"20260903",[],696,[],"20261104","借季节流转写夏天结束后的少年心境，洛天依演唱的原创曲。","历史人工复核"],["BV1ohuu6LEBP","【本家投稿】トリックハート(魔术之心) / MIMI feat. 重音テトSV 【Official Video】","MIMI_music","assets/selected-covers/BV1ohuu6LEBP.webp",158,1786179776,594526,0.9598930481283422,"20260903",[],748,[],"20261104","MIMI 本人发布的《魔术之心》MV，重音 Teto 演唱，3774. 负责曲绘和动画。","历史人工复核"]],"worker":"discovery-data/7e52bce6a8612f458cd0.worker.js","calendar":{"20261104":9,"20261103":5},"music":[{"title":"青春コンプレックス","album":"青春コンプレックス","side":"A","number":"01","src":"assets/music/tracks/a01.mp3","art":"assets/music/cover-a01.jpg"},{"title":"ひとりぼっち東京","album":"青春コンプレックス","side":"A","number":"02","src":"assets/music/tracks/a02.mp3","art":"assets/music/cover-a01.jpg"},{"title":"Distortion!!","album":"Distortion!!","side":"A","number":"03","src":"assets/music/tracks/a03.mp3","art":"assets/music/cover-a03.jpg"},{"title":"ギターと孤独と蒼い惑星","album":"ギターと孤独と蒼い惑星","side":"B","number":"01","src":"assets/music/tracks/b01.mp3","art":"assets/music/cover-b01.jpg"},{"title":"あのバンド","album":"あのバンド","side":"B","number":"03","src":"assets/music/tracks/b03.mp3","art":"assets/music/cover-b03.jpg"},{"title":"カラカラ","album":"カラカラ","side":"C","number":"01","src":"assets/music/tracks/c01.mp3","art":"assets/music/cover-c01.jpg"},{"title":"なにが悪い","album":"なにが悪い","side":"C","number":"03","src":"assets/music/tracks/c03.mp3","art":"assets/music/cover-c03.jpg"},{"title":"忘れてやらない","album":"結束バンド","side":"D","number":"01","src":"assets/music/tracks/d01.mp3","art":"assets/music/cover-d01.jpg"},{"title":"星座になれたら","album":"結束バンド","side":"D","number":"02","src":"assets/music/tracks/d02.mp3","art":"assets/music/cover-d01.jpg"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","side":"D","number":"04","src":"assets/music/tracks/d04.mp3","art":"assets/music/cover-d01.jpg"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
   <script>'use strict';
 const BOOT=JSON.parse(document.getElementById('payload').textContent),$=id=>document.getElementById(id);
 const PROFILE='craft_resonance_v1',SCHEMA='bili-review-v1',storageKey='bili_review_'+PROFILE;
@@ -426,10 +431,26 @@ function card(record) {
   </article>`;
 }
 
+const emptySearch = `<div class="empty search-empty">
+  <svg viewBox="0 0 116 82" aria-hidden="true">
+    <ellipse cx="56" cy="73" rx="48" ry="6" fill="#21192060"/>
+    <path d="M14 26 38 11 104 22 85 36Z" fill="#cbaa85" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M85 36 104 22 101 59 82 73Z" fill="#927256" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M14 26 85 36 82 73 17 62Z" fill="#b9906b" stroke="#604737" stroke-linejoin="round"/>
+    <path d="M52 15 63 17 43 30 32 29Z" fill="#ead2aa" opacity=".75"/>
+    <path d="M42 18 93 27" stroke="#73543d" stroke-width=".8"/>
+    <path d="M91 41 97 37" stroke="#3b2926" stroke-width="3" stroke-linecap="round"/>
+    <text x="50" y="53" text-anchor="middle" transform="rotate(9 50 53)" fill="#4b312a" font-size="9" font-weight="600">完熟マンゴー</text>
+  </svg>
+  <p role="status">没找到匹配的作品</p>
+  <button type="button" data-clear-search>清空搜索</button>
+</div>`;
+
 function show(rows, n) {
   currentRows = rows;
   total = n;
-  $('grid').innerHTML = rows.map(card).join('') || '<div class="empty">暂无作品。</div>';
+  $('grid').innerHTML = rows.map(card).join('') ||
+    (BOOT.curated && query ? emptySearch : '<div class="empty">暂无作品。</div>');
   $('count').textContent = n.toLocaleString() + (BOOT.curated ? ' 部' : ' 条');
   $('page-label').textContent = (page + 1) + ' / ' + Math.max(1, Math.ceil(n / 24));
   $('prev').disabled = page === 0;
@@ -450,7 +471,17 @@ function persist(){try{localStorage.setItem(storageKey,JSON.stringify(documentFo
 function documentForExport(){return {schema:SCHEMA,profile_id:PROFILE,catalog_id:BOOT.catalog_id,experiment_id:BOOT.experiment_id,reviews};}
 function remember(){history.push(JSON.stringify(reviews));if(history.length>30)history.shift();}
 function openReview(b){selected=currentRows.find(r=>r.bvid===b);if(!selected)return;const r=reviews[b]||{};$('review-title').textContent=selected.title;$('review-note').textContent=selected.review_note?(selected.review_basis+' · '+selected.review_note):'制作与共鸣各至少2分，并认可表达本身，才加入“我的认可”。';for(const k of ['craft','resonance','reason','evidence'])$(k).value=r[k]??'';$('watched').checked=r.watched===true;$('review-dialog').showModal();}
-$('grid').addEventListener('click',e=>{const b=e.target.closest('[data-review]');if(b)openReview(b.dataset.review);});
+$('grid').addEventListener('click', event => {
+  const review = event.target.closest('[data-review]');
+  if (review) openReview(review.dataset.review);
+  if (event.target.closest('[data-clear-search]')) {
+    clearTimeout(searchTimer);
+    query = $('search').value = '';
+    page = 0;
+    $('search').focus();
+    render();
+  }
+});
 $('review-form').addEventListener('submit',e=>{e.preventDefault();if(!$('review-form').reportValidity())return;remember();reviews[selected.bvid]={craft:Number($('craft').value),resonance:Number($('resonance').value),reason:$('reason').value,evidence:$('evidence').value,watched:$('watched').checked};persist();$('review-dialog').close();show(currentRows,total);});
 $('close-review').addEventListener('click',()=>$('review-dialog').close());$('clear-review').addEventListener('click',()=>{remember();delete reviews[selected.bvid];persist();$('review-dialog').close();if(tab==='saved')render();else show(currentRows,total);});
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;if(tab==='daily'&&BOOT.latest_day){activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);paintCalendar();}page=0;query='';$('search').value='';clearTimeout(searchTimer);render();}));
