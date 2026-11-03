@@ -1,6 +1,5 @@
-> **每日视频目录 v6**：[打开网页](https://elabation.github.io/bewly-pure/god-shelf.html)。孤独摇滚视觉主题，按日期浏览、全库搜索、结束乐队官方试听与本地音频播放。
-> 本地运行 `run_review.ps1`；重建 `python -X utf8 engine/publish_discovery.py`。本机 `GodShelfDaily` 任务每天北京时间 12:00 采集、重建并推送，需电脑开机联网。
-> 互动负责候选召回，收藏夹只以 10% 权重提供题材提示；不自动认定神作，不展示机器主推大卡。详见 [升级说明](docs/mining-upgrade-20261103.md)。
+> **每日视频目录**按上架日期浏览和搜索已复核作品，附结束乐队官方试听与本地音频播放器。[打开网页](https://elabation.github.io/bewly-pure/god-shelf.html)
+> 本机任务 `GodShelfDaily` 每天北京时间 12:00 采集并重建，需电脑开机联网。上架清单为 `data/reference/shelf_approvals.json`，数字复筛队列为本机的 `data/review/numeric_queue.json`。
 
 # 洁净B站 Clean Bilibili
 

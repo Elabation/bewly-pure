@@ -3,13 +3,15 @@ from datetime import datetime, timedelta
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 
-VERSION = "bocchi-v6"
+VERSION = "bocchi-v7"
 CHUNK_SIZE = 96
 PAGE_SIZE = 24
 FIELDS = ("bvid", "title", "owner", "pic", "dur", "pubdate", "view",
-          "coin_percentile", "first_seen", "motive_cues", "reference_n", "screen_flags")
+          "coin_percentile", "first_seen", "motive_cues", "reference_n", "screen_flags",
+          "admitted_on", "review_note", "review_basis")
 
 
 def compact_json(value):
@@ -27,6 +29,46 @@ def asset(folder, extension, body):
     if not path.exists():
         path.write_bytes(encoded)
     return "discovery-data/" + name
+
+
+def load_approvals(root):
+    path = root / "data/reference/shelf_approvals.json"
+    if not path.exists():
+        return []
+    return json.loads(path.read_text(encoding="utf-8"))["items"]
+
+
+def approved_streams(rows, approvals):
+    by_id = {row["bvid"]: row for row in rows}
+    selected = {}
+    for entry in approvals:
+        bvid = entry["bvid"]
+        row = by_id.get(bvid)
+        if not row or bvid in selected or (row.get("dur") or 0) <= 150:
+            continue
+        flags = set(row.get("screen_flags") or [])
+        if entry.get("number_checked"):
+            flags.discard("number_review")
+        if flags:
+            continue
+        admitted_on = entry["admitted_on"]
+        datetime.strptime(admitted_on, "%Y%m%d")
+        if not (entry["note"].strip() and entry["basis"].strip()):
+            raise ValueError("An approval requires a review note and provenance.")
+        record = dict(row, admitted_on=admitted_on, review_note=entry["note"], review_basis=entry["basis"])
+        if entry.get("owner"):
+            record["owner"] = entry["owner"]
+        elif re.fullmatch(r"[0-9a-f]{10}", record.get("owner") or ""):
+            record["owner"] = ""
+        selected[bvid] = record
+    archive = sorted(selected.values(), key=lambda row: row["admitted_on"], reverse=True)
+    by_day = {}
+    for row in archive:
+        by_day.setdefault(row["admitted_on"], []).append(row)
+    day = max(by_day, default="")
+    streams = {"daily": by_day.get(day, []), "archive": archive}
+    streams.update(("day:" + date, items) for date, items in by_day.items())
+    return streams, day
 
 
 def prepare_streams(rows):
@@ -63,19 +105,26 @@ def zip_longest_rows(groups):
         yield [g[i] for g in groups if len(g) > i]
 
 
-def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=None):
+def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=None, approvals=None):
     output, root = Path(output), Path(root)
     output.mkdir(parents=True, exist_ok=True)
     folder = output / "discovery-data"
     folder.mkdir(exist_ok=True)
-    streams, day = prepare_streams(rows)
+    curated = experiment is None
+    if curated:
+        if approvals is None:
+            approvals = load_approvals(root)
+        streams, day = approved_streams(rows, approvals)
+    else:
+        streams, day = prepare_streams(rows)
+    cover_folder = "assets/selected-covers/" if curated else "assets/covers/"
     def public(r):
         record = dict(r)
-        cover = root / ("assets/covers/" + r["bvid"] + ".webp")
+        cover = root / (cover_folder + r["bvid"] + ".webp")
         if cover.exists():
-            record["pic"] = "assets/covers/"+cover.name
+            record["pic"] = cover_folder + cover.name
             if output.resolve()!=root.resolve():
-                dest=output/"assets/covers"/cover.name
+                dest = output / record["pic"]
                 dest.parent.mkdir(parents=True,exist_ok=True)
                 if not dest.exists():shutil.copy2(cover,dest)
         return [record.get(field) for field in FIELDS]
@@ -95,7 +144,7 @@ def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=N
     index = asset(folder, ".json", compact_json([public(r) for r in streams["archive"]]))
     worker = "const INDEX=" + json.dumps(index.split("/")[-1]) + ";\n" + (root / "engine/discovery_search.js").read_text(encoding="utf-8")
     worker_path = asset(folder, ".worker.js", worker)
-    for relative in ("assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/fonts/ui-sans.woff", "assets/fonts/OFL.txt"):
+    for relative in ("assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/music/kessoku.jpg", "assets/music/re-kessoku.jpg"):
         hero_source = root / relative
         if not hero_source.exists():
             continue
@@ -104,37 +153,37 @@ def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=N
         hero_dest.parent.mkdir(parents=True, exist_ok=True)
         if hero_source.resolve() != hero_dest.resolve():
             shutil.copy2(hero_source, hero_dest)
-    boot = {"version": VERSION, "fields": FIELDS, "pageSize": PAGE_SIZE, "chunkSize": CHUNK_SIZE,
+    boot = {"version": VERSION, "curated": curated, "fields": FIELDS, "pageSize": PAGE_SIZE, "chunkSize": CHUNK_SIZE,
             "catalog_id": meta["catalog_id"], "experiment_id": (experiment or {}).get("id"),
-            "generated_at": china_now(), "latest_day": day, "total": len(rows), "streams": stream_meta,
+            "generated_at": china_now(), "latest_day": day, "total": len(streams["archive"]), "streams": stream_meta,
             "initial": [public(r) for r in streams["daily"][:PAGE_SIZE]], "worker": worker_path,
-            "editorial": {r["bvid"]: r["editorial"]["reason"] for r in streams["editorial"]},
-            "editorial_rows": [public(r) for r in streams["editorial"]],
             "calendar": {key[4:]:len(value) for key,value in streams.items() if key.startswith("day:")},
             "music": json.loads((root / "assets/music/playlist.json").read_text(encoding="utf-8")) if (root / "assets/music/playlist.json").exists() else [],
             "collection": json.loads((root / "data/review/last_success.json").read_text(encoding="utf-8"))
             if (root / "data/review/last_success.json").exists() else None}
     template = (root / "engine/discovery_template.html").read_text(encoding="utf-8")
+    style = (root / "engine/discovery.css").read_text(encoding="utf-8")
     js = (root / "engine/discovery_ui.js").read_text(encoding="utf-8")
     companion = (root / "engine/discovery_companion.js").read_text(encoding="utf-8") if (root / "engine/discovery_companion.js").exists() else ""
-    html = template.replace("__BOOT__", compact_json(boot)).replace("__UI__", js+"\n"+companion)
+    html = template.replace("__STYLE__", style).replace("__BOOT__", compact_json(boot)).replace("__UI__", js+"\n"+companion)
     encoded = html.encode("utf-8")
     if len(encoded) > 150000:
         raise ValueError("Bootstrap exceeds 150 KB performance budget")
     (output / filename).write_bytes(encoded)
-    # Only generated content-addressed assets are pruned, keeping the preceding
-    # deployed generation available for browser caches and in-flight page loads.
+    # Public builds purge stale chunks so a withdrawn title also leaves search.
+    # Private builds keep one prior generation for in-flight page loads.
     current = {p.split("/")[-1] for s in stream_meta.values() for p in s["chunks"]}
     current.update((index.split("/")[-1], worker_path.split("/")[-1]))
     manifest_path = output / "discovery-assets.json"
     previous = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
-    keep = current | set(previous.get("current", []))
-    for old in previous.get("previous", []):
-        path = folder / old
-        if old not in keep and path.parent.resolve() == folder.resolve() and len(old.split(".")[0]) == 20:
-            path.unlink(missing_ok=True) if __import__("sys").version_info >= (3,8) else (path.unlink() if path.exists() else None)
-    manifest_path.write_text(json.dumps({"current": sorted(current), "previous": previous.get("current", [])}), encoding="utf-8")
+    preceding = [] if curated else previous.get("current", [])
+    keep = current | set(preceding)
+    for path in folder.iterdir():
+        if path.name not in keep and path.is_file() and re.fullmatch(r"[a-f0-9]{20}\.(?:js|json|worker\.js)", path.name):
+            path.unlink()
+    manifest_path.write_text(json.dumps({"current": sorted(current), "previous": preceding}), encoding="utf-8")
     summary = {"version": VERSION, "html_bytes": len(encoded), "initial_rows": len(boot["initial"]),
-               "catalog_rows": len(rows), "daily_rows": len(streams["daily"]), "latest_day": day}
+               "catalog_rows": len(rows), "published_rows": len(streams["archive"]),
+               "daily_rows": len(streams["daily"]), "latest_day": day}
     (output / "discovery-status.json").write_text(json.dumps(summary, ensure_ascii=False), encoding="utf-8")
     return summary

@@ -20,6 +20,7 @@ from mining_data import (BAND, band_percentile, build_bands, finite_nonnegative,
                          load_flow_nodes, load_population, load_reference,
                          merge_metadata, owner_fields, read_json, reference_manifest)
 from preference_hint import PreferenceHint
+from title_screen import numeric_title_flag
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILE = "craft_resonance_v1"
@@ -141,6 +142,9 @@ def catalog(root):
         if (rec["like"] / max(1,rec["view"]) > .20 and rec["coin"] / max(1,rec["view"]) < .02
                 and rec["fav"] / max(1,rec["view"]) > .10):
             flags.append("interaction_review")
+        number_flag = numeric_title_flag(title)
+        if number_flag:
+            flags.append(number_flag)
         rec["screen_flags"] = flags
         # Even a score of 1.0 cannot certify content quality.
         rec["status"] = "unreviewed"
@@ -173,7 +177,8 @@ def make_batch(rows, reviews, seed=20261103, size=24):
     Creator cap is best effort; a small catalog need not fill every arm.
     """
     rng = random.Random(seed)
-    eligible = [r for r in rows if review_status(reviews.get(r["bvid"])) in ("unreviewed", "incomplete")]
+    eligible = [r for r in rows if "series" not in (r.get("screen_flags") or [])
+                and review_status(reviews.get(r["bvid"])) in ("unreviewed", "incomplete")]
     rng.shuffle(eligible)  # deterministic tie breaking without rewarding view count
     ranked = sorted(eligible, key=lambda r: r.get("recall_priority", r["coin_percentile"]) if r.get("recall_priority", r["coin_percentile"]) is not None else -1,
                     reverse=True)
@@ -193,7 +198,7 @@ def make_batch(rows, reviews, seed=20261103, size=24):
             if count == 0:
                 break
 
-    take([r for r in ranked if not r["motive_cues"] and r["reference_n"] >= 30
+    take([r for r in ranked if not r["motive_cues"] and not r.get("screen_flags") and r["reference_n"] >= 30
           and r["coin_percentile"] is not None], "recall", max(1, size // 2))
     take([r for r in ranked if r["motive_cues"]], "motive_check", size // 4)
     remaining = [r for r in eligible if r["bvid"] not in used]

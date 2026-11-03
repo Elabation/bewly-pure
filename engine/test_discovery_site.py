@@ -6,7 +6,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from discovery_site import build_site, prepare_streams
+from discovery_site import approved_streams, build_site, prepare_streams
+from title_screen import numeric_title_flag
 import daily_refresh
 from mining_data import load_population
 
@@ -21,11 +22,11 @@ class DiscoveryTests(unittest.TestCase):
     def test_large_catalog_does_not_enter_bootstrap(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);engine=root/"engine";engine.mkdir()
-            for name in ("discovery_template.html","discovery_ui.js","discovery_search.js","discovery_companion.js"):
+            for name in ("discovery_template.html","discovery_ui.js","discovery_search.js","discovery_companion.js","discovery.css"):
                 shutil.copy2(Path(__file__).parent/name,engine/name)
             rows=[row(i) for i in range(40000)]
             rows[0]["title"]="</script><script>alert(1)</script>"
-            result=build_site(rows,{"catalog_id":"C"},root/"site",root)
+            result=build_site(rows,{"catalog_id":"C"},root/"site",root,experiment={"id":"private"})
             html=(root/"site/god-shelf.html").read_text(encoding="utf-8")
             boot=json.loads(re.search(r'<script id="payload" type="application/json">(.*?)</script>',html,re.S).group(1))
             self.assertLess(result["html_bytes"],100000)
@@ -66,6 +67,39 @@ class DiscoveryTests(unittest.TestCase):
             result=load_population(mine,samples)[v["bvid"]]
             self.assertEqual(result["first_seen"],"20260903")
             self.assertEqual(result["coin"],200)
+
+    def test_public_index_and_chunks_only_contain_approved_titles(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(__file__).resolve().parents[1]
+            out=Path(d)
+            (out/"discovery-data").mkdir()
+            stale=out/"discovery-data"/("a"*20+".json")
+            stale.write_text("old public candidate",encoding="utf-8")
+            reviewed, serial, unknown, short, numbered = (row(i) for i in range(5))
+            serial["screen_flags"] = ["series"]
+            short["dur"] = 150
+            numbered["screen_flags"] = ["number_review"]
+            approvals = [{"bvid": r["bvid"], "admitted_on": "20261103", "basis": "review", "note": "evidence"}
+                         for r in (reviewed, serial, short, numbered)]
+            rows=[reviewed, serial, unknown, short, numbered]
+            result=build_site(rows,{"catalog_id":"C"},out,root,approvals=approvals)
+            self.assertEqual(result["published_rows"],1)
+            self.assertFalse(stale.exists())
+            content="".join(p.read_text(encoding="utf-8") for p in (out/"discovery-data").iterdir())
+            self.assertIn(reviewed["bvid"],content)
+            for r in (serial, unknown, short, numbered):
+                self.assertNotIn(r["bvid"],content)
+            approvals[-1]["number_checked"] = True
+            streams,_=approved_streams(rows,approvals)
+            self.assertEqual(len(streams["archive"]),2)
+
+    def test_numbers_need_episode_context_or_secondary_review(self):
+        for title in ("灵血修仙第484集 大考13", "第４８４話", "S02E110", "更新至第九十六话"):
+            self.assertEqual(numeric_title_flag(title),"series")
+        for title in ("灵血修仙 大考13", "当你穿进老钱班34", "仙侠故事 484."):
+            self.assertEqual(numeric_title_flag(title),"number_review")
+        for title in ("2019年度全明星", "1080P / 60帧", "100天拍完", "3.14 为什么重要", "百万播放", "261103 打歌舞台"):
+            self.assertIsNone(numeric_title_flag(title))
 
     def test_failed_api_does_not_overwrite_site_or_create_empty_raw(self):
         class Empty:

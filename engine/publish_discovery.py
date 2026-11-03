@@ -1,10 +1,11 @@
 """Build/publish the lightweight discovery page at the established URL."""
 from pathlib import Path
+import json
 import subprocess
-from discovery_site import build_site
+from discovery_site import approved_streams, build_site, load_approvals
 
 PUBLIC_PATHS = ["god-shelf.html", "index.html", "docs/god-shelf.html", "discovery-data",
-                "discovery-assets.json", "discovery-status.json", "assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/fonts", "assets/music/playlist.json", "assets/covers"]
+                "discovery-assets.json", "discovery-status.json", "assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/music", "assets/selected-covers"]
 
 
 def git(root, *args):
@@ -20,10 +21,23 @@ def rebuild(root, rows=None, meta=None):
     if rows is None:
         from review_miner import catalog
         rows, meta = catalog(root)
-    from discovery_site import prepare_streams
     from discovery_covers import ensure_covers
-    ensure_covers(prepare_streams(rows)[0], root)
-    result = build_site(rows, meta, root, root)
+    approvals = load_approvals(root)
+    streams, _ = approved_streams(rows, approvals)
+    cover_folder = "assets/selected-covers"
+    ensure_covers(streams, root, cover_folder=cover_folder)
+    selected = {row["bvid"] for row in streams["archive"]}
+    for cover in (root / cover_folder).glob("BV*.webp"):
+        if cover.stem not in selected:
+            cover.unlink()
+    result = build_site(rows, meta, root, root, approvals=approvals)
+    flagged = [row for row in rows if "number_review" in (row.get("screen_flags") or []) and row["bvid"] not in selected]
+    queue = sorted(flagged, key=lambda row: row.get("first_seen") or "", reverse=True)
+    private = root / "data/review"
+    private.mkdir(parents=True, exist_ok=True)
+    (private / "numeric_queue.json").write_text(json.dumps([
+        {key: row.get(key) for key in ("bvid", "title", "dur", "first_seen")} for row in queue
+    ], ensure_ascii=False, indent=2), encoding="utf-8")
     redirect = '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url={url}"><title>每日视频目录</title><a href="{url}">打开每日视频目录 →</a></html>'
     (root / "index.html").write_text(redirect.format(url="god-shelf.html"), encoding="utf-8")
     (root / "docs").mkdir(exist_ok=True)

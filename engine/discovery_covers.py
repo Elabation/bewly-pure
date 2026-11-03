@@ -5,12 +5,12 @@ import re
 import urllib.request
 
 
-def ensure_covers(streams, root, limit=168):
-    folder = Path(root)/"assets/covers"
+def ensure_covers(streams, root, limit=168, cover_folder="assets/covers"):
+    folder = Path(root) / cover_folder
     folder.mkdir(parents=True,exist_ok=True)
     candidates = {}
     for key, count in (("daily",96),("picks",48),("editorial",6),("archive",24)):
-        for row in streams[key][:count]:
+        for row in streams.get(key, [])[:count]:
             if re.fullmatch(r"BV[0-9A-Za-z]{10}",row["bvid"]) and row.get("pic"):
                 candidates.setdefault(row["bvid"],row["pic"])
     def fetch(pair):

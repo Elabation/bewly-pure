@@ -89,7 +89,7 @@ def collect(client, pages=10, seeds=8):
                           "like_rate":rec["like"]/rec["view"],"stat":video["stat"],"pubdate":rec["pubdate"],
                           "owner":video.get("owner"),"pic":rec["pic"],"parent":candidate["bvid"],"arm":"daily"})
     if nodes:
-        write_capture(graphs/("godflowdaily_"+stamp()+".json"),{"meta":{"src":"daily-v6","requests":{"related":len(choices)}},"flows":[{"nodes":nodes}]})
+        write_capture(graphs/("godflowdaily_"+stamp()+".json"),{"meta":{"src":"daily","requests":{"related":len(choices)}},"flows":[{"nodes":nodes}]})
     return {"finished_at":stamp(),"popular_videos":len(rows),"new_videos":len(fresh),
             "related_nodes":len(nodes),"related_requests_succeeded":related_ok,"popular_pages_failed":len(failures)}
 
@@ -101,7 +101,7 @@ def main():
     args=parser.parse_args()
     status_path=ROOT/"data/review/last_success.json"
     status_path.parent.mkdir(parents=True,exist_ok=True)
-    log("=== 每日目录 v6 开始 ===")
+    log("=== 每日目录开始 ===")
     try:
         if not args.build_only:
             result=collect(BiliClient(interval=.8))
@@ -112,7 +112,7 @@ def main():
         if not args.no_publish:
             commit=publish(ROOT,"每日目录更新 "+stamp())
             log("新版推送成功："+commit)
-        log("=== 每日目录 v6 完成 ===")
+        log("=== 每日目录完成 ===")
     except Exception as error:
         (ROOT/"data/review/last_error.json").write_text(json.dumps({"time":stamp(),"error":str(error)},ensure_ascii=False),encoding="utf-8")
         log("FAILED: "+str(error))
