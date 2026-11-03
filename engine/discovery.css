@@ -73,7 +73,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px 5px 25px; background: #20181c; font-size: 12px; }
 .catalog-layout { display: grid; grid-template-columns: minmax(0,1fr) 234px; gap: 18px; align-items: start; }
 .catalog-main, .calendar-panel, .record-panel { border: 1px solid var(--line); }
-.catalog-main { min-width: 0; padding: 14px 17px; background: linear-gradient(90deg,#211920bd,#211920da 31%); }
+.catalog-main { min-width: 0; padding: 14px 17px; background: linear-gradient(90deg,#2119207d,#2119209c 55%); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
 .section-heading h2, .calendar-heading h3, .record-heading h3 { margin: 0; font-weight: 600; }
 .section-heading h2 { font-size: 17px; }
