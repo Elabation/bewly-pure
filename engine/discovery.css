@@ -29,7 +29,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .hero {
   --pull: 0;
-  --rest: clamp(205px, 17vw, 300px);
+  --rest: clamp(205px, 19vw, 330px);
   --travel: clamp(120px, 12vw, 220px);
   height: calc(var(--rest) + var(--pull) * var(--travel));
   position: relative; overflow: hidden; overflow-anchor: none;
