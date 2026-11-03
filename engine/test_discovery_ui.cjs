@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
 function setup(companion=false){
  const nodes={},tabs=['daily','picks','archive','editorial','saved'].map(tab=>({dataset:{tab},classList:{toggle(){}},addEventListener(){}}));
- const el=id=>nodes[id]??=( {value:'',checked:false,hidden:false,innerHTML:'',textContent:'',listeners:{},addEventListener(k,v){this.listeners[k]=v;},showModal(){this.open=true;},close(){this.open=false;},reportValidity(){return true;}});
+ const el=id=>nodes[id]??=( {value:'',checked:false,hidden:false,innerHTML:'',textContent:'',dataset:{},listeners:{},addEventListener(k,v){this.listeners[k]=v;},showModal(){this.open=true;},close(){this.open=false;},reportValidity(){return true;}});
  const fields=['bvid','title','owner','pic','dur','pubdate','view','coin_percentile','first_seen','motive_cues','reference_n'];
  const rows=Array.from({length:96},(_,i)=>['BV'+String(i).padStart(10,'0'),'作品 '+i,'作者','','120',null,10000,.95,'20261103',[],100]);
  rows[0][1]='</script>作品';
@@ -15,8 +15,9 @@ function setup(companion=false){
  vm.runInContext(fs.readFileSync(path.join(__dirname,'discovery_ui.js'),'utf8'),context);
  if(companion){
   context.Date=Date;
-  vm.runInContext("BOOT.calendar={20261101:1,20261103:200};BOOT.streams['day:20261101']={count:1,chunks:['older.js']};BOOT.music=[{title:'青春コンプレックス',src:'https://example.test/preview.m4a',url:'https://example.test/album'}];",context);
-  for(const id of ['interactive-hero','turntable']){const node=el(id);node.classes=new Set();node.classList={add:k=>node.classes.add(k),remove:k=>node.classes.delete(k),toggle(k,on){on?node.classes.add(k):node.classes.delete(k);}};}
+  vm.runInContext("BOOT.calendar={20261101:1,20261103:200};BOOT.streams['day:20261101']={count:1,chunks:['older.js']};BOOT.music=[{title:'青春コンプレックス',album:'結束バンド',side:'A',number:'01',src:'assets/music/tracks/a01.mp3'}];",context);
+  for(const id of ['interactive-hero','turntable']){const node=el(id);node.classes=new Set();node.classList={add:(...keys)=>keys.forEach(k=>node.classes.add(k)),remove:(...keys)=>keys.forEach(k=>node.classes.delete(k))};}
+  el('music-track').querySelectorAll=()=>[];
   for(const id of ['interactive-hero','turntable'])el(id).style={setProperty(k,v){this[k]=v;}};
   el('music-play').setAttribute=function(k,v){this[k]=v;};
   const audio=el('music-audio');audio.paused=true;audio.pause=()=>{audio.paused=true;audio.listeners.pause?.();};audio.play=()=>{audio.paused=false;audio.listeners.play?.();return Promise.resolve();};
@@ -33,7 +34,25 @@ test('search kernel runs independently and bounds results to one page',async()=>
 
 test('calendar selection loads the older stream and resets to latest',async()=>{const h=setup(true);h.el('calendar-days').listeners.click({target:{closest:()=>({dataset:{day:'20261101'}})}});await new Promise(setImmediate);assert.equal(h.run('activeDay'),'20261101');assert.equal(h.run('total'),1);h.el('calendar-today').listeners.click();await new Promise(setImmediate);assert.equal(h.run('activeDay'),'20261103');assert.equal(h.run('total'),200);});
 
-test('vinyl starts only after real playback and stops while buffering or paused',()=>{const h=setup(true),audio=h.el('music-audio'),deck=h.el('turntable');h.el('music-play').listeners.click();assert.equal(audio.paused,false);assert.equal(deck.classes.has('playing'),false);audio.listeners.playing();assert.equal(deck.classes.has('playing'),true);audio.listeners.waiting();assert.equal(deck.classes.has('playing'),false);audio.listeners.playing();h.el('music-play').listeners.click();assert.equal(audio.paused,true);assert.equal(deck.classes.has('playing'),false);});
+test('vinyl follows playback and the arm tracks the groove even through buffering',()=>{
+ const h=setup(true),audio=h.el('music-audio'),deck=h.el('turntable');
+ h.el('music-play').listeners.click();
+ assert.equal(audio.src,'assets/music/tracks/a01.mp3');
+ assert.equal(deck.classes.has('arm-cued'),true);
+ assert.equal(deck.classes.has('playing'),false);
+ audio.listeners.playing();
+ assert.equal(deck.classes.has('playing'),true);
+ assert.equal(deck.classes.has('arm-down'),true);
+ audio.duration=200;audio.currentTime=100;audio.listeners.timeupdate();
+ assert.equal(deck.style['--arm-angle'],'23deg');
+ audio.listeners.waiting();
+ assert.equal(deck.classes.has('playing'),false);
+ assert.equal(deck.classes.has('arm-down'),true);
+ audio.listeners.playing();
+ h.el('music-play').listeners.click();
+ assert.equal(audio.paused,true);
+ assert.equal(deck.classes.size,0);
+});
 
 test('small top-edge wheel gestures expand the header, down resets and the wheel stays passive',()=>{
  const h=setup(true),wheel=h.context.window.listeners.wheel,style=h.el('interactive-hero').style;

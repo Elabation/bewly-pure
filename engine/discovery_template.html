@@ -48,7 +48,6 @@
           <section class="calendar-panel">
             <div class="calendar-heading">
               <h3>放映日历</h3>
-              <span class="ticket-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             </div>
             <div class="calendar-month">
               <button id="calendar-prev" aria-label="上个月">‹</button>
@@ -65,17 +64,31 @@
             </div>
           </section>
           <section class="record-panel">
-            <div class="record-heading"><h3>結束バンド</h3><span id="music-kind"></span></div>
-            <div class="turntable" id="turntable">
-              <div class="turntable-plate"><div class="vinyl"><div class="record-label"><span>33⅓</span><img id="record-art" alt="" hidden></div></div></div>
-              <div class="tonearm"><i></i></div><div class="power-led"></div>
-              <div class="deck-strobe" aria-hidden="true"></div><span class="deck-type">33⅓ · STEREO</span>
+            <div class="record-heading"><h3>結束バンド</h3></div>
+            <div class="turntable" id="turntable" aria-hidden="true">
+              <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="record-art" alt="" hidden></div></div></div>
+              <svg class="deck-hardware" viewBox="0 0 216 192">
+                <path class="arm-rest" d="M194 133h11m-9 0v5h7v-5" />
+                <circle class="arm-base" cx="193" cy="29" r="12" />
+                <g class="tonearm">
+                  <path class="arm-shadow" d="M193 14v106l-8 34" />
+                  <path class="arm-shaft" d="M193 14v106l-8 34" />
+                  <path class="arm-highlight" d="M192 17v103l-8 33" />
+                  <rect class="counterweight" x="186" y="11" width="14" height="12" rx="3" />
+                  <circle class="arm-bearing" cx="193" cy="29" r="5" />
+                  <g class="headshell" transform="translate(185 153) rotate(13)">
+                    <rect width="10" height="15" x="-5" y="-8" rx="2" />
+                    <path d="M-2 -4h4m-4 3h4" />
+                    <circle class="stylus-tip" cy="9" r="1.5" />
+                  </g>
+                </g>
+              </svg>
+              <div class="power-led"></div><div class="deck-strobe"></div><span class="deck-side" id="deck-side"></span>
             </div>
             <div class="music-sleeve">
               <img id="sleeve-art" alt="" width="43" height="43" hidden>
               <div><strong id="music-title"></strong><small id="music-album"></small></div>
             </div>
-            <select id="music-track" aria-label="选择曲目"></select>
             <div class="music-transport">
               <button id="music-prev" aria-label="上一首">‹</button>
               <button id="music-play" aria-label="播放">▶</button>
@@ -85,14 +98,12 @@
             <div class="music-times"><span id="music-elapsed">0:00</span><span id="music-duration">—</span></div>
             <div class="music-bottom">
               <label>音量<input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.25" aria-label="音量"></label>
-              <button id="music-preview" hidden>试听</button>
-              <a id="music-download" target="_blank" rel="noopener" hidden>购买下载 ↗</a>
-            </div>
-            <div class="local-audio">
-              <label>打开本地音频<input type="file" id="music-local" accept="audio/*,.flac,.m4a,.mp3" multiple hidden></label>
-              <button id="music-official" hidden>返回试听</button>
             </div>
             <p class="music-message" id="music-message" role="status"></p>
+            <details class="music-queue" id="music-queue">
+              <summary>曲目 <span id="music-count"></span></summary>
+              <div id="music-track"></div>
+            </details>
             <audio id="music-audio" preload="none"></audio>
           </section>
         </aside>
@@ -117,20 +128,6 @@
   <button class="jump-end" id="jump-end" aria-label="跳到页尾" title="跳到页尾">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M5 16h10"/></svg>
   </button>
-  <dialog class="full-player" id="full-player" aria-labelledby="full-track-title">
-    <header><h3 id="full-track-title"></h3><button id="close-full-player" type="button" aria-label="关闭播放器">×</button></header>
-    <div class="full-player-layout">
-      <div class="full-record" aria-hidden="true">
-        <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="full-record-art" alt=""></div></div></div>
-        <div class="tonearm"><i></i></div>
-      </div>
-      <div class="full-media">
-        <div id="full-player-frame"></div>
-        <p id="full-player-message" role="status"></p>
-        <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开原曲 ↗</a>
-      </div>
-    </div>
-  </dialog>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 
   <script id="payload" type="application/json">__BOOT__</script>

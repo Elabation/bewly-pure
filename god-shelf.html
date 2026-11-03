@@ -31,7 +31,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: default; }
 a { color: inherit; text-decoration: none; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
   outline: 2px solid var(--pink); outline-offset: 3px;
 }
 .hero {
@@ -109,15 +109,27 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .pager button:disabled { color: #9a7d87; background: transparent; border-color: transparent; }
 .pager span { padding: 0 13px; font-variant-numeric: tabular-nums; color: var(--muted); }
 .catalog-aside { display: grid; gap: 13px; min-width: 0; }
-.calendar-panel { padding: 13px 12px 0; position: relative; background: linear-gradient(145deg,#3c2c2b,#2d2024 68%); border-radius: 5px; }
-.calendar-heading, .record-heading, .calendar-month, .calendar-selected, .music-times, .music-bottom, .local-audio { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.calendar-heading { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #bb886a50; }
+.calendar-panel {
+  --stub-height: 37px;
+  --tear-line: calc(var(--stub-height) + 1px);
+  padding: 13px 12px 0; position: relative; border-radius: 5px;
+  background: linear-gradient(148deg,#40302e,#302324 69%);
+  mask:
+    radial-gradient(circle at left calc(100% - var(--tear-line)),transparent 5px,#000 5.6px),
+    radial-gradient(circle at right calc(100% - var(--tear-line)),transparent 5px,#000 5.6px),
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tear-line) - 4px) no-repeat,
+    linear-gradient(#000 0 0) bottom / 100% calc(var(--tear-line) - 4px) no-repeat,
+    radial-gradient(circle,transparent 1.25px,#000 1.75px) center bottom calc(var(--tear-line) - 4px) / 7px 8px repeat-x;
+  mask-composite: intersect, intersect, add, add;
+}
+.calendar-heading, .record-heading, .calendar-month, .calendar-selected, .music-times, .music-bottom { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.calendar-heading {
+  min-height: 48px; margin: -13px -12px 8px; padding: 0 12px; border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #b18767;
+  background: linear-gradient(90deg,#211719f5 0%,#2117194d 52%,transparent 77%),
+    url("assets/calendar-ticket-v1.jpg") right 72% / cover no-repeat #211719;
+}
 .calendar-heading h3, .record-heading h3 { font-size: 13px; }
-.ticket-mark { display: inline-flex; align-items: center; gap: 3px; transform: rotate(-8deg); }
-.ticket-mark i { width: 5px; height: 14px; border-radius: 1px; transform: rotate(12deg); background: var(--blue); box-shadow: 1px 2px #151013; }
-.ticket-mark i:nth-child(2) { background: var(--yellow); }
-.ticket-mark i:nth-child(3) { background: #d998b7; }
-.ticket-mark i:nth-child(4) { background: var(--red); }
 .calendar-month strong { font-weight: 600; font-variant-numeric: tabular-nums; }
 .calendar-month button { min-width: 28px; min-height: 27px; font-size: 19px; color: var(--muted); }
 .calendar-month button:disabled { opacity: .32; }
@@ -136,31 +148,46 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .band-date.ryo { --band: var(--blue); }
 .calendar-occasion { color: #ebc2a0; font-size: 10px; margin: 8px 0 0; }
 .calendar-occasion button { padding: 0; color: inherit; text-align: left; }
-.calendar-occasion a:hover, .calendar-occasion button:hover { color: var(--pink); }
-.calendar-selected { margin: 10px -12px 0; padding: 9px 11px; background: #4d342e; border-top: 1px dashed #c99a79; border-radius: 0 0 4px 4px; color: #f3d7ba; font-size: 11px; }
-.calendar-selected::before, .calendar-selected::after { content: ""; position: absolute; bottom: 30px; width: 8px; height: 8px; background: var(--paper); border-radius: 50%; }
-.calendar-selected::before { left: -4px; }
-.calendar-selected::after { right: -4px; }
+.calendar-occasion button:hover { color: var(--pink); }
+.calendar-selected { height: var(--stub-height); margin: 10px -12px 0; padding: 0 11px; background: #563a31; border-radius: 0 0 4px 4px; color: #f3d7ba; font-size: 11px; }
+.calendar-selected > :first-child { border: 1px solid #d3aa8a76; padding: 1px 4px; font-variant-numeric: tabular-nums; font-weight: 600; }
 .calendar-selected button { color: #f4c9a8; padding: 0; }
 .record-panel { padding: 12px; background: #251b23f0; border-radius: 5px; }
 .record-heading { margin-bottom: 10px; }
-.record-heading span, .record-panel label, .music-bottom, .local-audio, .music-message { font-size: 10px; color: var(--muted); }
-.turntable { height: 199px; overflow: hidden; position: relative; background: radial-gradient(ellipse at 34% 35%,#51343e,#30232e 62%,#221b24); border-radius: 3px; box-shadow: inset 0 0 0 1px #866770, inset 0 -3px #18141a; }
-.turntable-plate { position: absolute; left: 10px; top: 9px; width: min(176px, 86%); aspect-ratio: 1; border: 2px solid #9d8690; border-radius: 50%; box-shadow: 0 4px 12px #09070bba; }
-.vinyl { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(from 25deg,#fff0,#b6a8c145 31deg,#fff0 56deg,#fff0 175deg,#dfc4b53d 205deg,#fff0 235deg),repeating-radial-gradient(circle,#17131a 0 1px,#37303a 2px,#1e1821 3px); animation: vinyl 1.8s linear infinite paused; }
-.record-label { position: relative; width: 69%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #dbadc4; color: #3e2a3b; font-size: 10px; box-shadow: 0 0 0 2px #6e555f, 0 0 0 5px #1a131c; }
+.record-panel label, .music-message { font-size: 10px; color: var(--muted); }
+.turntable { aspect-ratio: 216 / 192; overflow: hidden; position: relative; background: linear-gradient(135deg,#523a40,#2f252a 73%); border-radius: 3px; box-shadow: inset 0 0 0 1px #876b6e, inset 0 -3px #181419; }
+.turntable-plate {
+  position: absolute; left: 5.56%; top: 5.21%; width: 75.93%; aspect-ratio: 1; border-radius: 50%;
+  background: conic-gradient(from 26deg,#ddd0bc00,#d8b9a23b 26deg,#fff0 48deg,#fff0 174deg,#bca2aa4f 211deg,#fff0 238deg),
+    repeating-radial-gradient(circle,#191519 0 1px,#322a30 1.5px 2px,#211b21 2.5px 3px);
+  box-shadow: inset 0 0 0 1px #b29b92, inset 0 0 0 3px #44363c, 0 5px 12px #100a0ebf;
+}
+.vinyl { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; animation: vinyl 6s linear infinite paused; }
+.record-label { position: relative; width: 61%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #7e576c; box-shadow: 0 0 0 1px var(--side-color,#9b7d80), 0 0 0 4px #171319; }
 .record-label img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
-.record-label::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 5px; height: 5px; border-radius: 50%; background: #16141a; border: 1px solid #bdaab5; }
-.tonearm { position: absolute; right: 12px; top: 15px; width: 15px; height: 135px; transform-origin: 7px 7px; transition: transform .55s ease; }
-.tonearm::before { content: ""; position: absolute; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle,#565059 15%,#b8afb7 22%,#7b727c 64%,#29242c 68%); z-index: 1; }
-.tonearm::after { content: ""; position: absolute; top: 9px; left: 5px; height: 116px; width: 5px; border-radius: 3px; background: linear-gradient(90deg,#78727c,#dbd3dc,#7b747e); transform-origin: top; transform: rotate(9deg); }
-.tonearm i { position: absolute; left: -15px; top: 119px; width: 11px; height: 17px; border: 2px solid #39303a; background: #c8b6c3; transform: rotate(9deg); z-index: 1; }
+.record-label::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 12px #22131d55; }
+.turntable-plate::after { content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 5px; height: 5px; border-radius: 50%; background: #c5b3aa; box-shadow: 0 1px 2px #140e14; }
+.deck-hardware { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.arm-base { fill: #33272c; stroke: #967d76; stroke-width: 1.5; }
+.arm-rest { fill: #54434a; stroke: #ad9690; stroke-width: 1.5; stroke-linecap: round; }
+.tonearm { transform-origin: 193px 29px; transform: rotate(-8deg); transition: transform .44s cubic-bezier(.24,.68,.24,1) .16s; }
+.tonearm > path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.arm-shadow { stroke: #1a1118; stroke-width: 7; translate: 2px 3px; opacity: .7; transition: translate .16s, opacity .16s; }
+.arm-shaft { stroke: #b0a3a1; stroke-width: 4.5; }
+.arm-highlight { stroke: #e7d8c9; stroke-width: 1; }
+.counterweight { fill: #6e6063; stroke: #b6a29a; }
+.arm-bearing { fill: #6c5a60; stroke: #d1bfb2; }
+.headshell rect { fill: #54444e; stroke: #bca9a2; }
+.headshell path { fill: none; stroke: #cbaca5; stroke-linecap: round; }
+.stylus-tip { fill: #f6cfa1; opacity: .42; transition: opacity .16s; }
+.arm-cued .tonearm { transform: rotate(var(--arm-angle,18deg)); transition-delay: 0s; }
+.arm-down .arm-shadow { translate: 1px 1px; opacity: .45; transition-delay: .32s; }
+.arm-down .stylus-tip { opacity: 1; transition-delay: .32s; }
 .power-led { position: absolute; left: 12px; bottom: 7px; width: 4px; height: 4px; border-radius: 50%; background: #786873; }
-.deck-type { position: absolute; bottom: 8px; right: 10px; font-size: 7px; color: #d7c2d0; letter-spacing: 1px; }
+.deck-side { position: absolute; bottom: 6px; right: 9px; font-size: 9px; color: var(--side-color,#ead0ba); letter-spacing: .07em; }
 .deck-strobe { position: absolute; left: 18px; bottom: 6px; width: 36px; height: 3px; background: repeating-linear-gradient(90deg,#a58d9e 0 1px,transparent 1px 4px); }
 .playing .vinyl { animation-play-state: running; }
-.playing .tonearm { transform: rotate(var(--arm-angle,26deg)); }
-.playing .power-led { background: #f5a1ca; box-shadow: 0 0 5px #fa8ec0; }
+.arm-cued .power-led { background: #f3ae80; box-shadow: 0 0 5px #e98d6e; }
 @keyframes vinyl { to { transform: rotate(360deg); } }
 .music-sleeve { display: flex; align-items: center; gap: 8px; margin-top: 10px; min-width: 0; }
 .music-sleeve img { width: 43px; height: 43px; object-fit: cover; border-radius: 2px; background: #4d3243; }
@@ -168,16 +195,32 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .music-sleeve strong, .music-sleeve small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-sleeve strong { font-size: 11px; font-weight: 600; }
 .music-sleeve small { font-size: 10px; color: var(--muted); }
-.record-panel select { margin-top: 7px; width: 100%; padding: 4px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; font-size: 11px; }
 .music-transport { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 5px 0; }
 .music-transport button { width: 30px; height: 30px; font-size: 16px; color: var(--ink); }
 .music-transport #music-play { border-radius: 50%; background: #e7a2be; color: #311d2a; font-size: 13px; }
 .record-panel input[type=range] { display: block; width: 100%; height: 4px; accent-color: var(--pink); margin: 6px 0; }
 .music-times { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.music-bottom, .local-audio { margin-top: 6px; }
+.music-bottom { margin-top: 6px; }
 .music-bottom label { display: flex; gap: 5px; align-items: center; white-space: nowrap; }
 .music-bottom #music-volume { width: 42px; }
-.local-audio label, .local-audio button, .music-bottom a, .music-bottom button { cursor: pointer; color: #f0b4d0; padding: 0; }
+.music-queue { margin-top: 9px; border-top: 1px solid #9c78745c; }
+.music-queue summary { display: flex; align-items: center; gap: 6px; padding: 8px 0 0; cursor: pointer; font-size: 12px; }
+.music-queue summary::-webkit-details-marker { display: none; }
+.music-queue summary span { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--muted); }
+.music-queue summary::after { content: ""; width: 5px; height: 5px; border: solid #e6b9c9; border-width: 0 1px 1px 0; rotate: 45deg; margin: -3px 3px 0 2px; }
+.music-queue[open] summary::after { rotate: 225deg; margin-top: 2px; }
+#music-track { max-block-size: 260px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #815664 #21181f; }
+.track-side { margin: 8px 0 0; background: #21181f; border-left: 2px solid var(--side-color); }
+.track-side h4 { padding: 5px 7px 2px; margin: 0; color: var(--side-color); font-size: 10px; font-weight: 600; letter-spacing: .06em; }
+.track-side-a, .turntable[data-side=A] { --side-color: var(--pink); }
+.track-side-b, .turntable[data-side=B] { --side-color: var(--yellow); }
+.track-side-c, .turntable[data-side=C] { --side-color: var(--blue); }
+.track-side-d, .turntable[data-side=D] { --side-color: #e69288; }
+.track-side ul { margin: 0; padding: 0; list-style: none; }
+.track-side button { width: 100%; display: grid; grid-template-columns: 20px minmax(0,1fr); gap: 4px; min-height: 31px; padding: 5px 6px; align-items: baseline; text-align: left; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.track-side button span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 10px; }
+.track-side button[aria-current=true] { background: #4b303f; color: #ffdfec; }
+.track-side button:hover { background: #513543; }
 .music-message { margin: 4px 0 0; }
 .music-message:empty { display: none; }
 .footer { padding: 12px 10px 26px; margin-top: 15px; background: #221920dd; color: var(--muted); font-size: 11px; }
@@ -189,21 +232,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .jump-end svg { width: 16px; height: 16px; }
 dialog { width: min(480px,92vw); border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }
 dialog::backdrop { background: #251b27a8; }
-.full-player { width: min(840px, 94vw); padding: 14px 16px; background: #27202a; color: #f7e9f2; }
-.full-player header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.full-player h3 { font-weight: 500; }
-.full-player button { color: inherit; border: 0; background: none; font-size: 22px; }
-.full-player-layout { display: grid; grid-template-columns: 216px minmax(0, 1fr); align-items: center; gap: 15px; }
-.full-record { height: 215px; position: relative; background: radial-gradient(ellipse at 35% 40%,#5c394a,#27202a 72%); }
-.full-record .turntable-plate { width: 186px; top: 12px; left: 6px; }
-.full-record .record-label { width: 72%; }
-.full-record .tonearm { right: 9px; top: 13px; }
-.full-player iframe { border: 0; width: 100%; aspect-ratio: 16 / 9; min-height: 200px; display: block; background: #17131b; }
-.full-player a { display: inline-block; margin-top: 8px; color: #e9b8d4; font-size: 12px; }
-.full-player #full-player-message { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
-.full-player #full-player-message:empty { display: none; }
-.full-player.unavailable { width: min(550px,94vw); }
-.full-player.unavailable #full-player-frame { display: none; }
 dialog h3, dialog p { margin: 0 0 9px; }
 dialog label { display: block; margin-top: 6px; }
 dialog select, dialog textarea { width: 100%; border: 1px solid var(--line); background: #20171e; padding: 6px; }
@@ -228,18 +256,9 @@ dialog textarea { min-height: 74px; resize: vertical; }
   .catalog-main { padding: 12px 9px; }
   .catalog-aside { grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
   .record-panel, .calendar-panel { min-width: 0; }
-  .turntable { height: 142px; }
-  .turntable-plate { width: min(120px, 86%); }
-  .tonearm { transform: scale(.75); right: 7px; top: 9px; }
-  .playing .tonearm { transform: scale(.75) rotate(var(--arm-angle,26deg)); }
-  .deck-type { display: none; }
-  .full-player-layout { grid-template-columns: minmax(0,1fr); gap: 5px; }
-  .full-record { width: 216px; height: 207px; margin: auto; }
-  .full-record .tonearm { transform: none; }
-  .full-player.playing .full-record .tonearm { transform: rotate(28deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero, .tonearm { transition: none; }
+  .hero, .tonearm, .arm-shadow, .stylus-tip { transition: none; }
   .vinyl { animation: none; }
 }
 </style>
@@ -285,7 +304,6 @@ dialog textarea { min-height: 74px; resize: vertical; }
           <section class="calendar-panel">
             <div class="calendar-heading">
               <h3>放映日历</h3>
-              <span class="ticket-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             </div>
             <div class="calendar-month">
               <button id="calendar-prev" aria-label="上个月">‹</button>
@@ -302,17 +320,31 @@ dialog textarea { min-height: 74px; resize: vertical; }
             </div>
           </section>
           <section class="record-panel">
-            <div class="record-heading"><h3>結束バンド</h3><span id="music-kind"></span></div>
-            <div class="turntable" id="turntable">
-              <div class="turntable-plate"><div class="vinyl"><div class="record-label"><span>33⅓</span><img id="record-art" alt="" hidden></div></div></div>
-              <div class="tonearm"><i></i></div><div class="power-led"></div>
-              <div class="deck-strobe" aria-hidden="true"></div><span class="deck-type">33⅓ · STEREO</span>
+            <div class="record-heading"><h3>結束バンド</h3></div>
+            <div class="turntable" id="turntable" aria-hidden="true">
+              <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="record-art" alt="" hidden></div></div></div>
+              <svg class="deck-hardware" viewBox="0 0 216 192">
+                <path class="arm-rest" d="M194 133h11m-9 0v5h7v-5" />
+                <circle class="arm-base" cx="193" cy="29" r="12" />
+                <g class="tonearm">
+                  <path class="arm-shadow" d="M193 14v106l-8 34" />
+                  <path class="arm-shaft" d="M193 14v106l-8 34" />
+                  <path class="arm-highlight" d="M192 17v103l-8 33" />
+                  <rect class="counterweight" x="186" y="11" width="14" height="12" rx="3" />
+                  <circle class="arm-bearing" cx="193" cy="29" r="5" />
+                  <g class="headshell" transform="translate(185 153) rotate(13)">
+                    <rect width="10" height="15" x="-5" y="-8" rx="2" />
+                    <path d="M-2 -4h4m-4 3h4" />
+                    <circle class="stylus-tip" cy="9" r="1.5" />
+                  </g>
+                </g>
+              </svg>
+              <div class="power-led"></div><div class="deck-strobe"></div><span class="deck-side" id="deck-side"></span>
             </div>
             <div class="music-sleeve">
               <img id="sleeve-art" alt="" width="43" height="43" hidden>
               <div><strong id="music-title"></strong><small id="music-album"></small></div>
             </div>
-            <select id="music-track" aria-label="选择曲目"></select>
             <div class="music-transport">
               <button id="music-prev" aria-label="上一首">‹</button>
               <button id="music-play" aria-label="播放">▶</button>
@@ -322,14 +354,12 @@ dialog textarea { min-height: 74px; resize: vertical; }
             <div class="music-times"><span id="music-elapsed">0:00</span><span id="music-duration">—</span></div>
             <div class="music-bottom">
               <label>音量<input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.25" aria-label="音量"></label>
-              <button id="music-preview" hidden>试听</button>
-              <a id="music-download" target="_blank" rel="noopener" hidden>购买下载 ↗</a>
-            </div>
-            <div class="local-audio">
-              <label>打开本地音频<input type="file" id="music-local" accept="audio/*,.flac,.m4a,.mp3" multiple hidden></label>
-              <button id="music-official" hidden>返回试听</button>
             </div>
             <p class="music-message" id="music-message" role="status"></p>
+            <details class="music-queue" id="music-queue">
+              <summary>曲目 <span id="music-count"></span></summary>
+              <div id="music-track"></div>
+            </details>
             <audio id="music-audio" preload="none"></audio>
           </section>
         </aside>
@@ -354,23 +384,9 @@ dialog textarea { min-height: 74px; resize: vertical; }
   <button class="jump-end" id="jump-end" aria-label="跳到页尾" title="跳到页尾">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M5 16h10"/></svg>
   </button>
-  <dialog class="full-player" id="full-player" aria-labelledby="full-track-title">
-    <header><h3 id="full-track-title"></h3><button id="close-full-player" type="button" aria-label="关闭播放器">×</button></header>
-    <div class="full-player-layout">
-      <div class="full-record" aria-hidden="true">
-        <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="full-record-art" alt=""></div></div></div>
-        <div class="tonearm"><i></i></div>
-      </div>
-      <div class="full-media">
-        <div id="full-player-frame"></div>
-        <p id="full-player-message" role="status"></p>
-        <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开原曲 ↗</a>
-      </div>
-    </div>
-  </dialog>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 
-  <script id="payload" type="application/json">{"version":"bocchi-v8","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"d9fe1cb0628ef5cf7c4aaef7a876fa47b6bba96d86de687f78d04685458b1d05","experiment_id":null,"generated_at":"2026-11-04 00:04:58 +08:00","latest_day":"20261103","total":5,"streams":{"daily":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]},"archive":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV1bW411n7fY","【春晚鬼畜】赵本山：我就是念诗之王！【改革春风吹满地】","","assets/selected-covers/BV1bW411n7fY.webp",152,1518339644,128932178,null,"20260903",[],2,[],"20261103","语言切分和节拍一起构成笑点，重组后的台词本身就是旋律。","历史人工复核"],["BV1UJ41147Ej","【黑桃Q】新番红白战，2019年度全明星","","assets/selected-covers/BV1UJ41147Ej.webp",1050,1576984072,8893,0.9969879518072289,"20260903",[],332,[],"20261103","跨番混剪用红白对阵组织素材，整支作品有自己的结构。","历史人工复核"],["BV1Ux411d7e9","把B站万恶之源的舞蹈片段汇聚在一起！祝B站越来越社会！干杯十周年，我已经嗨到不行！","AD钙爷","assets/selected-covers/BV1Ux411d7e9.webp",250,1561713609,19996642,0.8571428571428571,"20260903",[],49,[],"20261103","把熟悉的舞步与模因重新编排成一场完整的表演。","历史人工复核"],["BV1GS411P74t","自来也老师，这次，我来保护你!","牙牙的包裹","assets/selected-covers/BV1GS411P74t.webp",437,1717767589,16423613,0.98989898989899,"20260903",[],99,[],"20261103","以角色互换重新组织原作情节，表达集中在一个完整的假设。","历史人工复核"],["BV1jQ87ziEKZ","我做了第一首英文关于731的歌","","assets/selected-covers/BV1jQ87ziEKZ.webp",337,1753761600,6029483,0.9963636363636363,"20260902",[],275,["number_review"],"20261103","历史题材的原创音乐，入选依据是创作与表达。","历史人工复核"]],"worker":"discovery-data/a8659206cb832c0f1878.worker.js","calendar":{"20261103":5},"music":[{"title":"青春コンプレックス","album":"結束バンド","number":"01/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/5e/21/955e2119-0127-4210-d947-5739f7d1c742/mzaf_5734893486571999400.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E9%9D%92%E6%98%A5%E3%82%B3%E3%83%B3%E3%83%97%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9/1657318546?i=1657318551&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/76531684f721e7da89da2d56ec615c2e877df4bf","fullVideo":"RWFW1OSlMkM"},{"title":"ひとりぼっち東京","album":"結束バンド","number":"02/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/21/4d/31214d03-4b38-d263-45d9-43d0605c3870/mzaf_7626256341945862508.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%A8%E3%82%8A%E3%81%BC%E3%81%A3%E3%81%A1%E6%9D%B1%E4%BA%AC/1657318546?i=1657318555&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b396aaf261f5c9846bd6fc777944e34100b17b0c","fullVideo":"7TovqLDCosk"},{"title":"Distortion!!","album":"結束バンド","number":"03/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/57/52/315752e5-7985-e132-6228-443b5e4d0096/mzaf_12248143147077507975.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/distortion/1657318546?i=1657318564&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/4aa365182b833464953694d2323517d487fb426d","fullVideo":"5RSHNMkKGLs"},{"title":"ひみつ基地","album":"結束バンド","number":"04/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/27/38/57273855-b45d-1566-d207-6e38e48c16d4/mzaf_86025273103452167.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%BF%E3%81%A4%E5%9F%BA%E5%9C%B0/1657318546?i=1657318570&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7563b329ef65d67efb013da66f121a772a46c5bd","fullVideo":"ztF1ru7LEzs"},{"title":"ギターと孤独と蒼い惑星","album":"結束バンド","number":"05/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d9/5c/99/d95c9928-7a84-80d8-f666-9e139bb55618/mzaf_3451712062174813596.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AE%E3%82%BF%E3%83%BC%E3%81%A8%E5%AD%A4%E7%8B%AC%E3%81%A8%E8%92%BC%E3%81%84%E6%83%91%E6%98%9F/1657318546?i=1657318765&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/601348ee05c715ace5202738e39cad3441c2854e","fullVideo":"B7BxrAAXl94"},{"title":"ラブソングが歌えない","album":"結束バンド","number":"06/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/15/57/de/1557de36-ecad-2ee4-6cd5-a86e449fec0c/mzaf_12204809330958986952.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%A9%E3%83%96%E3%82%BD%E3%83%B3%E3%82%B0%E3%81%8C%E6%AD%8C%E3%81%88%E3%81%AA%E3%81%84/1657318546?i=1657318775&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/c945829bc3054824e3e8350c9e8a3b6799ab2308","fullVideo":"vW9d8-8gm7o"},{"title":"あのバンド","album":"結束バンド","number":"07/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e6/14/ee/e614ee3e-a305-11a1-4fdf-8d269df33381/mzaf_9456356230410638930.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%82%E3%81%AE%E3%83%90%E3%83%B3%E3%83%89/1657318546?i=1657318780&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/74b94a194abcd3fdfaae028884397a84d827e85f","fullVideo":"L2i0i9gWE00"},{"title":"カラカラ","album":"結束バンド","number":"08/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/08/e5/95/08e5955b-5e35-810a-af21-c5ea627b9e62/mzaf_14523279170137656585.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AB%E3%83%A9%E3%82%AB%E3%83%A9/1657318546?i=1657318783&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/95a8cac484b748abadbce82c17ce22bfdc4334a4","fullVideo":"IwHwv-lcxi4"},{"title":"小さな海","album":"結束バンド","number":"09/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/0f/47/490f47ea-7091-c05b-f00b-e1b182dc1f90/mzaf_15407234873314910124.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%B0%8F%E3%81%95%E3%81%AA%E6%B5%B7/1657318546?i=1657318876&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/f310158abcd3055b8b58d4d62167c5b957be4aca","fullVideo":"NF8c5pXx-Xc"},{"title":"なにが悪い","album":"結束バンド","number":"10/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c6/7d/49/c67d49a9-b08b-d5c3-5a20-30770b32aeef/mzaf_1177679356616256059.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%AA%E3%81%AB%E3%81%8C%E6%82%AA%E3%81%84/1657318546?i=1657318881&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7f881415b734db8248239327e52d1bd167896973","fullVideo":"BVvcQ4ge8Ow"},{"title":"忘れてやらない","album":"結束バンド","number":"11/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/63/b0/ca63b000-b910-7717-278f-3e1885407ca8/mzaf_5319354686321300295.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%BF%98%E3%82%8C%E3%81%A6%E3%82%84%E3%82%89%E3%81%AA%E3%81%84/1657318546?i=1657318882&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/5eb5f8e59dca0eb636747c1c922fb42bedddc3f7","fullVideo":"gX9m-rCtSqc"},{"title":"星座になれたら","album":"結束バンド","number":"12/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6c/1d/2e/6c1d2e47-1a3d-ac8a-19d2-a5ab01a4fecf/mzaf_4077582503102929951.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%98%9F%E5%BA%A7%E3%81%AB%E3%81%AA%E3%82%8C%E3%81%9F%E3%82%89/1657318546?i=1657318884&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b40d9847f00747ad099986e037be2ae763fa9fab","fullVideo":"wSTbdqo-j74"},{"title":"フラッシュバッカー","album":"結束バンド","number":"13/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/a9/52/f5a95294-1723-eb2a-50e1-eee2472c6913/mzaf_4929718209793094683.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%95%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5%E3%83%90%E3%83%83%E3%82%AB%E3%83%BC/1657318546?i=1657318889&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/0eb3628e7c383ca23eed51312cd3a5052665372e","fullVideo":"ecVnw_SiREQ"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","number":"14/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/67/7b/94677b38-154d-9e8c-11dd-fec9b8419eeb/mzaf_15700298817702070953.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E8%BB%A2%E3%81%8C%E3%82%8B%E5%B2%A9-%E5%90%9B%E3%81%AB%E6%9C%9D%E3%81%8C%E9%99%8D%E3%82%8B/1657318546?i=1657318890&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b15b4082b71aeb67d0f554e4b174079e08f197b7","fullVideo":"E5O0mCrUdAM"},{"title":"月並みに輝け","album":"Re:結束バンド - EP","number":"01/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/70/5c/a6705c33-ebdf-78bd-ce10-5d54e807ed73/mzaf_10207518281308685421.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%9C%88%E4%B8%A6%E3%81%BF%E3%81%AB%E8%BC%9D%E3%81%91/1759525321?i=1759525329&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"anCp-VnUQtM"},{"title":"今、僕、アンダーグラウンドから","album":"Re:結束バンド - EP","number":"02/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/c3/d1/78c3d164-1f3a-96d9-e555-6043776dc29e/mzaf_1716431183313068052.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E4%BB%8A-%E5%83%95-%E3%82%A2%E3%83%B3%E3%83%80%E3%83%BC%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%8B%E3%82%89/1759525321?i=1759525332&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"mt4on5DnMw4"},{"title":"ドッペルゲンガー","album":"Re:結束バンド - EP","number":"03/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9a/19/67/9a196776-1042-e365-a5dd-1a5cabb65e5d/mzaf_8294460973162649945.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%89%E3%83%83%E3%83%9A%E3%83%AB%E3%82%B2%E3%83%B3%E3%82%AC%E3%83%BC/1759525321?i=1759525333&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"776pBhZ3oO0"},{"title":"僕と三原色","album":"Re:結束バンド - EP","number":"04/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/3e/93/b93e9351-5df9-b822-ae13-adc11f3d01ea/mzaf_8877883855655534641.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%83%95%E3%81%A8%E4%B8%89%E5%8E%9F%E8%89%B2/1759525321?i=1759525334&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"nPRzbUSmWg0"},{"title":"秒針少女","album":"Re:結束バンド - EP","number":"05/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3c/9b/77/3c9b776e-4d58-66e5-e31f-d039f2220c97/mzaf_1076848941482724053.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E7%A7%92%E9%87%9D%E5%B0%91%E5%A5%B3/1759525321?i=1759525335&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"UlCjySjkblI"},{"title":"Re:Re:","album":"Re:結束バンド - EP","number":"06/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/93/40/88/93408813-fe4f-722a-89ad-0edab6392682/mzaf_7656634569888780862.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/re-re/1759525321?i=1759525336&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"PiIAVnFX2eo"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
+  <script id="payload" type="application/json">{"version":"bocchi-v9","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"1077d84e4f32e42f43e7396cf19351c6f47eab2d73701c08ec1119f22d3f44d3","experiment_id":null,"generated_at":"2026-11-04 00:53:41 +08:00","latest_day":"20261103","total":5,"streams":{"daily":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]},"archive":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV1bW411n7fY","【春晚鬼畜】赵本山：我就是念诗之王！【改革春风吹满地】","","assets/selected-covers/BV1bW411n7fY.webp",152,1518339644,128932178,null,"20260903",[],2,[],"20261103","语言切分和节拍一起构成笑点，重组后的台词本身就是旋律。","历史人工复核"],["BV1UJ41147Ej","【黑桃Q】新番红白战，2019年度全明星","","assets/selected-covers/BV1UJ41147Ej.webp",1050,1576984072,8893,0.9969879518072289,"20260903",[],332,[],"20261103","跨番混剪用红白对阵组织素材，整支作品有自己的结构。","历史人工复核"],["BV1Ux411d7e9","把B站万恶之源的舞蹈片段汇聚在一起！祝B站越来越社会！干杯十周年，我已经嗨到不行！","AD钙爷","assets/selected-covers/BV1Ux411d7e9.webp",250,1561713609,19996642,0.8571428571428571,"20260903",[],49,[],"20261103","把熟悉的舞步与模因重新编排成一场完整的表演。","历史人工复核"],["BV1GS411P74t","自来也老师，这次，我来保护你!","牙牙的包裹","assets/selected-covers/BV1GS411P74t.webp",437,1717767589,16423613,0.98989898989899,"20260903",[],99,[],"20261103","以角色互换重新组织原作情节，表达集中在一个完整的假设。","历史人工复核"],["BV1jQ87ziEKZ","我做了第一首英文关于731的歌","","assets/selected-covers/BV1jQ87ziEKZ.webp",337,1753761600,6029483,0.9963636363636363,"20260902",[],275,["number_review"],"20261103","历史题材的原创音乐，入选依据是创作与表达。","历史人工复核"]],"worker":"discovery-data/a8659206cb832c0f1878.worker.js","calendar":{"20261103":5},"music":[{"title":"青春コンプレックス","album":"青春コンプレックス","side":"A","number":"01","src":"assets/music/tracks/a01.mp3","art":"assets/music/cover-a01.jpg"},{"title":"ひとりぼっち東京","album":"青春コンプレックス","side":"A","number":"02","src":"assets/music/tracks/a02.mp3","art":"assets/music/cover-a01.jpg"},{"title":"Distortion!!","album":"Distortion!!","side":"A","number":"03","src":"assets/music/tracks/a03.mp3","art":"assets/music/cover-a03.jpg"},{"title":"ギターと孤独と蒼い惑星","album":"ギターと孤独と蒼い惑星","side":"B","number":"01","src":"assets/music/tracks/b01.mp3","art":"assets/music/cover-b01.jpg"},{"title":"あのバンド","album":"あのバンド","side":"B","number":"03","src":"assets/music/tracks/b03.mp3","art":"assets/music/cover-b03.jpg"},{"title":"カラカラ","album":"カラカラ","side":"C","number":"01","src":"assets/music/tracks/c01.mp3","art":"assets/music/cover-c01.jpg"},{"title":"なにが悪い","album":"なにが悪い","side":"C","number":"03","src":"assets/music/tracks/c03.mp3","art":"assets/music/cover-c03.jpg"},{"title":"忘れてやらない","album":"結束バンド","side":"D","number":"01","src":"assets/music/tracks/d01.mp3","art":"assets/music/cover-d01.jpg"},{"title":"星座になれたら","album":"結束バンド","side":"D","number":"02","src":"assets/music/tracks/d02.mp3","art":"assets/music/cover-d01.jpg"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","side":"D","number":"04","src":"assets/music/tracks/d04.mp3","art":"assets/music/cover-d01.jpg"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
   <script>'use strict';
 const BOOT=JSON.parse(document.getElementById('payload').textContent),$=id=>document.getElementById(id);
 const PROFILE='craft_resonance_v1',SCHEMA='bili-review-v1',storageKey='bili_review_'+PROFILE;
@@ -463,11 +479,11 @@ show(BOOT.initial.map(unpack),BOOT.streams.daily.count);
 // Calendar, a scroll-responsive cover, and the turntable.
 const calendarDates=Object.keys(BOOT.calendar||{}).sort();
 const bandDates = {
-  '0221': ['后藤一里生日', 'hitori', 'https://bocchi.rocks/birthday/hitori.html'],
-  '0421': ['喜多郁代生日', 'kita', 'https://bocchi.rocks/kessokuband/info/?article_id=60509'],
-  '0529': ['伊地知虹夏生日', 'nijika', 'https://bocchi.rocks/kessokuband/info/?article_id=60699'],
-  '0918': ['山田凉生日', 'ryo', 'https://bocchi.rocks/kessokuband/info/?article_id=61533'],
-  '1225': ['首张专辑数字发行纪念日', 'hitori', 'https://mora.jp/package/43000100/SVWC70613B00Z_48/']
+  '0221': ['后藤一里生日', 'hitori'],
+  '0421': ['喜多郁代生日', 'kita'],
+  '0529': ['伊地知虹夏生日', 'nijika'],
+  '0918': ['山田凉生日', 'ryo'],
+  '1225': ['首张专辑数字发行纪念日', 'hitori']
 };
 let calendarMonth=(activeDay||BOOT.generated_at.slice(0,7).replace('-','')).slice(0,6);
 const calendarUnit = BOOT.curated ? '部入选' : '条候选';
@@ -490,7 +506,7 @@ function paintCalendar(){
  const occasion = $('calendar-occasion');
  occasion.hidden = false;
  occasion.innerHTML = monthEvent
-   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>`
+   ? `${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}`
    : `<button data-occasion-month="${upcoming[0].slice(0, 2)}">${upcoming[0].slice(0, 2)}/${upcoming[0].slice(2)} · ${upcoming[1][0]}</button>`;
  const buildYear = Number(BOOT.generated_at.slice(0, 4));
  const firstYear = calendarDates.length ? Number(calendarDates[0].slice(0, 4)) : buildYear;
@@ -537,166 +553,155 @@ $('jump-end').addEventListener('click', () => {
   window.scrollTo(0, document.documentElement.scrollHeight);
 });
 
-const audio=$('music-audio'),officialTracks=BOOT.music||[];let musicTracks=[...officialTracks],trackIndex=0,localUrls=[],fallbackTried=false;
-const musicTime=n=>Number.isFinite(n)?Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0'):'—';
+const audio = $('music-audio');
+const deck = $('turntable');
+const trackList = $('music-track');
+const musicTracks = BOOT.music || [];
+let trackIndex = 0;
+
+const musicTime = seconds => Number.isFinite(seconds)
+  ? Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0')
+  : '—';
+
 function musicList() {
-  $('music-track').innerHTML = musicTracks.map((track, index) =>
-    `<option value="${index}">${esc(track.title)}</option>`).join('');
-  $('music-track').value = String(trackIndex);
+  const groups = new Map();
+  musicTracks.forEach((track, index) => {
+    const items = groups.get(track.side) || [];
+    items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.number)}</span>${esc(track.title)}</button></li>`);
+    groups.set(track.side, items);
+  });
+  trackList.innerHTML = Array.from(groups, ([side, items]) =>
+    `<section class="track-side track-side-${esc(side.toLowerCase())}"><h4>${esc(side)} 面</h4><ul>${items.join('')}</ul></section>`
+  ).join('');
+  $('music-count').textContent = String(musicTracks.length).padStart(2, '0');
 }
 
 function paintTrack(track) {
-  if (!track) return;
   $('music-title').textContent = track.title;
-  $('music-album').textContent = track.album ? track.album + ' · ' + track.number : '本地音频';
-  $('music-kind').textContent = track.fullVideo ? '完整曲目' : track.kind || '本地音频';
-  $('music-play').textContent = '▶';
-  $('music-play').setAttribute('aria-label', track.fullVideo ? '播放完整曲目' : '播放');
-  $('music-play').title = track.fullVideo ? '播放完整曲目' : '播放';
-  $('music-preview').hidden = !track.fullVideo;
-  $('music-preview').textContent = '试听';
-  $('music-official').hidden = Boolean(track.url);
+  const edition = track.album === track.title ? '单曲' : track.album;
+  $('music-album').textContent = edition + ' · ' + track.side + track.number;
+  deck.dataset.side = track.side;
+  $('deck-side').textContent = track.side + track.number;
   for (const id of ['record-art', 'sleeve-art']) {
-    const art = $(id);
-    art.hidden = !track.art;
-    if (track.art) art.src = track.art;
+    const image = $(id);
+    image.hidden = !track.art;
+    if (track.art && image.getAttribute('src') !== track.art) image.src = track.art;
   }
-  $('music-download').hidden = !track.download;
-  if (track.download) $('music-download').href = track.download;
+  for (const button of trackList.querySelectorAll('[data-track]')) {
+    button.setAttribute('aria-current', String(Number(button.dataset.track) === trackIndex));
+  }
+}
+
+function paintTransport(active) {
+  $('music-play').textContent = active ? 'Ⅱ' : '▶';
+  $('music-play').setAttribute('aria-label', active ? '暂停' : '播放');
+}
+
+function parkArm() {
+  deck.classList.remove('playing', 'arm-down', 'arm-cued');
+  paintTransport(false);
+}
+
+function paintProgress() {
+  const duration = audio.duration;
+  const fraction = Number.isFinite(duration) && duration > 0
+    ? Math.min(1, audio.currentTime / duration) : 0;
+  $('music-elapsed').textContent = musicTime(audio.currentTime);
+  $('music-seek').value = String(fraction * 1000);
+  deck.style.setProperty('--arm-angle', (18 + fraction * 10) + 'deg');
+}
+
+function startMusic() {
+  audio.play().catch(error => {
+    if (error.name === 'AbortError') return;
+    parkArm();
+    $('music-message').textContent = '音频未能播放，请再试一次。';
+  });
 }
 
 function loadTrack(index, play = false) {
-  if (!musicTracks.length) {
-    $('music-message').textContent = '可以选择本地音频播放。';
-    return;
-  }
+  if (!musicTracks.length) return;
   audio.pause();
-  fallbackTried = false;
+  parkArm();
   trackIndex = (index + musicTracks.length) % musicTracks.length;
   const track = musicTracks[trackIndex];
   audio.src = track.src;
-  $('music-track').value = String(trackIndex);
   paintTrack(track);
   $('music-message').textContent = '';
   $('music-seek').value = '0';
+  $('music-seek').disabled = true;
   $('music-elapsed').textContent = '0:00';
   $('music-duration').textContent = '—';
-  $('turntable').style.setProperty('--arm-angle', '26deg');
+  deck.style.setProperty('--arm-angle', '18deg');
   if (play) startMusic();
 }
-function startMusic(){audio.play().catch(()=>{$('music-message').textContent='试听暂时无法连接，可选择本地音频或打开完整曲目。';});}
-function paintTransport(playing) {
-  if (musicTracks[trackIndex]?.fullVideo) {
-    $('music-preview').textContent = playing ? '暂停试听' : '试听';
-    return;
-  }
-  $('music-play').textContent = playing ? 'Ⅱ' : '▶';
-  $('music-play').setAttribute('aria-label', playing ? '暂停' : '播放');
-}
-function transportState(playing) {
-  $('turntable').classList.toggle('playing', playing);
-  paintTransport(playing);
-}
-audio.addEventListener('play',()=>{paintTransport(true);$('music-message').textContent='正在连接音源…';});
-audio.addEventListener('playing',()=>{transportState(true);$('music-message').textContent='';});
-audio.addEventListener('waiting',()=>{$('turntable').classList.remove('playing');$('music-message').textContent='正在缓冲…';});
-audio.addEventListener('pause',()=>transportState(false));audio.addEventListener('error',()=>{transportState(false);const backup=musicTracks[trackIndex]?.fallbackSrc;if(backup&&!fallbackTried){fallbackTried=true;audio.src=backup;startMusic();return;}$('music-message').textContent='音频加载失败，可切换曲目或选择本地音频。';});
-audio.addEventListener('loadedmetadata',()=>{$('music-duration').textContent=musicTime(audio.duration);});
-audio.addEventListener('timeupdate', () => {
-  const fraction = audio.duration > 0 ? Math.min(1, audio.currentTime / audio.duration) : 0;
-  $('music-elapsed').textContent = musicTime(audio.currentTime);
-  $('music-seek').value = String(fraction * 1000);
-  $('turntable').style.setProperty('--arm-angle', (26 + fraction * 10) + 'deg');
+
+audio.addEventListener('play', () => {
+  paintTransport(true);
+  deck.classList.add('arm-cued');
 });
-audio.addEventListener('ended',()=>loadTrack(trackIndex+1,true));audio.volume=.25;
-function toggleAudio() {
-  if (!audio.src) loadTrack(trackIndex, false);
-  if (audio.paused) startMusic();
-  else audio.pause();
-}
-
-const fullPlayer = $('full-player');
-let youtubeApi, fullSession = 0, fullControl, fullWait;
-
-function loadYouTubeApi() {
-  if (window.YT?.Player) return Promise.resolve(window.YT);
-  if (youtubeApi) return youtubeApi;
-  youtubeApi = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://www.youtube.com/iframe_api';
-    script.onerror = () => { youtubeApi = null; script.remove(); reject(); };
-    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
-    document.head.appendChild(script);
-  });
-  return youtubeApi;
-}
-
-function openFullTrack(track) {
-  audio.pause();
-  const session = ++fullSession;
-  const message = $('full-player-message');
-  message.textContent = '正在连接原曲…';
-  fullPlayer.classList.remove('unavailable');
-  const frame = document.createElement('iframe');
-  frame.title = track.title + ' · 完整曲目';
-  frame.referrerPolicy = 'strict-origin-when-cross-origin';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  const embed = new URL('https://www.youtube-nocookie.com/embed/' + track.fullVideo);
-  embed.search = new URLSearchParams({autoplay: '1', playsinline: '1', enablejsapi: '1', origin: location.origin});
-  frame.src = embed.href;
-  $('full-track-title').textContent = track.title;
-  $('full-track-link').href = 'https://www.youtube.com/watch?v=' + track.fullVideo;
-  $('full-record-art').src = track.art;
-  $('full-player-frame').replaceChildren(frame);
-  fullPlayer.showModal();
-  fullWait = setTimeout(() => {
-    if (session === fullSession) message.textContent = '播放器尚未响应，可以直接打开原曲。';
-  }, 7000);
-  loadYouTubeApi().then(YT => {
-    if (session !== fullSession) return;
-    fullControl = new YT.Player(frame, {events: {
-      onReady: event => {
-        if (session !== fullSession) return;
-        event.target.setVolume(audio.volume * 100);
-        clearTimeout(fullWait);
-        message.textContent = '';
-      },
-      onError: () => {
-        if (session !== fullSession) return;
-        clearTimeout(fullWait);
-        fullPlayer.classList.remove('playing');
-        fullPlayer.classList.add('unavailable');
-        message.textContent = '这首曲目在当前环境无法嵌入播放，可以打开原曲。';
-      },
-      onStateChange: event => {
-        if (session === fullSession) fullPlayer.classList.toggle('playing', event.data === 1);
-      }
-    }});
-  }).catch(() => {}); // Native iframe controls are available without the API.
-}
-$('close-full-player').addEventListener('click', () => fullPlayer.close());
-fullPlayer.addEventListener('close', () => {
-  fullSession++;
-  clearTimeout(fullWait);
-  fullPlayer.classList.remove('playing', 'unavailable');
-  fullControl?.destroy();
-  fullControl = null;
-  $('full-player-frame').replaceChildren();
+audio.addEventListener('playing', () => {
+  deck.classList.add('playing', 'arm-cued', 'arm-down');
+  $('music-message').textContent = '';
 });
+audio.addEventListener('waiting', () => {
+  if (audio.paused) return;
+  deck.classList.remove('playing');
+  $('music-message').textContent = '正在缓冲…';
+});
+audio.addEventListener('pause', () => {
+  if (!audio.paused) return;
+  parkArm();
+  $('music-message').textContent = '';
+});
+audio.addEventListener('error', () => {
+  parkArm();
+  $('music-message').textContent = '音频加载失败，请重试或换一首。';
+});
+audio.addEventListener('loadedmetadata', () => {
+  $('music-duration').textContent = musicTime(audio.duration);
+  $('music-seek').disabled = !Number.isFinite(audio.duration);
+  paintProgress();
+});
+audio.addEventListener('timeupdate', paintProgress);
+audio.addEventListener('ended', () => loadTrack(trackIndex + 1, true));
+audio.volume = .25;
+
 $('music-play').addEventListener('click', () => {
-  const track = musicTracks[trackIndex];
-  if (track?.fullVideo) openFullTrack(track);
-  else toggleAudio();
+  if (!musicTracks.length) return;
+  if (!audio.paused) {
+    audio.pause();
+  } else if (!audio.src || audio.error) {
+    loadTrack(trackIndex, true);
+  } else {
+    startMusic();
+  }
 });
-$('music-preview').addEventListener('click', toggleAudio);
-$('music-prev').addEventListener('click',()=>loadTrack(trackIndex-1,!audio.paused));$('music-next').addEventListener('click',()=>loadTrack(trackIndex+1,!audio.paused));
-$('music-track').addEventListener('change',()=>loadTrack(Number($('music-track').value),!audio.paused));
-$('music-seek').addEventListener('input',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=Number($('music-seek').value)/1000*audio.duration;});
-$('music-volume').addEventListener('input',()=>{audio.volume=Number($('music-volume').value);});
-$('music-local').addEventListener('change',e=>{const files=Array.from(e.target.files||[]);if(!files.length)return;audio.pause();for(const url of localUrls)URL.revokeObjectURL(url);localUrls=[];musicTracks=files.map(file=>{const src=URL.createObjectURL(file);localUrls.push(src);return {title:file.name.replace(/\.[^.]+$/,''),src,kind:'本地音频'};});trackIndex=0;musicList();loadTrack(0,false);});
-$('music-official').addEventListener('click',()=>{audio.pause();musicTracks=[...officialTracks];trackIndex=0;musicList();loadTrack(0,false);for(const url of localUrls)URL.revokeObjectURL(url);localUrls=[];});
+$('music-prev').addEventListener('click', () => loadTrack(trackIndex - 1, !audio.paused));
+$('music-next').addEventListener('click', () => loadTrack(trackIndex + 1, !audio.paused));
+trackList.addEventListener('click', event => {
+  const button = event.target.closest('[data-track]');
+  if (!button) return;
+  const index = Number(button.dataset.track);
+  if (index !== trackIndex || !audio.src || audio.error) loadTrack(index, true);
+  else if (audio.paused) startMusic();
+});
+$('music-seek').addEventListener('input', () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    audio.currentTime = Number($('music-seek').value) / 1000 * audio.duration;
+    paintProgress();
+  }
+});
+$('music-volume').addEventListener('input', () => { audio.volume = Number($('music-volume').value); });
 musicList();
-paintTrack(officialTracks[0]);
+if (musicTracks.length) {
+  paintTrack(musicTracks[0]);
+  $('music-seek').disabled = true;
+} else {
+  $('music-queue').hidden = true;
+  for (const id of ['music-prev', 'music-play', 'music-next', 'music-seek', 'music-volume']) $(id).disabled = true;
+  $('music-message').textContent = '暂无曲目';
+}
 </script>
 </body>
 </html>

@@ -5,7 +5,8 @@ import subprocess
 from discovery_site import approved_streams, build_site, load_approvals
 
 PUBLIC_PATHS = ["god-shelf.html", "index.html", "docs/god-shelf.html", "discovery-data",
-                "discovery-assets.json", "discovery-status.json", "assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/music", "assets/selected-covers"]
+                "discovery-assets.json", "discovery-status.json", "assets/bocchi-livehouse-v1.webp",
+                "assets/livehouse-room-v6.webp", "assets/calendar-ticket-v1.jpg", "assets/music", "assets/selected-covers"]
 
 
 def git(root, *args):

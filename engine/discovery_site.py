@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import shutil
 
-VERSION = "bocchi-v8"
+VERSION = "bocchi-v9"
 CHUNK_SIZE = 96
 PAGE_SIZE = 24
 FIELDS = ("bvid", "title", "owner", "pic", "dur", "pubdate", "view",
@@ -144,21 +144,29 @@ def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=N
     index = asset(folder, ".json", compact_json([public(r) for r in streams["archive"]]))
     worker = "const INDEX=" + json.dumps(index.split("/")[-1]) + ";\n" + (root / "engine/discovery_search.js").read_text(encoding="utf-8")
     worker_path = asset(folder, ".worker.js", worker)
-    for relative in ("assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/music/kessoku.jpg", "assets/music/re-kessoku.jpg"):
-        hero_source = root / relative
-        if not hero_source.exists():
-            continue
-        (output / "assets").mkdir(exist_ok=True)
-        hero_dest = output / relative
-        hero_dest.parent.mkdir(parents=True, exist_ok=True)
-        if hero_source.resolve() != hero_dest.resolve():
-            shutil.copy2(hero_source, hero_dest)
+    playlist_path = root / "assets/music/playlist.json"
+    music = json.loads(playlist_path.read_text(encoding="utf-8")) if playlist_path.exists() else []
+    images = {"assets/bocchi-livehouse-v1.webp", "assets/livehouse-room-v6.webp", "assets/calendar-ticket-v1.jpg"}
+    for track in music:
+        if not re.fullmatch(r"assets/music/tracks/[a-d][0-9]{2}\.mp3", track["src"]):
+            raise ValueError("Playlist audio must be bundled with the site.")
+        if not (root / track["src"]).is_file():
+            raise FileNotFoundError(track["src"])
+        images.add(track["art"])
+    if output.resolve() != root.resolve():
+        media = images | {track["src"] for track in music}
+        for relative in sorted(media):
+            source = root / relative
+            if source.is_file():
+                destination = output / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, destination)
     boot = {"version": VERSION, "curated": curated, "fields": FIELDS, "pageSize": PAGE_SIZE, "chunkSize": CHUNK_SIZE,
             "catalog_id": meta["catalog_id"], "experiment_id": (experiment or {}).get("id"),
             "generated_at": china_now(), "latest_day": day, "total": len(streams["archive"]), "streams": stream_meta,
             "initial": [public(r) for r in streams["daily"][:PAGE_SIZE]], "worker": worker_path,
             "calendar": {key[4:]:len(value) for key,value in streams.items() if key.startswith("day:")},
-            "music": json.loads((root / "assets/music/playlist.json").read_text(encoding="utf-8")) if (root / "assets/music/playlist.json").exists() else [],
+            "music": music,
             "collection": json.loads((root / "data/review/last_success.json").read_text(encoding="utf-8"))
             if (root / "data/review/last_success.json").exists() else None}
     template = (root / "engine/discovery_template.html").read_text(encoding="utf-8")

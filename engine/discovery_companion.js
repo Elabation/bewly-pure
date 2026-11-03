@@ -1,11 +1,11 @@
 // Calendar, a scroll-responsive cover, and the turntable.
 const calendarDates=Object.keys(BOOT.calendar||{}).sort();
 const bandDates = {
-  '0221': ['后藤一里生日', 'hitori', 'https://bocchi.rocks/birthday/hitori.html'],
-  '0421': ['喜多郁代生日', 'kita', 'https://bocchi.rocks/kessokuband/info/?article_id=60509'],
-  '0529': ['伊地知虹夏生日', 'nijika', 'https://bocchi.rocks/kessokuband/info/?article_id=60699'],
-  '0918': ['山田凉生日', 'ryo', 'https://bocchi.rocks/kessokuband/info/?article_id=61533'],
-  '1225': ['首张专辑数字发行纪念日', 'hitori', 'https://mora.jp/package/43000100/SVWC70613B00Z_48/']
+  '0221': ['后藤一里生日', 'hitori'],
+  '0421': ['喜多郁代生日', 'kita'],
+  '0529': ['伊地知虹夏生日', 'nijika'],
+  '0918': ['山田凉生日', 'ryo'],
+  '1225': ['首张专辑数字发行纪念日', 'hitori']
 };
 let calendarMonth=(activeDay||BOOT.generated_at.slice(0,7).replace('-','')).slice(0,6);
 const calendarUnit = BOOT.curated ? '部入选' : '条候选';
@@ -28,7 +28,7 @@ function paintCalendar(){
  const occasion = $('calendar-occasion');
  occasion.hidden = false;
  occasion.innerHTML = monthEvent
-   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>`
+   ? `${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}`
    : `<button data-occasion-month="${upcoming[0].slice(0, 2)}">${upcoming[0].slice(0, 2)}/${upcoming[0].slice(2)} · ${upcoming[1][0]}</button>`;
  const buildYear = Number(BOOT.generated_at.slice(0, 4));
  const firstYear = calendarDates.length ? Number(calendarDates[0].slice(0, 4)) : buildYear;
@@ -75,163 +75,152 @@ $('jump-end').addEventListener('click', () => {
   window.scrollTo(0, document.documentElement.scrollHeight);
 });
 
-const audio=$('music-audio'),officialTracks=BOOT.music||[];let musicTracks=[...officialTracks],trackIndex=0,localUrls=[],fallbackTried=false;
-const musicTime=n=>Number.isFinite(n)?Math.floor(n/60)+':'+String(Math.floor(n%60)).padStart(2,'0'):'—';
+const audio = $('music-audio');
+const deck = $('turntable');
+const trackList = $('music-track');
+const musicTracks = BOOT.music || [];
+let trackIndex = 0;
+
+const musicTime = seconds => Number.isFinite(seconds)
+  ? Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0')
+  : '—';
+
 function musicList() {
-  $('music-track').innerHTML = musicTracks.map((track, index) =>
-    `<option value="${index}">${esc(track.title)}</option>`).join('');
-  $('music-track').value = String(trackIndex);
+  const groups = new Map();
+  musicTracks.forEach((track, index) => {
+    const items = groups.get(track.side) || [];
+    items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.number)}</span>${esc(track.title)}</button></li>`);
+    groups.set(track.side, items);
+  });
+  trackList.innerHTML = Array.from(groups, ([side, items]) =>
+    `<section class="track-side track-side-${esc(side.toLowerCase())}"><h4>${esc(side)} 面</h4><ul>${items.join('')}</ul></section>`
+  ).join('');
+  $('music-count').textContent = String(musicTracks.length).padStart(2, '0');
 }
 
 function paintTrack(track) {
-  if (!track) return;
   $('music-title').textContent = track.title;
-  $('music-album').textContent = track.album ? track.album + ' · ' + track.number : '本地音频';
-  $('music-kind').textContent = track.fullVideo ? '完整曲目' : track.kind || '本地音频';
-  $('music-play').textContent = '▶';
-  $('music-play').setAttribute('aria-label', track.fullVideo ? '播放完整曲目' : '播放');
-  $('music-play').title = track.fullVideo ? '播放完整曲目' : '播放';
-  $('music-preview').hidden = !track.fullVideo;
-  $('music-preview').textContent = '试听';
-  $('music-official').hidden = Boolean(track.url);
+  const edition = track.album === track.title ? '单曲' : track.album;
+  $('music-album').textContent = edition + ' · ' + track.side + track.number;
+  deck.dataset.side = track.side;
+  $('deck-side').textContent = track.side + track.number;
   for (const id of ['record-art', 'sleeve-art']) {
-    const art = $(id);
-    art.hidden = !track.art;
-    if (track.art) art.src = track.art;
+    const image = $(id);
+    image.hidden = !track.art;
+    if (track.art && image.getAttribute('src') !== track.art) image.src = track.art;
   }
-  $('music-download').hidden = !track.download;
-  if (track.download) $('music-download').href = track.download;
+  for (const button of trackList.querySelectorAll('[data-track]')) {
+    button.setAttribute('aria-current', String(Number(button.dataset.track) === trackIndex));
+  }
+}
+
+function paintTransport(active) {
+  $('music-play').textContent = active ? 'Ⅱ' : '▶';
+  $('music-play').setAttribute('aria-label', active ? '暂停' : '播放');
+}
+
+function parkArm() {
+  deck.classList.remove('playing', 'arm-down', 'arm-cued');
+  paintTransport(false);
+}
+
+function paintProgress() {
+  const duration = audio.duration;
+  const fraction = Number.isFinite(duration) && duration > 0
+    ? Math.min(1, audio.currentTime / duration) : 0;
+  $('music-elapsed').textContent = musicTime(audio.currentTime);
+  $('music-seek').value = String(fraction * 1000);
+  deck.style.setProperty('--arm-angle', (18 + fraction * 10) + 'deg');
+}
+
+function startMusic() {
+  audio.play().catch(error => {
+    if (error.name === 'AbortError') return;
+    parkArm();
+    $('music-message').textContent = '音频未能播放，请再试一次。';
+  });
 }
 
 function loadTrack(index, play = false) {
-  if (!musicTracks.length) {
-    $('music-message').textContent = '可以选择本地音频播放。';
-    return;
-  }
+  if (!musicTracks.length) return;
   audio.pause();
-  fallbackTried = false;
+  parkArm();
   trackIndex = (index + musicTracks.length) % musicTracks.length;
   const track = musicTracks[trackIndex];
   audio.src = track.src;
-  $('music-track').value = String(trackIndex);
   paintTrack(track);
   $('music-message').textContent = '';
   $('music-seek').value = '0';
+  $('music-seek').disabled = true;
   $('music-elapsed').textContent = '0:00';
   $('music-duration').textContent = '—';
-  $('turntable').style.setProperty('--arm-angle', '26deg');
+  deck.style.setProperty('--arm-angle', '18deg');
   if (play) startMusic();
 }
-function startMusic(){audio.play().catch(()=>{$('music-message').textContent='试听暂时无法连接，可选择本地音频或打开完整曲目。';});}
-function paintTransport(playing) {
-  if (musicTracks[trackIndex]?.fullVideo) {
-    $('music-preview').textContent = playing ? '暂停试听' : '试听';
-    return;
-  }
-  $('music-play').textContent = playing ? 'Ⅱ' : '▶';
-  $('music-play').setAttribute('aria-label', playing ? '暂停' : '播放');
-}
-function transportState(playing) {
-  $('turntable').classList.toggle('playing', playing);
-  paintTransport(playing);
-}
-audio.addEventListener('play',()=>{paintTransport(true);$('music-message').textContent='正在连接音源…';});
-audio.addEventListener('playing',()=>{transportState(true);$('music-message').textContent='';});
-audio.addEventListener('waiting',()=>{$('turntable').classList.remove('playing');$('music-message').textContent='正在缓冲…';});
-audio.addEventListener('pause',()=>transportState(false));audio.addEventListener('error',()=>{transportState(false);const backup=musicTracks[trackIndex]?.fallbackSrc;if(backup&&!fallbackTried){fallbackTried=true;audio.src=backup;startMusic();return;}$('music-message').textContent='音频加载失败，可切换曲目或选择本地音频。';});
-audio.addEventListener('loadedmetadata',()=>{$('music-duration').textContent=musicTime(audio.duration);});
-audio.addEventListener('timeupdate', () => {
-  const fraction = audio.duration > 0 ? Math.min(1, audio.currentTime / audio.duration) : 0;
-  $('music-elapsed').textContent = musicTime(audio.currentTime);
-  $('music-seek').value = String(fraction * 1000);
-  $('turntable').style.setProperty('--arm-angle', (26 + fraction * 10) + 'deg');
+
+audio.addEventListener('play', () => {
+  paintTransport(true);
+  deck.classList.add('arm-cued');
 });
-audio.addEventListener('ended',()=>loadTrack(trackIndex+1,true));audio.volume=.25;
-function toggleAudio() {
-  if (!audio.src) loadTrack(trackIndex, false);
-  if (audio.paused) startMusic();
-  else audio.pause();
-}
-
-const fullPlayer = $('full-player');
-let youtubeApi, fullSession = 0, fullControl, fullWait;
-
-function loadYouTubeApi() {
-  if (window.YT?.Player) return Promise.resolve(window.YT);
-  if (youtubeApi) return youtubeApi;
-  youtubeApi = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://www.youtube.com/iframe_api';
-    script.onerror = () => { youtubeApi = null; script.remove(); reject(); };
-    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
-    document.head.appendChild(script);
-  });
-  return youtubeApi;
-}
-
-function openFullTrack(track) {
-  audio.pause();
-  const session = ++fullSession;
-  const message = $('full-player-message');
-  message.textContent = '正在连接原曲…';
-  fullPlayer.classList.remove('unavailable');
-  const frame = document.createElement('iframe');
-  frame.title = track.title + ' · 完整曲目';
-  frame.referrerPolicy = 'strict-origin-when-cross-origin';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  const embed = new URL('https://www.youtube-nocookie.com/embed/' + track.fullVideo);
-  embed.search = new URLSearchParams({autoplay: '1', playsinline: '1', enablejsapi: '1', origin: location.origin});
-  frame.src = embed.href;
-  $('full-track-title').textContent = track.title;
-  $('full-track-link').href = 'https://www.youtube.com/watch?v=' + track.fullVideo;
-  $('full-record-art').src = track.art;
-  $('full-player-frame').replaceChildren(frame);
-  fullPlayer.showModal();
-  fullWait = setTimeout(() => {
-    if (session === fullSession) message.textContent = '播放器尚未响应，可以直接打开原曲。';
-  }, 7000);
-  loadYouTubeApi().then(YT => {
-    if (session !== fullSession) return;
-    fullControl = new YT.Player(frame, {events: {
-      onReady: event => {
-        if (session !== fullSession) return;
-        event.target.setVolume(audio.volume * 100);
-        clearTimeout(fullWait);
-        message.textContent = '';
-      },
-      onError: () => {
-        if (session !== fullSession) return;
-        clearTimeout(fullWait);
-        fullPlayer.classList.remove('playing');
-        fullPlayer.classList.add('unavailable');
-        message.textContent = '这首曲目在当前环境无法嵌入播放，可以打开原曲。';
-      },
-      onStateChange: event => {
-        if (session === fullSession) fullPlayer.classList.toggle('playing', event.data === 1);
-      }
-    }});
-  }).catch(() => {}); // Native iframe controls are available without the API.
-}
-$('close-full-player').addEventListener('click', () => fullPlayer.close());
-fullPlayer.addEventListener('close', () => {
-  fullSession++;
-  clearTimeout(fullWait);
-  fullPlayer.classList.remove('playing', 'unavailable');
-  fullControl?.destroy();
-  fullControl = null;
-  $('full-player-frame').replaceChildren();
+audio.addEventListener('playing', () => {
+  deck.classList.add('playing', 'arm-cued', 'arm-down');
+  $('music-message').textContent = '';
 });
+audio.addEventListener('waiting', () => {
+  if (audio.paused) return;
+  deck.classList.remove('playing');
+  $('music-message').textContent = '正在缓冲…';
+});
+audio.addEventListener('pause', () => {
+  if (!audio.paused) return;
+  parkArm();
+  $('music-message').textContent = '';
+});
+audio.addEventListener('error', () => {
+  parkArm();
+  $('music-message').textContent = '音频加载失败，请重试或换一首。';
+});
+audio.addEventListener('loadedmetadata', () => {
+  $('music-duration').textContent = musicTime(audio.duration);
+  $('music-seek').disabled = !Number.isFinite(audio.duration);
+  paintProgress();
+});
+audio.addEventListener('timeupdate', paintProgress);
+audio.addEventListener('ended', () => loadTrack(trackIndex + 1, true));
+audio.volume = .25;
+
 $('music-play').addEventListener('click', () => {
-  const track = musicTracks[trackIndex];
-  if (track?.fullVideo) openFullTrack(track);
-  else toggleAudio();
+  if (!musicTracks.length) return;
+  if (!audio.paused) {
+    audio.pause();
+  } else if (!audio.src || audio.error) {
+    loadTrack(trackIndex, true);
+  } else {
+    startMusic();
+  }
 });
-$('music-preview').addEventListener('click', toggleAudio);
-$('music-prev').addEventListener('click',()=>loadTrack(trackIndex-1,!audio.paused));$('music-next').addEventListener('click',()=>loadTrack(trackIndex+1,!audio.paused));
-$('music-track').addEventListener('change',()=>loadTrack(Number($('music-track').value),!audio.paused));
-$('music-seek').addEventListener('input',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=Number($('music-seek').value)/1000*audio.duration;});
-$('music-volume').addEventListener('input',()=>{audio.volume=Number($('music-volume').value);});
-$('music-local').addEventListener('change',e=>{const files=Array.from(e.target.files||[]);if(!files.length)return;audio.pause();for(const url of localUrls)URL.revokeObjectURL(url);localUrls=[];musicTracks=files.map(file=>{const src=URL.createObjectURL(file);localUrls.push(src);return {title:file.name.replace(/\.[^.]+$/,''),src,kind:'本地音频'};});trackIndex=0;musicList();loadTrack(0,false);});
-$('music-official').addEventListener('click',()=>{audio.pause();musicTracks=[...officialTracks];trackIndex=0;musicList();loadTrack(0,false);for(const url of localUrls)URL.revokeObjectURL(url);localUrls=[];});
+$('music-prev').addEventListener('click', () => loadTrack(trackIndex - 1, !audio.paused));
+$('music-next').addEventListener('click', () => loadTrack(trackIndex + 1, !audio.paused));
+trackList.addEventListener('click', event => {
+  const button = event.target.closest('[data-track]');
+  if (!button) return;
+  const index = Number(button.dataset.track);
+  if (index !== trackIndex || !audio.src || audio.error) loadTrack(index, true);
+  else if (audio.paused) startMusic();
+});
+$('music-seek').addEventListener('input', () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    audio.currentTime = Number($('music-seek').value) / 1000 * audio.duration;
+    paintProgress();
+  }
+});
+$('music-volume').addEventListener('input', () => { audio.volume = Number($('music-volume').value); });
 musicList();
-paintTrack(officialTracks[0]);
+if (musicTracks.length) {
+  paintTrack(musicTracks[0]);
+  $('music-seek').disabled = true;
+} else {
+  $('music-queue').hidden = true;
+  for (const id of ['music-prev', 'music-play', 'music-next', 'music-seek', 'music-volume']) $(id).disabled = true;
+  $('music-message').textContent = '暂无曲目';
+}
