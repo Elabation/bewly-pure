@@ -22,10 +22,14 @@ function paintCalendar(){
    html += `<button data-day="${key}" ${count ? '' : 'disabled'} class="${classes}" aria-pressed="${key === activeDay}" aria-label="${year}年${month}月${day}日，${label}" title="${label}">${day}</button>`;
  }
  $('calendar-days').innerHTML=html;$('calendar-selected-date').textContent=activeDay?date(activeDay):'暂无上架';$('calendar-selected-count').textContent=((BOOT.calendar||{})[activeDay]||0)+' '+calendarUnit;
- const monthEvent = Object.entries(bandDates).find(([day]) => day.slice(0, 2) === calendarMonth.slice(4));
- $('calendar-occasion').hidden = !monthEvent;
- $('calendar-occasion').innerHTML = monthEvent
-   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>` : '';
+ const dates = Object.entries(bandDates).sort();
+ const monthEvent = dates.find(([day]) => day.slice(0, 2) === calendarMonth.slice(4));
+ const upcoming = dates.find(([day]) => day.slice(0, 2) > calendarMonth.slice(4)) || dates[0];
+ const occasion = $('calendar-occasion');
+ occasion.hidden = false;
+ occasion.innerHTML = monthEvent
+   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>`
+   : `<button data-occasion-month="${upcoming[0].slice(0, 2)}">${upcoming[0].slice(0, 2)}/${upcoming[0].slice(2)} · ${upcoming[1][0]}</button>`;
  const buildYear = Number(BOOT.generated_at.slice(0, 4));
  const firstYear = calendarDates.length ? Number(calendarDates[0].slice(0, 4)) : buildYear;
  $('calendar-prev').disabled = calendarMonth <= Math.min(buildYear - 1, firstYear) + '01';
@@ -33,6 +37,12 @@ function paintCalendar(){
 }
 function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();}
 $('calendar-prev').addEventListener('click',()=>moveMonth(-1));$('calendar-next').addEventListener('click',()=>moveMonth(1));
+$('calendar-occasion').addEventListener('click', event => {
+  const month = event.target.closest('[data-occasion-month]')?.dataset.occasionMonth;
+  if (!month) return;
+  calendarMonth = calendarMonth.slice(0, 4) + month;
+  paintCalendar();
+});
 $('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 $('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 paintCalendar();
@@ -144,20 +154,73 @@ function toggleAudio() {
 }
 
 const fullPlayer = $('full-player');
+let youtubeApi, fullSession = 0, fullControl, fullWait;
+
+function loadYouTubeApi() {
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (youtubeApi) return youtubeApi;
+  youtubeApi = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => { youtubeApi = null; script.remove(); reject(); };
+    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
+    document.head.appendChild(script);
+  });
+  return youtubeApi;
+}
+
 function openFullTrack(track) {
   audio.pause();
+  const session = ++fullSession;
+  const message = $('full-player-message');
+  message.textContent = '正在连接原曲…';
+  fullPlayer.classList.remove('unavailable');
   const frame = document.createElement('iframe');
   frame.title = track.title + ' · 完整曲目';
   frame.referrerPolicy = 'strict-origin-when-cross-origin';
   frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  frame.src = 'https://www.youtube-nocookie.com/embed/' + track.fullVideo + '?autoplay=1&playsinline=1';
+  const embed = new URL('https://www.youtube-nocookie.com/embed/' + track.fullVideo);
+  embed.search = new URLSearchParams({autoplay: '1', playsinline: '1', enablejsapi: '1', origin: location.origin});
+  frame.src = embed.href;
   $('full-track-title').textContent = track.title;
   $('full-track-link').href = 'https://www.youtube.com/watch?v=' + track.fullVideo;
+  $('full-record-art').src = track.art;
   $('full-player-frame').replaceChildren(frame);
   fullPlayer.showModal();
+  fullWait = setTimeout(() => {
+    if (session === fullSession) message.textContent = '播放器尚未响应，可以直接打开原曲。';
+  }, 7000);
+  loadYouTubeApi().then(YT => {
+    if (session !== fullSession) return;
+    fullControl = new YT.Player(frame, {events: {
+      onReady: event => {
+        if (session !== fullSession) return;
+        event.target.setVolume(audio.volume * 100);
+        clearTimeout(fullWait);
+        message.textContent = '';
+      },
+      onError: () => {
+        if (session !== fullSession) return;
+        clearTimeout(fullWait);
+        fullPlayer.classList.remove('playing');
+        fullPlayer.classList.add('unavailable');
+        message.textContent = '这首曲目在当前环境无法嵌入播放，可以打开原曲。';
+      },
+      onStateChange: event => {
+        if (session === fullSession) fullPlayer.classList.toggle('playing', event.data === 1);
+      }
+    }});
+  }).catch(() => {}); // Native iframe controls are available without the API.
 }
 $('close-full-player').addEventListener('click', () => fullPlayer.close());
-fullPlayer.addEventListener('close', () => $('full-player-frame').replaceChildren());
+fullPlayer.addEventListener('close', () => {
+  fullSession++;
+  clearTimeout(fullWait);
+  fullPlayer.classList.remove('playing', 'unavailable');
+  fullControl?.destroy();
+  fullControl = null;
+  $('full-player-frame').replaceChildren();
+});
 $('music-play').addEventListener('click', () => {
   const track = musicTracks[trackIndex];
   if (track?.fullVideo) openFullTrack(track);

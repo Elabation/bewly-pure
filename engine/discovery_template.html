@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4ebed">
+  <meta name="theme-color" content="#241b21">
   <title>每日视频目录</title>
   <style>__STYLE__</style>
 </head>
@@ -15,8 +15,7 @@
       <time id="updated"></time>
     </div>
   </header>
-  <div class="shell">
-    <main id="discover">
+  <div class="control-band">
       <div class="controls">
         <nav class="tabs" aria-label="视频分区">
           <button data-tab="daily" class="on">本期</button>
@@ -28,6 +27,9 @@
           <input id="search" aria-label="搜索入选作品" placeholder="标题 / UP / BV号" maxlength="120" autocomplete="off">
         </div>
       </div>
+  </div>
+  <div class="shell">
+    <main id="discover">
       <div class="catalog-layout">
         <section class="catalog-main">
           <div class="section-heading">
@@ -116,8 +118,17 @@
   </button>
   <dialog class="full-player" id="full-player" aria-labelledby="full-track-title">
     <header><h3 id="full-track-title"></h3><button id="close-full-player" type="button" aria-label="关闭播放器">×</button></header>
-    <div id="full-player-frame"></div>
-    <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开 ↗</a>
+    <div class="full-player-layout">
+      <div class="full-record" aria-hidden="true">
+        <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="full-record-art" alt=""></div></div></div>
+        <div class="tonearm"><i></i></div>
+      </div>
+      <div class="full-media">
+        <div id="full-player-frame"></div>
+        <p id="full-player-message" role="status"></p>
+        <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开原曲 ↗</a>
+      </div>
+    </div>
   </dialog>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 

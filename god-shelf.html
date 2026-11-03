@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4ebed">
+  <meta name="theme-color" content="#241b21">
   <title>每日视频目录</title>
   <style>:root {
-  color-scheme: light;
-  --paper: #f4ebed;
-  --panel: #fff9fa;
-  --ink: #31272f;
-  --muted: #74616c;
-  --line: #ddcdd5;
-  --pink: #a34f77;
+  color-scheme: dark;
+  --paper: #241b21;
+  --panel: #2a2026;
+  --ink: #f5e9e7;
+  --muted: #d7bdc3;
+  --line: #b0928470;
+  --pink: #ee9fbe;
   --blue: #78bad7;
   --yellow: #f4cf65;
   --red: #cf6964;
@@ -21,11 +21,11 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.55; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.55; isolation: isolate; }
 body::before {
   content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
-  background: url("assets/livehouse-room-v6.webp") center / cover no-repeat;
-  opacity: .13;
+  background: linear-gradient(180deg,#281d2670,#22182042 60%,#21171e28),
+    url("assets/livehouse-room-v6.webp") center / cover no-repeat;
 }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -46,11 +46,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hero-art {
   position: absolute; width: 100%; height: 100%; inset: 0;
   object-fit: cover; object-position: 50% calc(24% + var(--pull) * 13%);
-  mask-image: linear-gradient(#000 0%, #000 60%, #000d 78%, transparent 100%);
 }
 .hero::after {
   position: absolute; content: ""; inset: 0; pointer-events: none;
-  background: linear-gradient(#21192199, transparent 70px);
+  background: linear-gradient(0deg,#24191f 0,#24191f99 15px,transparent 58px),
+    linear-gradient(#21192188,transparent 64px);
 }
 .top {
   position: relative; z-index: 1; width: min(100% - 64px, 1680px); margin: auto;
@@ -60,10 +60,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .clip-mark { display: flex; gap: 4px; transform: rotate(-11deg); }
 .clip-mark i { width: 11px; height: 11px; border-radius: 1px; background: var(--blue); box-shadow: 1px 2px #20182266; }
 .clip-mark i:last-child { background: var(--yellow); transform: translateY(5px); }
-.shell { width: min(100% - 64px, 1680px); margin: -9px auto 0; position: relative; }
+.shell { width: min(100% - 64px, 1680px); margin: 0 auto; position: relative; }
+.control-band {
+  background: #24191f; border-bottom: 1px solid #aa7e6680;
+  margin-bottom: 16px; box-shadow: 0 10px 22px #1d141a60;
+}
 .controls {
   display: flex; justify-content: space-between; align-items: center; gap: 14px;
-  padding: 0 3px; border-bottom: 1px solid var(--line); margin-bottom: 14px;
+  width: min(100% - 64px, 1680px); margin: auto; padding: 0 10px;
 }
 .tabs { display: flex; gap: 18px; }
 .tabs button, .calendar-panel button, .record-panel button, .utility button, .pager button {
@@ -73,10 +77,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .tabs button.on { border-color: var(--pink); color: var(--ink); }
 .searchbox { width: min(270px, 40%); position: relative; }
 .searchbox span { position: absolute; inset: 5px auto auto 8px; color: var(--muted); }
-.searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 4px; padding: 5px 8px 5px 25px; background: #fff9; font-size: 12px; }
+.searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px 5px 25px; background: #20181c; font-size: 12px; }
 .catalog-layout { display: grid; grid-template-columns: minmax(0,1fr) 234px; gap: 18px; align-items: start; }
-.catalog-main, .calendar-panel, .record-panel { background: #fff9faee; border: 1px solid #fff9; border-radius: 8px; }
-.catalog-main { min-width: 0; padding: 14px 17px; border-radius: 2px; }
+.catalog-main, .calendar-panel, .record-panel { border: 1px solid var(--line); }
+.catalog-main { min-width: 0; padding: 14px 17px; background: linear-gradient(90deg,#211920bd,#211920da 31%); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
 .section-heading h2, .calendar-heading h3, .record-heading h3 { margin: 0; font-weight: 600; }
 .section-heading h2 { font-size: 17px; }
@@ -85,7 +89,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .notice:empty { display: none; }
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px 12px; }
 .card { min-width: 0; }
-.cover { display: block; overflow: hidden; border-radius: 4px; aspect-ratio: 16 / 10; position: relative; background: #e7d9df; }
+.cover { display: block; overflow: hidden; border-radius: 3px; aspect-ratio: 16 / 10; position: relative; background: #483039; }
 .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .duration, .corner { position: absolute; font-size: 10px; background: #262027d9; color: #fff; border-radius: 2px; padding: 1px 5px; }
 .duration { bottom: 5px; right: 5px; font-variant-numeric: tabular-nums; }
@@ -100,17 +104,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .empty { grid-column: 1 / -1; padding: 28px 0; color: var(--muted); }
 .pager { display: flex; justify-content: center; align-items: center; margin-top: 18px; gap: 3px; }
 .pager button, .pager span { min-width: 36px; min-height: 34px; display: grid; place-items: center; }
-.pager button { border-radius: 50%; background: #f1e2e9; font-size: 17px; }
-.pager button:not(:disabled):hover { background: #e9cbd9; }
-.pager button:disabled { color: #a08a97; background: transparent; }
+.pager button { border: 1px solid var(--line); border-radius: 50%; background: #3b2a34; font-size: 17px; }
+.pager button:not(:disabled):hover { background: #654254; }
+.pager button:disabled { color: #9a7d87; background: transparent; border-color: transparent; }
 .pager span { padding: 0 13px; font-variant-numeric: tabular-nums; color: var(--muted); }
 .catalog-aside { display: grid; gap: 13px; min-width: 0; }
-.calendar-panel { padding: 13px 12px 0; position: relative; }
+.calendar-panel { padding: 13px 12px 0; position: relative; background: linear-gradient(145deg,#3c2c2b,#2d2024 68%); border-radius: 5px; }
 .calendar-heading, .record-heading, .calendar-month, .calendar-selected, .music-times, .music-bottom, .local-audio { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.calendar-heading { margin-bottom: 9px; }
+.calendar-heading { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #bb886a50; }
 .calendar-heading h3, .record-heading h3 { font-size: 13px; }
-.ticket-mark { display: inline-flex; align-items: center; gap: 2px; }
-.ticket-mark i { width: 4px; height: 12px; border-radius: 1px; transform: rotate(12deg); background: var(--blue); }
+.ticket-mark { display: inline-flex; align-items: center; gap: 3px; transform: rotate(-8deg); }
+.ticket-mark i { width: 5px; height: 14px; border-radius: 1px; transform: rotate(12deg); background: var(--blue); box-shadow: 1px 2px #151013; }
 .ticket-mark i:nth-child(2) { background: var(--yellow); }
 .ticket-mark i:nth-child(3) { background: #d998b7; }
 .ticket-mark i:nth-child(4) { background: var(--red); }
@@ -120,36 +124,37 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .calendar-week, .calendar-days { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); text-align: center; gap: 1px; }
 .calendar-week { color: var(--muted); font-size: 10px; margin: 5px 0 2px; }
 .calendar-days button, .calendar-blank { min-height: 25px; font-size: 11px; position: relative; z-index: 0; font-variant-numeric: tabular-nums; }
-.calendar-days button:disabled { color: #a28d98; }
+.calendar-days button:disabled { color: #af939b; }
 .calendar-days button:not(:disabled)::after { content: ""; position: absolute; background: var(--red); border-radius: 50%; width: 3px; height: 3px; bottom: 1px; left: calc(50% - 1px); }
-.calendar-days button.chosen { color: white; }
-.calendar-days button.chosen::before { content: ""; position: absolute; z-index: -1; inset: 1px 2px 0; background: var(--pink); clip-path: polygon(19% 0,81% 0,100% 32%,81% 70%,50% 100%,19% 70%,0 32%); }
+.calendar-days button.chosen { color: #2d1824; font-weight: 600; }
+.calendar-days button.chosen::before { content: ""; position: absolute; z-index: -1; inset: 0 1px; background: var(--pink); clip-path: polygon(19% 0,81% 0,100% 32%,81% 70%,50% 100%,19% 70%,0 32%); }
 .calendar-days button.chosen::after { display: none; }
 .calendar-days .band-date { box-shadow: inset 0 -2px var(--band); }
 .band-date.hitori { --band: #d998b7; }
 .band-date.kita { --band: var(--red); }
 .band-date.nijika { --band: var(--yellow); }
 .band-date.ryo { --band: var(--blue); }
-.calendar-occasion { color: var(--muted); font-size: 10px; margin: 5px 0 0; }
-.calendar-occasion a:hover { color: var(--pink); }
-.calendar-selected { margin: 9px -12px 0; padding: 9px 11px; background: #f1e2e8; border-top: 1px dashed #c6a5b8; border-radius: 0 0 7px 7px; color: var(--muted); font-size: 11px; }
-.calendar-selected::before, .calendar-selected::after { content: ""; position: absolute; bottom: 28px; width: 8px; height: 8px; background: var(--paper); border-radius: 50%; }
+.calendar-occasion { color: #ebc2a0; font-size: 10px; margin: 8px 0 0; }
+.calendar-occasion button { padding: 0; color: inherit; text-align: left; }
+.calendar-occasion a:hover, .calendar-occasion button:hover { color: var(--pink); }
+.calendar-selected { margin: 10px -12px 0; padding: 9px 11px; background: #4d342e; border-top: 1px dashed #c99a79; border-radius: 0 0 4px 4px; color: #f3d7ba; font-size: 11px; }
+.calendar-selected::before, .calendar-selected::after { content: ""; position: absolute; bottom: 30px; width: 8px; height: 8px; background: var(--paper); border-radius: 50%; }
 .calendar-selected::before { left: -4px; }
 .calendar-selected::after { right: -4px; }
-.calendar-selected button { color: #743752; padding: 0; }
-.record-panel { padding: 12px; }
+.calendar-selected button { color: #f4c9a8; padding: 0; }
+.record-panel { padding: 12px; background: #251b23f0; border-radius: 5px; }
 .record-heading { margin-bottom: 10px; }
 .record-heading span, .record-panel label, .music-bottom, .local-audio, .music-message { font-size: 10px; color: var(--muted); }
-.turntable { height: 155px; overflow: hidden; position: relative; background: linear-gradient(140deg,#5f4b56,#2a232d 72%); border-radius: 5px; box-shadow: inset 0 0 0 1px #7d6872, inset 0 -4px #221b24; }
-.turntable-plate { position: absolute; left: 9px; top: 9px; width: 132px; aspect-ratio: 1; border: 4px solid #a197a0; border-radius: 50%; box-shadow: 0 3px 9px #0f0d14b3; }
-.vinyl { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; background: repeating-radial-gradient(circle,#16141c 0 1px,#35313c 2px,#1b1920 3px); animation: vinyl 1.8s linear infinite paused; }
-.record-label { position: relative; width: 42%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #dbadc4; color: #3e2a3b; font-size: 10px; }
+.turntable { height: 199px; overflow: hidden; position: relative; background: radial-gradient(ellipse at 34% 35%,#51343e,#30232e 62%,#221b24); border-radius: 3px; box-shadow: inset 0 0 0 1px #866770, inset 0 -3px #18141a; }
+.turntable-plate { position: absolute; left: 10px; top: 9px; width: min(176px, 86%); aspect-ratio: 1; border: 2px solid #9d8690; border-radius: 50%; box-shadow: 0 4px 12px #09070bba; }
+.vinyl { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(from 25deg,#fff0,#b6a8c145 31deg,#fff0 56deg,#fff0 175deg,#dfc4b53d 205deg,#fff0 235deg),repeating-radial-gradient(circle,#17131a 0 1px,#37303a 2px,#1e1821 3px); animation: vinyl 1.8s linear infinite paused; }
+.record-label { position: relative; width: 69%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #dbadc4; color: #3e2a3b; font-size: 10px; box-shadow: 0 0 0 2px #6e555f, 0 0 0 5px #1a131c; }
 .record-label img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 .record-label::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 5px; height: 5px; border-radius: 50%; background: #16141a; border: 1px solid #bdaab5; }
-.tonearm { position: absolute; right: 15px; top: 14px; width: 15px; height: 106px; transform-origin: 7px 7px; transition: transform .55s ease; }
+.tonearm { position: absolute; right: 12px; top: 15px; width: 15px; height: 135px; transform-origin: 7px 7px; transition: transform .55s ease; }
 .tonearm::before { content: ""; position: absolute; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle,#565059 15%,#b8afb7 22%,#7b727c 64%,#29242c 68%); z-index: 1; }
-.tonearm::after { content: ""; position: absolute; top: 9px; left: 5px; height: 85px; width: 5px; border-radius: 3px; background: linear-gradient(90deg,#78727c,#dbd3dc,#7b747e); transform-origin: top; transform: rotate(13deg); }
-.tonearm i { position: absolute; left: -10px; top: 89px; width: 11px; height: 17px; border: 2px solid #39303a; background: #c8b6c3; transform: rotate(13deg); z-index: 1; }
+.tonearm::after { content: ""; position: absolute; top: 9px; left: 5px; height: 116px; width: 5px; border-radius: 3px; background: linear-gradient(90deg,#78727c,#dbd3dc,#7b747e); transform-origin: top; transform: rotate(9deg); }
+.tonearm i { position: absolute; left: -15px; top: 119px; width: 11px; height: 17px; border: 2px solid #39303a; background: #c8b6c3; transform: rotate(9deg); z-index: 1; }
 .power-led { position: absolute; left: 12px; bottom: 7px; width: 4px; height: 4px; border-radius: 50%; background: #786873; }
 .deck-type { position: absolute; bottom: 8px; right: 10px; font-size: 7px; color: #d7c2d0; letter-spacing: 1px; }
 .deck-strobe { position: absolute; left: 18px; bottom: 6px; width: 36px; height: 3px; background: repeating-linear-gradient(90deg,#a58d9e 0 1px,transparent 1px 4px); }
@@ -158,55 +163,64 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .playing .power-led { background: #f5a1ca; box-shadow: 0 0 5px #fa8ec0; }
 @keyframes vinyl { to { transform: rotate(360deg); } }
 .music-sleeve { display: flex; align-items: center; gap: 8px; margin-top: 10px; min-width: 0; }
-.music-sleeve img { width: 43px; height: 43px; object-fit: cover; border-radius: 2px; background: #ead6e2; }
+.music-sleeve img { width: 43px; height: 43px; object-fit: cover; border-radius: 2px; background: #4d3243; }
 .music-sleeve div { min-width: 0; }
 .music-sleeve strong, .music-sleeve small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-sleeve strong { font-size: 11px; font-weight: 600; }
 .music-sleeve small { font-size: 10px; color: var(--muted); }
 .record-panel select { margin-top: 7px; width: 100%; padding: 4px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; font-size: 11px; }
 .music-transport { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 5px 0; }
-.music-transport button { width: 30px; height: 30px; font-size: 16px; color: #75455f; }
-.music-transport #music-play { border-radius: 50%; background: #f1e2e9; font-size: 13px; }
+.music-transport button { width: 30px; height: 30px; font-size: 16px; color: var(--ink); }
+.music-transport #music-play { border-radius: 50%; background: #e7a2be; color: #311d2a; font-size: 13px; }
 .record-panel input[type=range] { display: block; width: 100%; height: 4px; accent-color: var(--pink); margin: 6px 0; }
 .music-times { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .music-bottom, .local-audio { margin-top: 6px; }
 .music-bottom label { display: flex; gap: 5px; align-items: center; white-space: nowrap; }
 .music-bottom #music-volume { width: 42px; }
-.local-audio label, .local-audio button, .music-bottom a, .music-bottom button { cursor: pointer; color: #783c5a; padding: 0; }
+.local-audio label, .local-audio button, .music-bottom a, .music-bottom button { cursor: pointer; color: #f0b4d0; padding: 0; }
 .music-message { margin: 4px 0 0; }
 .music-message:empty { display: none; }
-.footer { padding: 12px 1px 35px; color: var(--muted); font-size: 11px; }
+.footer { padding: 12px 10px 26px; margin-top: 15px; background: #221920dd; color: var(--muted); font-size: 11px; }
 .footer details { margin-bottom: 7px; }
 .footer summary { cursor: pointer; }
 .utility { display: flex; flex-wrap: wrap; gap: 7px 13px; }
 .utility button, .filelabel { padding: 0; cursor: pointer; }
-.jump-end { position: fixed; z-index: 3; right: 17px; bottom: 16px; width: 35px; height: 35px; border: 1px solid #ceafc0; border-radius: 50%; background: #fff6fa; color: #713957; display: grid; place-items: center; box-shadow: 0 3px 9px #44253b18; }
+.jump-end { position: fixed; z-index: 3; right: 17px; bottom: 16px; width: 35px; height: 35px; border: 1px solid #aa7d8e; border-radius: 50%; background: #36262f; color: #f0bfd1; display: grid; place-items: center; box-shadow: 0 3px 9px #140a14aa; }
 .jump-end svg { width: 16px; height: 16px; }
 dialog { width: min(480px,92vw); border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }
 dialog::backdrop { background: #251b27a8; }
-.full-player { width: min(650px, 94vw); padding: 11px 13px; background: #27202a; color: #f7e9f2; }
+.full-player { width: min(840px, 94vw); padding: 14px 16px; background: #27202a; color: #f7e9f2; }
 .full-player header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .full-player h3 { font-weight: 500; }
 .full-player button { color: inherit; border: 0; background: none; font-size: 22px; }
+.full-player-layout { display: grid; grid-template-columns: 216px minmax(0, 1fr); align-items: center; gap: 15px; }
+.full-record { height: 215px; position: relative; background: radial-gradient(ellipse at 35% 40%,#5c394a,#27202a 72%); }
+.full-record .turntable-plate { width: 186px; top: 12px; left: 6px; }
+.full-record .record-label { width: 72%; }
+.full-record .tonearm { right: 9px; top: 13px; }
 .full-player iframe { border: 0; width: 100%; aspect-ratio: 16 / 9; min-height: 200px; display: block; background: #17131b; }
 .full-player a { display: inline-block; margin-top: 8px; color: #e9b8d4; font-size: 12px; }
+.full-player #full-player-message { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+.full-player #full-player-message:empty { display: none; }
+.full-player.unavailable { width: min(550px,94vw); }
+.full-player.unavailable #full-player-frame { display: none; }
 dialog h3, dialog p { margin: 0 0 9px; }
 dialog label { display: block; margin-top: 6px; }
-dialog select, dialog textarea { width: 100%; border: 1px solid var(--line); background: #fff; padding: 6px; }
+dialog select, dialog textarea { width: 100%; border: 1px solid var(--line); background: #20171e; padding: 6px; }
 dialog textarea { min-height: 74px; resize: vertical; }
 .form-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .dialog-actions { display: flex; gap: 6px; margin-top: 9px; }
-.dialog-actions button { border: 1px solid var(--line); border-radius: 4px; background: #f6e8ef; padding: 5px 7px; }
+.dialog-actions button { border: 1px solid var(--line); border-radius: 4px; background: #48303d; padding: 5px 7px; }
 @media (min-width: 1160px) { .grid { grid-template-columns: repeat(4, minmax(0,1fr)); } }
 @media (min-width: 1440px) { .grid { grid-template-columns: repeat(5, minmax(0,1fr)); } }
 @media (max-width: 950px) {
-  .top, .shell { width: calc(100% - 32px); }
+  .top, .shell, .controls { width: calc(100% - 32px); }
   .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 @media (max-width: 670px) {
   .hero { --rest: 180px; --travel: 115px; }
   .hero-art { object-position: 70% 38%; }
-  .top, .shell { width: calc(100% - 22px); }
+  .top, .shell, .controls { width: calc(100% - 22px); }
   .controls { padding: 0 8px; gap: 8px; }
   .tabs { gap: 9px; font-size: 11px; }
   .searchbox { width: 46%; }
@@ -214,11 +228,15 @@ dialog textarea { min-height: 74px; resize: vertical; }
   .catalog-main { padding: 12px 9px; }
   .catalog-aside { grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
   .record-panel, .calendar-panel { min-width: 0; }
-  .turntable { height: 118px; }
-  .turntable-plate { width: 98px; }
+  .turntable { height: 142px; }
+  .turntable-plate { width: min(120px, 86%); }
   .tonearm { transform: scale(.75); right: 7px; top: 9px; }
   .playing .tonearm { transform: scale(.75) rotate(var(--arm-angle,26deg)); }
   .deck-type { display: none; }
+  .full-player-layout { grid-template-columns: minmax(0,1fr); gap: 5px; }
+  .full-record { width: 216px; height: 207px; margin: auto; }
+  .full-record .tonearm { transform: none; }
+  .full-player.playing .full-record .tonearm { transform: rotate(28deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero, .tonearm { transition: none; }
@@ -234,8 +252,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
       <time id="updated"></time>
     </div>
   </header>
-  <div class="shell">
-    <main id="discover">
+  <div class="control-band">
       <div class="controls">
         <nav class="tabs" aria-label="视频分区">
           <button data-tab="daily" class="on">本期</button>
@@ -247,6 +264,9 @@ dialog textarea { min-height: 74px; resize: vertical; }
           <input id="search" aria-label="搜索入选作品" placeholder="标题 / UP / BV号" maxlength="120" autocomplete="off">
         </div>
       </div>
+  </div>
+  <div class="shell">
+    <main id="discover">
       <div class="catalog-layout">
         <section class="catalog-main">
           <div class="section-heading">
@@ -335,12 +355,21 @@ dialog textarea { min-height: 74px; resize: vertical; }
   </button>
   <dialog class="full-player" id="full-player" aria-labelledby="full-track-title">
     <header><h3 id="full-track-title"></h3><button id="close-full-player" type="button" aria-label="关闭播放器">×</button></header>
-    <div id="full-player-frame"></div>
-    <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开 ↗</a>
+    <div class="full-player-layout">
+      <div class="full-record" aria-hidden="true">
+        <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="full-record-art" alt=""></div></div></div>
+        <div class="tonearm"><i></i></div>
+      </div>
+      <div class="full-media">
+        <div id="full-player-frame"></div>
+        <p id="full-player-message" role="status"></p>
+        <a id="full-track-link" target="_blank" rel="noopener">在 YouTube 打开原曲 ↗</a>
+      </div>
+    </div>
   </dialog>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 
-  <script id="payload" type="application/json">{"version":"bocchi-v7","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"5367fb55cf62581cbc2efcf109ada3e57d87433ee491c9905af663f45f557d8f","experiment_id":null,"generated_at":"2026-11-03 23:57:57 +08:00","latest_day":"20261103","total":5,"streams":{"daily":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]},"archive":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV1bW411n7fY","【春晚鬼畜】赵本山：我就是念诗之王！【改革春风吹满地】","","assets/selected-covers/BV1bW411n7fY.webp",152,1518339644,128932178,null,"20260903",[],2,[],"20261103","语言切分和节拍一起构成笑点，重组后的台词本身就是旋律。","历史人工复核"],["BV1UJ41147Ej","【黑桃Q】新番红白战，2019年度全明星","","assets/selected-covers/BV1UJ41147Ej.webp",1050,1576984072,8893,0.9969879518072289,"20260903",[],332,[],"20261103","跨番混剪用红白对阵组织素材，整支作品有自己的结构。","历史人工复核"],["BV1Ux411d7e9","把B站万恶之源的舞蹈片段汇聚在一起！祝B站越来越社会！干杯十周年，我已经嗨到不行！","AD钙爷","assets/selected-covers/BV1Ux411d7e9.webp",250,1561713609,19996642,0.8571428571428571,"20260903",[],49,[],"20261103","把熟悉的舞步与模因重新编排成一场完整的表演。","历史人工复核"],["BV1GS411P74t","自来也老师，这次，我来保护你!","牙牙的包裹","assets/selected-covers/BV1GS411P74t.webp",437,1717767589,16423613,0.98989898989899,"20260903",[],99,[],"20261103","以角色互换重新组织原作情节，表达集中在一个完整的假设。","历史人工复核"],["BV1jQ87ziEKZ","我做了第一首英文关于731的歌","","assets/selected-covers/BV1jQ87ziEKZ.webp",337,1753761600,6029483,0.9963636363636363,"20260902",[],275,["number_review"],"20261103","历史题材的原创音乐，入选依据是创作与表达。","历史人工复核"]],"worker":"discovery-data/a8659206cb832c0f1878.worker.js","calendar":{"20261103":5},"music":[{"title":"青春コンプレックス","album":"結束バンド","number":"01/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/5e/21/955e2119-0127-4210-d947-5739f7d1c742/mzaf_5734893486571999400.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E9%9D%92%E6%98%A5%E3%82%B3%E3%83%B3%E3%83%97%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9/1657318546?i=1657318551&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/76531684f721e7da89da2d56ec615c2e877df4bf","fullVideo":"RWFW1OSlMkM"},{"title":"ひとりぼっち東京","album":"結束バンド","number":"02/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/21/4d/31214d03-4b38-d263-45d9-43d0605c3870/mzaf_7626256341945862508.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%A8%E3%82%8A%E3%81%BC%E3%81%A3%E3%81%A1%E6%9D%B1%E4%BA%AC/1657318546?i=1657318555&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b396aaf261f5c9846bd6fc777944e34100b17b0c","fullVideo":"7TovqLDCosk"},{"title":"Distortion!!","album":"結束バンド","number":"03/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/57/52/315752e5-7985-e132-6228-443b5e4d0096/mzaf_12248143147077507975.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/distortion/1657318546?i=1657318564&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/4aa365182b833464953694d2323517d487fb426d","fullVideo":"5RSHNMkKGLs"},{"title":"ひみつ基地","album":"結束バンド","number":"04/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/27/38/57273855-b45d-1566-d207-6e38e48c16d4/mzaf_86025273103452167.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%BF%E3%81%A4%E5%9F%BA%E5%9C%B0/1657318546?i=1657318570&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7563b329ef65d67efb013da66f121a772a46c5bd","fullVideo":"ztF1ru7LEzs"},{"title":"ギターと孤独と蒼い惑星","album":"結束バンド","number":"05/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d9/5c/99/d95c9928-7a84-80d8-f666-9e139bb55618/mzaf_3451712062174813596.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AE%E3%82%BF%E3%83%BC%E3%81%A8%E5%AD%A4%E7%8B%AC%E3%81%A8%E8%92%BC%E3%81%84%E6%83%91%E6%98%9F/1657318546?i=1657318765&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/601348ee05c715ace5202738e39cad3441c2854e","fullVideo":"B7BxrAAXl94"},{"title":"ラブソングが歌えない","album":"結束バンド","number":"06/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/15/57/de/1557de36-ecad-2ee4-6cd5-a86e449fec0c/mzaf_12204809330958986952.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%A9%E3%83%96%E3%82%BD%E3%83%B3%E3%82%B0%E3%81%8C%E6%AD%8C%E3%81%88%E3%81%AA%E3%81%84/1657318546?i=1657318775&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/c945829bc3054824e3e8350c9e8a3b6799ab2308","fullVideo":"vW9d8-8gm7o"},{"title":"あのバンド","album":"結束バンド","number":"07/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e6/14/ee/e614ee3e-a305-11a1-4fdf-8d269df33381/mzaf_9456356230410638930.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%82%E3%81%AE%E3%83%90%E3%83%B3%E3%83%89/1657318546?i=1657318780&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/74b94a194abcd3fdfaae028884397a84d827e85f","fullVideo":"L2i0i9gWE00"},{"title":"カラカラ","album":"結束バンド","number":"08/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/08/e5/95/08e5955b-5e35-810a-af21-c5ea627b9e62/mzaf_14523279170137656585.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AB%E3%83%A9%E3%82%AB%E3%83%A9/1657318546?i=1657318783&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/95a8cac484b748abadbce82c17ce22bfdc4334a4","fullVideo":"IwHwv-lcxi4"},{"title":"小さな海","album":"結束バンド","number":"09/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/0f/47/490f47ea-7091-c05b-f00b-e1b182dc1f90/mzaf_15407234873314910124.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%B0%8F%E3%81%95%E3%81%AA%E6%B5%B7/1657318546?i=1657318876&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/f310158abcd3055b8b58d4d62167c5b957be4aca","fullVideo":"NF8c5pXx-Xc"},{"title":"なにが悪い","album":"結束バンド","number":"10/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c6/7d/49/c67d49a9-b08b-d5c3-5a20-30770b32aeef/mzaf_1177679356616256059.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%AA%E3%81%AB%E3%81%8C%E6%82%AA%E3%81%84/1657318546?i=1657318881&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7f881415b734db8248239327e52d1bd167896973","fullVideo":"BVvcQ4ge8Ow"},{"title":"忘れてやらない","album":"結束バンド","number":"11/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/63/b0/ca63b000-b910-7717-278f-3e1885407ca8/mzaf_5319354686321300295.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%BF%98%E3%82%8C%E3%81%A6%E3%82%84%E3%82%89%E3%81%AA%E3%81%84/1657318546?i=1657318882&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/5eb5f8e59dca0eb636747c1c922fb42bedddc3f7","fullVideo":"gX9m-rCtSqc"},{"title":"星座になれたら","album":"結束バンド","number":"12/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6c/1d/2e/6c1d2e47-1a3d-ac8a-19d2-a5ab01a4fecf/mzaf_4077582503102929951.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%98%9F%E5%BA%A7%E3%81%AB%E3%81%AA%E3%82%8C%E3%81%9F%E3%82%89/1657318546?i=1657318884&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b40d9847f00747ad099986e037be2ae763fa9fab","fullVideo":"wSTbdqo-j74"},{"title":"フラッシュバッカー","album":"結束バンド","number":"13/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/a9/52/f5a95294-1723-eb2a-50e1-eee2472c6913/mzaf_4929718209793094683.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%95%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5%E3%83%90%E3%83%83%E3%82%AB%E3%83%BC/1657318546?i=1657318889&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/0eb3628e7c383ca23eed51312cd3a5052665372e","fullVideo":"ecVnw_SiREQ"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","number":"14/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/67/7b/94677b38-154d-9e8c-11dd-fec9b8419eeb/mzaf_15700298817702070953.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E8%BB%A2%E3%81%8C%E3%82%8B%E5%B2%A9-%E5%90%9B%E3%81%AB%E6%9C%9D%E3%81%8C%E9%99%8D%E3%82%8B/1657318546?i=1657318890&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b15b4082b71aeb67d0f554e4b174079e08f197b7","fullVideo":"E5O0mCrUdAM"},{"title":"月並みに輝け","album":"Re:結束バンド - EP","number":"01/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/70/5c/a6705c33-ebdf-78bd-ce10-5d54e807ed73/mzaf_10207518281308685421.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%9C%88%E4%B8%A6%E3%81%BF%E3%81%AB%E8%BC%9D%E3%81%91/1759525321?i=1759525329&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"anCp-VnUQtM"},{"title":"今、僕、アンダーグラウンドから","album":"Re:結束バンド - EP","number":"02/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/c3/d1/78c3d164-1f3a-96d9-e555-6043776dc29e/mzaf_1716431183313068052.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E4%BB%8A-%E5%83%95-%E3%82%A2%E3%83%B3%E3%83%80%E3%83%BC%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%8B%E3%82%89/1759525321?i=1759525332&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"mt4on5DnMw4"},{"title":"ドッペルゲンガー","album":"Re:結束バンド - EP","number":"03/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9a/19/67/9a196776-1042-e365-a5dd-1a5cabb65e5d/mzaf_8294460973162649945.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%89%E3%83%83%E3%83%9A%E3%83%AB%E3%82%B2%E3%83%B3%E3%82%AC%E3%83%BC/1759525321?i=1759525333&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"776pBhZ3oO0"},{"title":"僕と三原色","album":"Re:結束バンド - EP","number":"04/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/3e/93/b93e9351-5df9-b822-ae13-adc11f3d01ea/mzaf_8877883855655534641.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%83%95%E3%81%A8%E4%B8%89%E5%8E%9F%E8%89%B2/1759525321?i=1759525334&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"nPRzbUSmWg0"},{"title":"秒針少女","album":"Re:結束バンド - EP","number":"05/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3c/9b/77/3c9b776e-4d58-66e5-e31f-d039f2220c97/mzaf_1076848941482724053.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E7%A7%92%E9%87%9D%E5%B0%91%E5%A5%B3/1759525321?i=1759525335&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"UlCjySjkblI"},{"title":"Re:Re:","album":"Re:結束バンド - EP","number":"06/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/93/40/88/93408813-fe4f-722a-89ad-0edab6392682/mzaf_7656634569888780862.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/re-re/1759525321?i=1759525336&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"PiIAVnFX2eo"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
+  <script id="payload" type="application/json">{"version":"bocchi-v8","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"3b3ea31e93e527c6bbbce20fa51e7ce2db639d6274c0390ba75027f694d92dbd","experiment_id":null,"generated_at":"2026-11-04 00:01:59 +08:00","latest_day":"20261103","total":5,"streams":{"daily":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]},"archive":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV1bW411n7fY","【春晚鬼畜】赵本山：我就是念诗之王！【改革春风吹满地】","","assets/selected-covers/BV1bW411n7fY.webp",152,1518339644,128932178,null,"20260903",[],2,[],"20261103","语言切分和节拍一起构成笑点，重组后的台词本身就是旋律。","历史人工复核"],["BV1UJ41147Ej","【黑桃Q】新番红白战，2019年度全明星","","assets/selected-covers/BV1UJ41147Ej.webp",1050,1576984072,8893,0.9969879518072289,"20260903",[],332,[],"20261103","跨番混剪用红白对阵组织素材，整支作品有自己的结构。","历史人工复核"],["BV1Ux411d7e9","把B站万恶之源的舞蹈片段汇聚在一起！祝B站越来越社会！干杯十周年，我已经嗨到不行！","AD钙爷","assets/selected-covers/BV1Ux411d7e9.webp",250,1561713609,19996642,0.8571428571428571,"20260903",[],49,[],"20261103","把熟悉的舞步与模因重新编排成一场完整的表演。","历史人工复核"],["BV1GS411P74t","自来也老师，这次，我来保护你!","牙牙的包裹","assets/selected-covers/BV1GS411P74t.webp",437,1717767589,16423613,0.98989898989899,"20260903",[],99,[],"20261103","以角色互换重新组织原作情节，表达集中在一个完整的假设。","历史人工复核"],["BV1jQ87ziEKZ","我做了第一首英文关于731的歌","","assets/selected-covers/BV1jQ87ziEKZ.webp",337,1753761600,6029483,0.9963636363636363,"20260902",[],275,["number_review"],"20261103","历史题材的原创音乐，入选依据是创作与表达。","历史人工复核"]],"worker":"discovery-data/a8659206cb832c0f1878.worker.js","calendar":{"20261103":5},"music":[{"title":"青春コンプレックス","album":"結束バンド","number":"01/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/5e/21/955e2119-0127-4210-d947-5739f7d1c742/mzaf_5734893486571999400.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E9%9D%92%E6%98%A5%E3%82%B3%E3%83%B3%E3%83%97%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9/1657318546?i=1657318551&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/76531684f721e7da89da2d56ec615c2e877df4bf","fullVideo":"RWFW1OSlMkM"},{"title":"ひとりぼっち東京","album":"結束バンド","number":"02/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/21/4d/31214d03-4b38-d263-45d9-43d0605c3870/mzaf_7626256341945862508.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%A8%E3%82%8A%E3%81%BC%E3%81%A3%E3%81%A1%E6%9D%B1%E4%BA%AC/1657318546?i=1657318555&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b396aaf261f5c9846bd6fc777944e34100b17b0c","fullVideo":"7TovqLDCosk"},{"title":"Distortion!!","album":"結束バンド","number":"03/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/31/57/52/315752e5-7985-e132-6228-443b5e4d0096/mzaf_12248143147077507975.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/distortion/1657318546?i=1657318564&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/4aa365182b833464953694d2323517d487fb426d","fullVideo":"5RSHNMkKGLs"},{"title":"ひみつ基地","album":"結束バンド","number":"04/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/57/27/38/57273855-b45d-1566-d207-6e38e48c16d4/mzaf_86025273103452167.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%B2%E3%81%BF%E3%81%A4%E5%9F%BA%E5%9C%B0/1657318546?i=1657318570&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7563b329ef65d67efb013da66f121a772a46c5bd","fullVideo":"ztF1ru7LEzs"},{"title":"ギターと孤独と蒼い惑星","album":"結束バンド","number":"05/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d9/5c/99/d95c9928-7a84-80d8-f666-9e139bb55618/mzaf_3451712062174813596.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AE%E3%82%BF%E3%83%BC%E3%81%A8%E5%AD%A4%E7%8B%AC%E3%81%A8%E8%92%BC%E3%81%84%E6%83%91%E6%98%9F/1657318546?i=1657318765&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/601348ee05c715ace5202738e39cad3441c2854e","fullVideo":"B7BxrAAXl94"},{"title":"ラブソングが歌えない","album":"結束バンド","number":"06/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/15/57/de/1557de36-ecad-2ee4-6cd5-a86e449fec0c/mzaf_12204809330958986952.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%A9%E3%83%96%E3%82%BD%E3%83%B3%E3%82%B0%E3%81%8C%E6%AD%8C%E3%81%88%E3%81%AA%E3%81%84/1657318546?i=1657318775&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/c945829bc3054824e3e8350c9e8a3b6799ab2308","fullVideo":"vW9d8-8gm7o"},{"title":"あのバンド","album":"結束バンド","number":"07/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e6/14/ee/e614ee3e-a305-11a1-4fdf-8d269df33381/mzaf_9456356230410638930.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%82%E3%81%AE%E3%83%90%E3%83%B3%E3%83%89/1657318546?i=1657318780&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/74b94a194abcd3fdfaae028884397a84d827e85f","fullVideo":"L2i0i9gWE00"},{"title":"カラカラ","album":"結束バンド","number":"08/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/08/e5/95/08e5955b-5e35-810a-af21-c5ea627b9e62/mzaf_14523279170137656585.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%82%AB%E3%83%A9%E3%82%AB%E3%83%A9/1657318546?i=1657318783&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/95a8cac484b748abadbce82c17ce22bfdc4334a4","fullVideo":"IwHwv-lcxi4"},{"title":"小さな海","album":"結束バンド","number":"09/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/0f/47/490f47ea-7091-c05b-f00b-e1b182dc1f90/mzaf_15407234873314910124.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%B0%8F%E3%81%95%E3%81%AA%E6%B5%B7/1657318546?i=1657318876&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/f310158abcd3055b8b58d4d62167c5b957be4aca","fullVideo":"NF8c5pXx-Xc"},{"title":"なにが悪い","album":"結束バンド","number":"10/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c6/7d/49/c67d49a9-b08b-d5c3-5a20-30770b32aeef/mzaf_1177679356616256059.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%81%AA%E3%81%AB%E3%81%8C%E6%82%AA%E3%81%84/1657318546?i=1657318881&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/7f881415b734db8248239327e52d1bd167896973","fullVideo":"BVvcQ4ge8Ow"},{"title":"忘れてやらない","album":"結束バンド","number":"11/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/63/b0/ca63b000-b910-7717-278f-3e1885407ca8/mzaf_5319354686321300295.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%BF%98%E3%82%8C%E3%81%A6%E3%82%84%E3%82%89%E3%81%AA%E3%81%84/1657318546?i=1657318882&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/5eb5f8e59dca0eb636747c1c922fb42bedddc3f7","fullVideo":"gX9m-rCtSqc"},{"title":"星座になれたら","album":"結束バンド","number":"12/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6c/1d/2e/6c1d2e47-1a3d-ac8a-19d2-a5ab01a4fecf/mzaf_4077582503102929951.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%98%9F%E5%BA%A7%E3%81%AB%E3%81%AA%E3%82%8C%E3%81%9F%E3%82%89/1657318546?i=1657318884&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b40d9847f00747ad099986e037be2ae763fa9fab","fullVideo":"wSTbdqo-j74"},{"title":"フラッシュバッカー","album":"結束バンド","number":"13/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f5/a9/52/f5a95294-1723-eb2a-50e1-eee2472c6913/mzaf_4929718209793094683.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%95%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5%E3%83%90%E3%83%83%E3%82%AB%E3%83%BC/1657318546?i=1657318889&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/0eb3628e7c383ca23eed51312cd3a5052665372e","fullVideo":"ecVnw_SiREQ"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","number":"14/14","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/67/7b/94677b38-154d-9e8c-11dd-fec9b8419eeb/mzaf_15700298817702070953.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E8%BB%A2%E3%81%8C%E3%82%8B%E5%B2%A9-%E5%90%9B%E3%81%AB%E6%9C%9D%E3%81%8C%E9%99%8D%E3%82%8B/1657318546?i=1657318890&uo=4","download":"https://mora.jp/package/43000100/SVWC70613B00Z_48/","art":"assets/music/kessoku.jpg","kind":"官方试听","fallbackSrc":"https://p.scdn.co/mp3-preview/b15b4082b71aeb67d0f554e4b174079e08f197b7","fullVideo":"E5O0mCrUdAM"},{"title":"月並みに輝け","album":"Re:結束バンド - EP","number":"01/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/70/5c/a6705c33-ebdf-78bd-ce10-5d54e807ed73/mzaf_10207518281308685421.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E6%9C%88%E4%B8%A6%E3%81%BF%E3%81%AB%E8%BC%9D%E3%81%91/1759525321?i=1759525329&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"anCp-VnUQtM"},{"title":"今、僕、アンダーグラウンドから","album":"Re:結束バンド - EP","number":"02/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/c3/d1/78c3d164-1f3a-96d9-e555-6043776dc29e/mzaf_1716431183313068052.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E4%BB%8A-%E5%83%95-%E3%82%A2%E3%83%B3%E3%83%80%E3%83%BC%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%81%8B%E3%82%89/1759525321?i=1759525332&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"mt4on5DnMw4"},{"title":"ドッペルゲンガー","album":"Re:結束バンド - EP","number":"03/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9a/19/67/9a196776-1042-e365-a5dd-1a5cabb65e5d/mzaf_8294460973162649945.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E3%83%89%E3%83%83%E3%83%9A%E3%83%AB%E3%82%B2%E3%83%B3%E3%82%AC%E3%83%BC/1759525321?i=1759525333&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"776pBhZ3oO0"},{"title":"僕と三原色","album":"Re:結束バンド - EP","number":"04/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b9/3e/93/b93e9351-5df9-b822-ae13-adc11f3d01ea/mzaf_8877883855655534641.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E5%83%95%E3%81%A8%E4%B8%89%E5%8E%9F%E8%89%B2/1759525321?i=1759525334&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"nPRzbUSmWg0"},{"title":"秒針少女","album":"Re:結束バンド - EP","number":"05/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3c/9b/77/3c9b776e-4d58-66e5-e31f-d039f2220c97/mzaf_1076848941482724053.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/%E7%A7%92%E9%87%9D%E5%B0%91%E5%A5%B3/1759525321?i=1759525335&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"UlCjySjkblI"},{"title":"Re:Re:","album":"Re:結束バンド - EP","number":"06/06","src":"https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/93/40/88/93408813-fe4f-722a-89ad-0edab6392682/mzaf_7656634569888780862.plus.aac.p.m4a","url":"https://music.apple.com/jp/album/re-re/1759525321?i=1759525336&uo=4","download":"https://mora.jp/package/43000100/SVWC70668B00Z_48/","art":"assets/music/re-kessoku.jpg","kind":"官方试听","fullVideo":"PiIAVnFX2eo"}],"collection":{"finished_at":"20261103_233602","popular_videos":200,"new_videos":10,"related_nodes":320,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
   <script>'use strict';
 const BOOT=JSON.parse(document.getElementById('payload').textContent),$=id=>document.getElementById(id);
 const PROFILE='craft_resonance_v1',SCHEMA='bili-review-v1',storageKey='bili_review_'+PROFILE;
@@ -454,10 +483,14 @@ function paintCalendar(){
    html += `<button data-day="${key}" ${count ? '' : 'disabled'} class="${classes}" aria-pressed="${key === activeDay}" aria-label="${year}年${month}月${day}日，${label}" title="${label}">${day}</button>`;
  }
  $('calendar-days').innerHTML=html;$('calendar-selected-date').textContent=activeDay?date(activeDay):'暂无上架';$('calendar-selected-count').textContent=((BOOT.calendar||{})[activeDay]||0)+' '+calendarUnit;
- const monthEvent = Object.entries(bandDates).find(([day]) => day.slice(0, 2) === calendarMonth.slice(4));
- $('calendar-occasion').hidden = !monthEvent;
- $('calendar-occasion').innerHTML = monthEvent
-   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>` : '';
+ const dates = Object.entries(bandDates).sort();
+ const monthEvent = dates.find(([day]) => day.slice(0, 2) === calendarMonth.slice(4));
+ const upcoming = dates.find(([day]) => day.slice(0, 2) > calendarMonth.slice(4)) || dates[0];
+ const occasion = $('calendar-occasion');
+ occasion.hidden = false;
+ occasion.innerHTML = monthEvent
+   ? `<a href="${monthEvent[1][2]}" target="_blank" rel="noopener">${Number(monthEvent[0].slice(2))} 日 · ${monthEvent[1][0]}</a>`
+   : `<button data-occasion-month="${upcoming[0].slice(0, 2)}">${upcoming[0].slice(0, 2)}/${upcoming[0].slice(2)} · ${upcoming[1][0]}</button>`;
  const buildYear = Number(BOOT.generated_at.slice(0, 4));
  const firstYear = calendarDates.length ? Number(calendarDates[0].slice(0, 4)) : buildYear;
  $('calendar-prev').disabled = calendarMonth <= Math.min(buildYear - 1, firstYear) + '01';
@@ -465,6 +498,12 @@ function paintCalendar(){
 }
 function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();}
 $('calendar-prev').addEventListener('click',()=>moveMonth(-1));$('calendar-next').addEventListener('click',()=>moveMonth(1));
+$('calendar-occasion').addEventListener('click', event => {
+  const month = event.target.closest('[data-occasion-month]')?.dataset.occasionMonth;
+  if (!month) return;
+  calendarMonth = calendarMonth.slice(0, 4) + month;
+  paintCalendar();
+});
 $('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 $('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 paintCalendar();
@@ -576,20 +615,73 @@ function toggleAudio() {
 }
 
 const fullPlayer = $('full-player');
+let youtubeApi, fullSession = 0, fullControl, fullWait;
+
+function loadYouTubeApi() {
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (youtubeApi) return youtubeApi;
+  youtubeApi = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => { youtubeApi = null; script.remove(); reject(); };
+    window.onYouTubeIframeAPIReady = () => resolve(window.YT);
+    document.head.appendChild(script);
+  });
+  return youtubeApi;
+}
+
 function openFullTrack(track) {
   audio.pause();
+  const session = ++fullSession;
+  const message = $('full-player-message');
+  message.textContent = '正在连接原曲…';
+  fullPlayer.classList.remove('unavailable');
   const frame = document.createElement('iframe');
   frame.title = track.title + ' · 完整曲目';
   frame.referrerPolicy = 'strict-origin-when-cross-origin';
   frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  frame.src = 'https://www.youtube-nocookie.com/embed/' + track.fullVideo + '?autoplay=1&playsinline=1';
+  const embed = new URL('https://www.youtube-nocookie.com/embed/' + track.fullVideo);
+  embed.search = new URLSearchParams({autoplay: '1', playsinline: '1', enablejsapi: '1', origin: location.origin});
+  frame.src = embed.href;
   $('full-track-title').textContent = track.title;
   $('full-track-link').href = 'https://www.youtube.com/watch?v=' + track.fullVideo;
+  $('full-record-art').src = track.art;
   $('full-player-frame').replaceChildren(frame);
   fullPlayer.showModal();
+  fullWait = setTimeout(() => {
+    if (session === fullSession) message.textContent = '播放器尚未响应，可以直接打开原曲。';
+  }, 7000);
+  loadYouTubeApi().then(YT => {
+    if (session !== fullSession) return;
+    fullControl = new YT.Player(frame, {events: {
+      onReady: event => {
+        if (session !== fullSession) return;
+        event.target.setVolume(audio.volume * 100);
+        clearTimeout(fullWait);
+        message.textContent = '';
+      },
+      onError: () => {
+        if (session !== fullSession) return;
+        clearTimeout(fullWait);
+        fullPlayer.classList.remove('playing');
+        fullPlayer.classList.add('unavailable');
+        message.textContent = '这首曲目在当前环境无法嵌入播放，可以打开原曲。';
+      },
+      onStateChange: event => {
+        if (session === fullSession) fullPlayer.classList.toggle('playing', event.data === 1);
+      }
+    }});
+  }).catch(() => {}); // Native iframe controls are available without the API.
 }
 $('close-full-player').addEventListener('click', () => fullPlayer.close());
-fullPlayer.addEventListener('close', () => $('full-player-frame').replaceChildren());
+fullPlayer.addEventListener('close', () => {
+  fullSession++;
+  clearTimeout(fullWait);
+  fullPlayer.classList.remove('playing', 'unavailable');
+  fullControl?.destroy();
+  fullControl = null;
+  $('full-player-frame').replaceChildren();
+});
 $('music-play').addEventListener('click', () => {
   const track = musicTracks[trackIndex];
   if (track?.fullVideo) openFullTrack(track);

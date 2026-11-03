@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import shutil
 
-VERSION = "bocchi-v7"
+VERSION = "bocchi-v8"
 CHUNK_SIZE = 96
 PAGE_SIZE = 24
 FIELDS = ("bvid", "title", "owner", "pic", "dur", "pubdate", "view",
