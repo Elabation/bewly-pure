@@ -226,9 +226,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .footer summary { cursor: pointer; }
 .utility { display: flex; flex-wrap: wrap; gap: 7px 13px; }
 .utility button, .filelabel { padding: 0; cursor: pointer; }
-.closing-art { width: min(100%,1680px); margin: 0 auto; background: #a36b68; }
-.closing-art a { display: block; cursor: zoom-in; }
-.closing-art img { display: block; width: 100%; height: auto; }
 .jump-end { position: fixed; z-index: 3; right: 17px; bottom: 16px; width: 35px; height: 35px; border: 1px solid #aa7d8e; border-radius: 50%; background: #36262f; color: #f0bfd1; display: grid; place-items: center; box-shadow: 0 3px 9px #140a14aa; }
 .jump-end svg { width: 16px; height: 16px; }
 dialog { width: min(480px,92vw); border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); }

@@ -147,7 +147,7 @@ def build_site(rows, meta, output, root, filename="god-shelf.html", experiment=N
     playlist_path = root / "assets/music/playlist.json"
     music = json.loads(playlist_path.read_text(encoding="utf-8")) if playlist_path.exists() else []
     images = {"assets/bocchi-livehouse-approved.webp", "assets/livehouse-room-v8.webp",
-              "assets/bocchi-rewrite-v1.webp", "assets/calendar-ticket-v1.jpg"}
+              "assets/calendar-ticket-v1.jpg"}
     for track in music:
         if not re.fullmatch(r"assets/music/tracks/[a-d][0-9]{2}\.mp3", track["src"]):
             raise ValueError("Playlist audio must be bundled with the site.")
