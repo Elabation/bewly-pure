@@ -13,6 +13,7 @@ from mining_data import load_population, load_flow_nodes, normalize_video
 from review_miner import catalog
 from publish_discovery import rebuild, publish
 from title_screen import anime_game_flag
+from daily_picks import write_picks
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -298,6 +299,11 @@ def main():
             log("采集成功："+json.dumps(result,ensure_ascii=False))
         summary=rebuild(ROOT)
         log("轻量新版生成："+json.dumps(summary,ensure_ascii=False))
+        try:
+            picks_path, picks_funnel, picks = write_picks(ROOT)
+            log("每日候选 {} 条 -> {}（当天新候 {}）".format(len(picks), picks_path.name, picks_funnel.get("fresh")))
+        except Exception as error:
+            log("每日候选生成失败（不影响发布）："+str(error)[:160])
         if not args.no_publish:
             commit=publish(ROOT,"每日目录更新 "+stamp())
             log("新版推送成功："+commit)
