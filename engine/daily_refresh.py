@@ -12,6 +12,7 @@ from collect_stats import BiliClient
 from mining_data import load_population, load_flow_nodes, normalize_video
 from review_miner import catalog
 from publish_discovery import rebuild, publish
+from title_screen import anime_game_flag
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,6 +39,67 @@ def write_capture(path, data):
 
 RANK_RIDS = (1, 3, 4, 5, 36, 160, 181, 188)  # 动画/音乐/游戏/娱乐/科技/生活/影视/数码
 FEED_PAGES = 5
+SEARCH_KEYWORDS = ("手书", "原创动画", "定格动画", "同人短片", "原创曲", "原创音乐",
+                   "翻调", "二创", "动画短片", "微电影", "演奏", "手作", "特效短片", "剧情MV")
+SEARCH_PAGES = 2
+SEARCH_LIMIT = 40
+
+
+def duration_seconds(value):
+    """搜索接口的时长是 "1:59" / "1:02:03" 字符串，其它接口是整数秒。"""
+    if isinstance(value, (int, float)):
+        return int(value)
+    parts = str(value or "").split(":")
+    try:
+        numbers = [int(part) for part in parts]
+    except ValueError:
+        return 0
+    total = 0
+    for number in numbers:
+        total = total * 60 + number
+    return total
+
+
+def collect_search(client, enrich_client, keywords=SEARCH_KEYWORDS, pages=SEARCH_PAGES, limit=SEARCH_LIMIT):
+    """关键词搜索（登录态）：结果自带标签，先按标签/时长粗筛，再对存活者补全统计。"""
+    raw, failed = {}, 0
+    for keyword in keywords:
+        for page in range(1, pages + 1):
+            try:
+                data = client.get_json("https://api.bilibili.com/x/web-interface/wbi/search/type",
+                                       {"search_type": "video", "keyword": keyword,
+                                        "page": page, "order": "scores"}, sign_wbi=True, tries=1)
+            except Exception as error:
+                failed += 1
+                log("search {} p{} failed: {}".format(keyword, page, str(error)[:100]))
+                continue
+            for item in (data or {}).get("result") or []:
+                bvid = item.get("bvid")
+                if not bvid or bvid in raw:
+                    continue
+                duration = duration_seconds(item.get("duration"))
+                if not (150 < duration <= 1800):
+                    continue
+                tags = [tag for tag in (item.get("tag") or "").split(",") if tag]
+                if anime_game_flag(item.get("title") or "") or anime_game_flag(" ".join(tags)):
+                    continue
+                play = item.get("play") or 0
+                favorites = item.get("favorites") or 0
+                raw[bvid] = {"bvid": bvid, "score": (favorites / play if play else 0)}
+    picked = sorted(raw.values(), key=lambda row: row["score"], reverse=True)[:limit]
+    videos, enriched = {}, 0
+    for row in picked:
+        try:
+            detail = enrich_client.get_json("https://api.bilibili.com/x/web-interface/view",
+                                            {"bvid": row["bvid"]}, tries=1)
+        except Exception as error:
+            failed += 1
+            log("search detail {} failed: {}".format(row["bvid"], str(error)[:100]))
+            continue
+        if normalize_video(detail, "search"):
+            videos[row["bvid"]] = detail
+            enriched += 1
+    return videos, failed, len(raw)
 
 
 def homefeed_client():
@@ -134,7 +196,7 @@ def write_source_capture(folder, prefix, captured, videos, src):
     return len(rows)
 
 
-def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=()):
+def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=(), search_keywords=()):
     mine, samples, graphs = ROOT/"data/fav_mine", ROOT/"data/samples", ROOT/"data/flow_graph"
     known = set(load_population(mine, samples)) | set(load_flow_nodes(graphs))
     videos, failures = {}, []
@@ -171,7 +233,16 @@ def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=()):
             log("首页推荐 {} 条（补详情 {} 次，失败 {} 次）。".format(
                 write_source_capture(mine, "favmine_feed_", captured, feed_videos, "homefeed"),
                 feed_details, feed_failed))
-    fresh = (set(videos) | set(ranking_videos) | set(feed_videos)) - known
+    search_videos, search_failed, search_raw = ({}, 0, 0)
+    if auth_client is not None and search_keywords:
+        bootstrap_buvid(client)
+        search_videos, search_failed, search_raw = collect_search(
+            auth_client, client, search_keywords, SEARCH_PAGES, SEARCH_LIMIT)
+        if search_videos:
+            log("关键词搜索 {} 条（粗筛 {} 条，失败 {}）。".format(
+                write_source_capture(mine, "favmine_search_", captured, search_videos, "search"),
+                search_raw, search_failed))
+    fresh = (set(videos) | set(ranking_videos) | set(feed_videos) | set(search_videos)) - known
     log("首页有效 {} 条，首次发现 {} 条。".format(len(rows), len(fresh)))
     pool, meta = catalog(ROOT)
     choices = sorted([r for r in pool if r["bvid"] in videos and not r.get("motive_cues") and not r.get("screen_flags") and r.get("dur",0)>150
@@ -203,7 +274,8 @@ def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=()):
     return {"finished_at":stamp(),"popular_videos":len(rows),"new_videos":len(fresh),
             "related_nodes":len(nodes),"related_requests_succeeded":related_ok,"popular_pages_failed":len(failures),
             "ranking_videos":ranking_written,"ranking_partitions_ok":ranking_ok,"ranking_partitions_failed":ranking_failed,
-            "homefeed_videos":len(feed_videos),"homefeed_pages_failed":feed_failed}
+            "homefeed_videos":len(feed_videos),"homefeed_pages_failed":feed_failed,
+            "search_videos":len(search_videos),"search_candidates":search_raw,"search_failed":search_failed}
 
 
 def main():
@@ -219,7 +291,9 @@ def main():
             auth = homefeed_client()
             if auth is None:
                 log("未找到 .sessdata，首页推荐源跳过（分区排行与热门照常）。")
-            result=collect(BiliClient(interval=.8), rids=RANK_RIDS, auth_client=auth, feed_pages=FEED_PAGES if auth else 0)
+            result=collect(BiliClient(interval=.8), rids=RANK_RIDS, auth_client=auth,
+                           feed_pages=FEED_PAGES if auth else 0,
+                           search_keywords=SEARCH_KEYWORDS if auth else ())
             status_path.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding="utf-8")
             log("采集成功："+json.dumps(result,ensure_ascii=False))
         summary=rebuild(ROOT)
