@@ -19,6 +19,20 @@ _UNIT = re.compile(
 )
 
 
+_ANIME_GAME = re.compile(
+    r"原神|崩坏|星穹|星铁|绝区零|未定事件簿|明日方舟|蔚蓝档案|碧蓝档案|blue\s*archive"
+    r"|碧蓝航线|少女前线|公主连结|fgo|fate\s*(?:/|系列|zero|stay)|阴阳师|战双|鸣潮|重返未来"
+    r"|无期迷途|第五人格|偶像梦幻祭|忘川风华录|pjsk|プロセカ|世界计划|边狱巴士|limbus|逆转裁判|弹丸论破"
+    r"|赛马娘|东方project|车万|一目连|茨木|酒吞|大天狗|玉藻前|妖刀姬|御馔津|彼岸花"
+    r"|派蒙|雷电将军|钟离|可莉|胡桃|甘雨|芙宁娜|纳西妲|阿米娅|凯尔希|斯卡蒂|史尔特尔"
+    r"|璃月|蒙德|稻妻|须弥|枫丹|纳塔|开拓者|旅行者|愚人众|执行官")
+
+
+def anime_game_flag(title):
+    """标题点名二次元游戏或其中角色时为 True（用户指定：这类作品一律不收录）。"""
+    return bool(_ANIME_GAME.search(unicodedata.normalize("NFKC", title or "").lower()))
+
+
 def numeric_title_flag(title):
     title = unicodedata.normalize("NFKC", title or "").lower()
     if _EPISODE.search(title):
