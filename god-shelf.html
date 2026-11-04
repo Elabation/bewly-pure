@@ -75,6 +75,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .tabs button { padding: 13px 0 11px; border-bottom: 2px solid transparent; color: var(--muted); white-space: nowrap; }
 .tabs button.on { border-color: var(--pink); color: var(--ink); }
+.tabs button { position: relative; }
+.saved-clip { display: none; position: absolute; right: -7px; top: 6px; width: 7px; height: 7px; background: var(--blue); rotate: -14deg; box-shadow: 5px 3px 0 var(--yellow); }
+[data-filled=true] .saved-clip { display: block; }
 .searchbox { width: min(270px, 40%); position: relative; }
 .searchbox span { position: absolute; inset: 5px auto auto 8px; color: var(--muted); }
 .searchbox input { width: 100%; border: 1px solid var(--line); border-radius: 3px; padding: 5px 8px 5px 25px; background: #20181c; font-size: 12px; }
@@ -118,7 +121,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   --stub-height: 37px;
   --tear-line: calc(var(--stub-height) + 1px);
   padding: 13px 12px 0; position: relative; border-radius: 5px;
-  background: linear-gradient(148deg,#40302e,#302324 69%);
+  background: repeating-linear-gradient(0deg,#d7b58b05 0 1px,transparent 1px 4px),linear-gradient(148deg,#40302e,#302324 69%);
   mask:
     radial-gradient(circle at left calc(100% - var(--tear-line)),transparent 5px,#000 5.6px),
     radial-gradient(circle at right calc(100% - var(--tear-line)),transparent 5px,#000 5.6px),
@@ -142,10 +145,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .calendar-week { color: var(--muted); font-size: 10px; margin: 5px 0 2px; }
 .calendar-days button, .calendar-blank { min-height: 25px; font-size: 11px; position: relative; z-index: 0; font-variant-numeric: tabular-nums; }
 .calendar-days button:disabled { color: #af939b; }
-.calendar-days button:not(:disabled)::after { content: ""; position: absolute; background: var(--red); border-radius: 50%; width: 3px; height: 3px; bottom: 1px; left: calc(50% - 1px); }
-.calendar-days button.chosen { color: #2d1824; font-weight: 600; }
-.calendar-days button.chosen::before { content: ""; position: absolute; z-index: -1; inset: 0 1px; background: var(--pink); clip-path: polygon(19% 0,81% 0,100% 32%,81% 70%,50% 100%,19% 70%,0 32%); }
-.calendar-days button.chosen::after { display: none; }
+.calendar-days button.has-entry::before { content: ""; position: absolute; z-index: -1; inset: 2px 3px; border: 1px solid #bf8a8990; border-radius: 2px; rotate: -6deg; background: #b86c6a10; }
+.calendar-days button.has-entry { color: #f3d6c2; }
+.calendar-days button.chosen { color: #ffe0d1; font-weight: 600; }
+.calendar-days button.chosen::before { border: 1px solid #e0a1a4; box-shadow: inset 0 0 0 2px #40302e,inset 0 0 0 3px #e0a1a440; background: #bf777836; }
+.calendar-days button.last-ticket::after { content: ""; position: absolute; width: 6px; height: 6px; right: 2px; top: 1px; background: linear-gradient(225deg,#e1b890 0 49%,#644c3b 51%); clip-path: polygon(0 0,100% 100%,0 100%); }
 .calendar-days .band-date { box-shadow: inset 0 -2px var(--band); }
 .band-date.hitori { --band: #d998b7; }
 .band-date.kita { --band: var(--red); }
@@ -154,21 +158,32 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .calendar-occasion { color: #ebc2a0; font-size: 10px; margin: 8px 0 0; }
 .calendar-occasion button { padding: 0; color: inherit; text-align: left; }
 .calendar-occasion button:hover { color: var(--pink); }
-.calendar-selected { height: var(--stub-height); margin: 10px -12px 0; padding: 0 11px; background: #563a31; border-radius: 0 0 4px 4px; color: #f3d7ba; font-size: 11px; }
-.calendar-selected > :first-child { border: 1px solid #d3aa8a76; padding: 1px 4px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.calendar-selected { height: var(--stub-height); margin: 10px -12px 0; padding: 0 11px; background: #503a31; border-radius: 0 0 4px 4px; color: #f3d7ba; font-size: 11px; }
+.calendar-selected .ticket-stamp { display: flex; align-items: baseline; gap: 7px; font-variant-numeric: tabular-nums; }
+.ticket-stamp > span { border: 1px solid #d3aa8a76; padding: 1px 3px; font-size: 10px; letter-spacing: .025em; rotate: -2deg; }
+.ticket-stamp small { font-size: 10px; }
+.ticket-notch { display: block; margin-left: auto; width: 5px; height: 14px; background: repeating-linear-gradient(0deg,#d3aa8a77 0 1px,transparent 1px 3px); }
 .calendar-selected button { color: #f4c9a8; padding: 0; }
-.record-panel { padding: 12px; background: #251b23f0; border-radius: 5px; }
+.record-panel { padding: 12px; background: linear-gradient(135deg,#43303b28,transparent 50%),#251b23ed; border-radius: 4px; box-shadow: inset 0 1px #d3bbad16,0 3px 8px #18101922; }
 .record-heading { margin-bottom: 10px; }
+.audio-meter { width: 36px; height: 13px; display: flex; align-items: end; gap: 2px; }
+.audio-meter i { width: 3px; height: 100%; background: #ccae87; transform-origin: bottom; transform: scaleY(calc(.08 + var(--v0,0)*.92)); transition: transform .09s linear; opacity: .75; }
+.audio-meter i:nth-child(2) { transform: scaleY(calc(.08 + var(--v1,0)*.92)); }
+.audio-meter i:nth-child(3) { transform: scaleY(calc(.08 + var(--v2,0)*.92)); }
+.audio-meter i:nth-child(4) { transform: scaleY(calc(.08 + var(--v3,0)*.92)); }
+.audio-meter i:nth-child(5) { transform: scaleY(calc(.08 + var(--v4,0)*.92)); }
+.audio-meter i:nth-child(6) { transform: scaleY(calc(.08 + var(--v5,0)*.92)); }
+.audio-meter i:nth-child(7) { transform: scaleY(calc(.08 + var(--v6,0)*.92)); }
 .record-panel label, .music-message { font-size: 10px; color: var(--muted); }
 .turntable { aspect-ratio: 216 / 192; overflow: hidden; position: relative; background: linear-gradient(135deg,#523a40,#2f252a 73%); border-radius: 3px; box-shadow: inset 0 0 0 1px #876b6e, inset 0 -3px #181419; }
 .turntable-plate {
   position: absolute; left: 5.56%; top: 5.21%; width: 75.93%; aspect-ratio: 1; border-radius: 50%;
-  background: conic-gradient(from 26deg,#ddd0bc00,#d8b9a23b 26deg,#fff0 48deg,#fff0 174deg,#bca2aa4f 211deg,#fff0 238deg),
-    repeating-radial-gradient(circle,#191519 0 1px,#322a30 1.5px 2px,#211b21 2.5px 3px);
+  background: repeating-radial-gradient(circle,#6b5a5a 0 1px,#3f3438 1.5px 2px);
   box-shadow: inset 0 0 0 1px #b29b92, inset 0 0 0 3px #44363c, 0 5px 12px #100a0ebf;
 }
-.vinyl { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; animation: vinyl 6s linear infinite paused; }
-.record-label { position: relative; width: 61%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #7e576c; box-shadow: 0 0 0 1px var(--side-color,#9b7d80), 0 0 0 4px #171319; }
+.vinyl { width: 98%; height: 98%; margin: 1%; border-radius: 50%; display: grid; place-items: center; animation: vinyl 6s linear infinite paused; background: conic-gradient(from 26deg,#ddd0bc00,#d8b9a23b 26deg,#fff0 48deg,#fff0 174deg,#bca2aa4f 211deg,#fff0 238deg),repeating-radial-gradient(circle,#191519 0 1px,#322a30 1.5px 2px,#211b21 2.5px 3px); transition: opacity .22s,translate .22s cubic-bezier(.2,.7,.2,1); }
+.turntable[data-changing=true] .vinyl { opacity: 0; translate: -25% -6%; transition-delay: .1s; }
+.record-label { position: relative; width: 45%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 50%; background: #7e576c; box-shadow: 0 0 0 1px var(--side-color,#9b7d80), 0 0 0 4px #171319; }
 .record-label img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 .record-label::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 12px #22131d55; }
 .turntable-plate::after { content: ""; position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 5px; height: 5px; border-radius: 50%; background: #c5b3aa; box-shadow: 0 1px 2px #140e14; }
@@ -194,10 +209,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .playing .vinyl { animation-play-state: running; }
 .arm-cued .power-led { background: #f3ae80; box-shadow: 0 0 5px #e98d6e; }
 @keyframes vinyl { to { transform: rotate(360deg); } }
-.music-sleeve { display: flex; align-items: center; gap: 8px; margin-top: 10px; min-width: 0; }
-.music-sleeve img { width: 43px; height: 43px; object-fit: cover; border-radius: 2px; background: #4d3243; }
+.music-sleeve { display: flex; align-items: center; gap: 10px; margin: 13px 0 9px; min-width: 0; }
+.music-sleeve img { width: 64px; height: 64px; flex: 0 0 64px; object-fit: cover; background: #4d3243; border: 1px solid #dacdb150; box-shadow: 2px 1px #221a21,3px 2px #9b83794a,5px 4px 8px #120c1380; }
 .music-sleeve div { min-width: 0; }
-.music-sleeve strong, .music-sleeve small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.music-sleeve strong, .music-sleeve small { display: block; overflow-wrap: anywhere; }
 .music-sleeve strong { font-size: 11px; font-weight: 600; }
 .music-sleeve small { font-size: 10px; color: var(--muted); }
 .music-transport { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 5px 0; }
@@ -215,14 +230,16 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .music-queue summary::after { content: ""; width: 5px; height: 5px; border: solid #e6b9c9; border-width: 0 1px 1px 0; rotate: 45deg; margin: -3px 3px 0 2px; }
 .music-queue[open] summary::after { rotate: 225deg; margin-top: 2px; }
 #music-track { max-block-size: 260px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #815664 #21181f; }
-.track-side { margin: 8px 0 0; background: #21181f; border-left: 2px solid var(--side-color); }
-.track-side h4 { padding: 5px 7px 2px; margin: 0; color: var(--side-color); font-size: 10px; font-weight: 600; letter-spacing: .06em; }
+.track-side { margin: 10px 0 0; padding: 8px; background: linear-gradient(100deg,#48313b35,transparent),#21181f; border: 1px solid #99726d30; box-shadow: 0 2px 0 #171017,inset 0 1px #bb97871a; }
+.album-jacket { display: flex; align-items: center; gap: 9px; padding-bottom: 7px; border-bottom: 1px solid #99726d25; }
+.album-jacket img { width: 48px; height: 48px; object-fit: cover; border: 1px solid #e5cdb340; box-shadow: 2px 2px #a48a7330; }
+.track-side h4 { padding: 0; margin: 0; color: #e6cebf; font-size: 10px; font-weight: 400; overflow-wrap: anywhere; }
 .track-side-a, .turntable[data-side=A] { --side-color: var(--pink); }
 .track-side-b, .turntable[data-side=B] { --side-color: var(--yellow); }
 .track-side-c, .turntable[data-side=C] { --side-color: var(--blue); }
 .track-side-d, .turntable[data-side=D] { --side-color: #e69288; }
 .track-side ul { margin: 0; padding: 0; list-style: none; }
-.track-side button { width: 100%; display: grid; grid-template-columns: 20px minmax(0,1fr); gap: 4px; min-height: 31px; padding: 5px 6px; align-items: baseline; text-align: left; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.track-side button { width: 100%; display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 4px; min-height: 31px; padding: 6px 2px; align-items: baseline; text-align: left; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
 .track-side button span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 10px; }
 .track-side button[aria-current=true] { background: #4b303f; color: #ffdfec; }
 .track-side button:hover { background: #513543; }
@@ -261,10 +278,20 @@ dialog textarea { min-height: 74px; resize: vertical; }
   .catalog-main { padding: 12px 9px; }
   .catalog-aside { grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
   .record-panel, .calendar-panel { min-width: 0; }
+  .music-sleeve { gap: 6px; }
+  .music-sleeve img { width: 42px; height: 42px; flex-basis: 42px; }
+  .music-sleeve strong { font-size: 10px; }
+  .music-sleeve small { font-size: 9px; }
+  .calendar-selected { padding: 0 7px; }
+  .calendar-selected .ticket-stamp { display: block; }
+  .ticket-stamp small { display: block; font-size: 9px; }
+  .ticket-stamp > span { font-size: 9px; padding: 0 2px; }
+  .ticket-notch { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero, .tonearm, .arm-shadow, .stylus-tip { transition: none; }
   .vinyl { animation: none; }
+  .vinyl, .audio-meter i { transition: none; }
 }
 </style>
 </head>
@@ -281,7 +308,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
         <nav class="tabs" aria-label="视频分区">
           <button data-tab="daily" class="on">本期</button>
           <button data-tab="archive">全部入选</button>
-          <button data-tab="saved">我的认可</button>
+          <button data-tab="saved" id="saved-tab"><span class="saved-clip" aria-hidden="true"></span>我的认可</button>
         </nav>
         <div class="searchbox">
           <span aria-hidden="true">⌕</span>
@@ -319,13 +346,13 @@ dialog textarea { min-height: 74px; resize: vertical; }
             <div class="calendar-days" id="calendar-days"></div>
             <p class="calendar-occasion" id="calendar-occasion" hidden></p>
             <div class="calendar-selected">
-              <span id="calendar-selected-date"></span>
-              <span id="calendar-selected-count"></span>
+              <span class="ticket-stamp"><span id="calendar-selected-date"></span><small id="calendar-selected-count"></small></span>
+              <span class="ticket-notch" aria-hidden="true"></span>
               <button id="calendar-today" title="回到最近上架日">最近</button>
             </div>
           </section>
           <section class="record-panel">
-            <div class="record-heading"><h3>結束バンド</h3></div>
+            <div class="record-heading"><h3>結束バンド</h3><span class="audio-meter" id="audio-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
             <div class="turntable" id="turntable" aria-hidden="true">
               <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="record-art" alt="" hidden></div></div></div>
               <svg class="deck-hardware" viewBox="0 0 216 192">
@@ -362,7 +389,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
             </div>
             <p class="music-message" id="music-message" role="status"></p>
             <details class="music-queue" id="music-queue">
-              <summary>曲目 <span id="music-count"></span></summary>
+              <summary>唱片架 <span id="music-count"></span></summary>
               <div id="music-track"></div>
             </details>
             <audio id="music-audio" preload="none"></audio>
@@ -391,7 +418,7 @@ dialog textarea { min-height: 74px; resize: vertical; }
   </button>
 <dialog id="review-dialog"><form id="review-form"><h3 id="review-title">记录你的判断</h3><p class="review-note" id="review-note"></p><div class="form-columns"><div><label for="craft">制作的独到之处</label><select id="craft" required><option value="">暂不评分</option value="0">0 · 缺乏打磨</option><option value="1">1 · 合格</option><option value="2">2 · 明显独到</option><option value="3">3 · 出色且难替代</option></select></div><div><label for="resonance">表达带来的共鸣</label><select id="resonance" required><option value="">暂不评分</option><option value="0">0 · 无感</option><option value="1">1 · 有趣但浅</option><option value="2">2 · 留下清楚回响</option><option value="3">3 · 强烈且持久</option></select></div></div><label for="reason">主要认可理由</label><select id="reason" required><option value="">请选择</option><option value="craft_expression">制作 / 表达本身</option><option value="sentiment_only">主要是感动 / 同情</option><option value="effort_only">主要是辛苦 / 肝</option><option value="utility_only">主要是有用 / 想收藏</option><option value="other">其他 / 不认可</option></select><label for="evidence">具体片段与理由</label><textarea id="evidence" required maxlength="2000" placeholder="哪一段、哪种处理，让你留下了这个判断？"></textarea><label class="checked"><input type="checkbox" id="watched" required>我已经观看，足以作出判断</label><div class="dialog-actions"><button type="submit">保存判断</button><button type="button" id="clear-review">移除判断</button><button type="button" id="close-review">返回浏览</button></div></form></dialog>
 
-  <script id="payload" type="application/json">{"version":"bocchi-v9","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"81d5a81bda422bc7421712ef7d8a5123b470315fbc3b44262764ecb18f0de86e","experiment_id":null,"generated_at":"2026-11-04 12:26:12 +08:00","latest_day":"20261104","total":14,"streams":{"daily":{"count":9,"chunks":["discovery-data/0683ef41c42d4cb6aa95.js"]},"archive":{"count":14,"chunks":["discovery-data/8e4073bf657a18e21f5d.js"]},"day:20261103":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV15n5164ErZ","【同人短片】假面骑士空我 - 鏖戦","变成哔头","assets/selected-covers/BV15n5164ErZ.webp",598,1778670971,679889,0.9946524064171123,"20260903",[],748,[],"20261104","《假面骑士空我》的同人翻拍，用一部独立短片重演特摄动作场面。","历史人工复核"],["BV1uKQwBUEcG","所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は","霓虹波NeXzlyn","assets/selected-covers/BV1uKQwBUEcG.webp",169,1775824160,367355,0.9920106524633822,"20260902",["感动"],751,[],"20261104","用 Minecraft 制作《僕は》的动画 MV 开场，旧评明确认可画面制作。","历史人工复核"],["BV1GnKc6gEJM","[Verity手书] PityParty animation","","assets/selected-covers/BV1GnKc6gEJM.webp",201,1784339398,255157,0.9795918367346939,"20260902",[],784,[],"20261104","用《Pity Party》做 Verity 同人手书，以绘制和动画重新诠释角色。","历史人工复核"],["BV1mP396bEhy","“谨以此片，献给每一位依旧热爱原神的玩家”","Ambersinging","assets/selected-covers/BV1mP396bEhy.webp",226,1785673048,709817,0.9679144385026738,"20260903",[],748,[],"20261104","给原神玩家的同人短片，旧评认可的是原创制作。","历史人工复核"],["BV1XWAuzBEwH","【诗岸原创我也不知道算不算摇滚】自由落体","FREEEEEFALL_","assets/selected-covers/BV1XWAuzBEwH.webp",341,1774143909,330533,0.9440745672436751,"20260903",[],751,[],"20261104","用坠落和失重写挣扎，收有诗岸演唱和人声两个版本。","历史人工复核"],["BV1QB8x6TERz","[诗岸/星尘/原创摇滚]十八岁前想做的事都没实现","grassP","assets/selected-covers/BV1QB8x6TERz.webp",151,1787475071,180449,0.9551192145862553,"20260903",[],713,[],"20261104","grassP 作词、作曲和编曲，以诗岸和星尘写下临近成年的落空感。","历史人工复核"],["BV1rDMyzvEvg","【本家投稿】ブラッドドール / フユウ feat. 初音ミク【BLOOD DOLL】","Fuyuuu_Official","assets/selected-covers/BV1rDMyzvEvg.webp",158,1749886263,361055,0.9067909454061251,"20260903",[],751,[],"20261104","フユウ本人发布的《BLOOD DOLL》，由初音未来演唱的原创音乐影像。","历史人工复核"],["BV1X3gd6BES2","【洛天依原创】若夏日终将完结","","assets/selected-covers/BV1X3gd6BES2.webp",175,1785150000,1168513,0.9612068965517241,"20260903",[],696,[],"20261104","借季节流转写夏天结束后的少年心境，洛天依演唱的原创曲。","历史人工复核"],["BV1ohuu6LEBP","【本家投稿】トリックハート(魔术之心) / MIMI feat. 重音テトSV 【Official Video】","MIMI_music","assets/selected-covers/BV1ohuu6LEBP.webp",158,1786179776,594526,0.9598930481283422,"20260903",[],748,[],"20261104","MIMI 本人发布的《魔术之心》MV，重音 Teto 演唱，3774. 负责曲绘和动画。","历史人工复核"]],"worker":"discovery-data/7e52bce6a8612f458cd0.worker.js","calendar":{"20261104":9,"20261103":5},"music":[{"title":"青春コンプレックス","album":"青春コンプレックス","side":"A","number":"01","src":"assets/music/tracks/a01.mp3","art":"assets/music/cover-a01.jpg"},{"title":"ひとりぼっち東京","album":"青春コンプレックス","side":"A","number":"02","src":"assets/music/tracks/a02.mp3","art":"assets/music/cover-a01.jpg"},{"title":"Distortion!!","album":"Distortion!!","side":"A","number":"03","src":"assets/music/tracks/a03.mp3","art":"assets/music/cover-a03.jpg"},{"title":"ギターと孤独と蒼い惑星","album":"ギターと孤独と蒼い惑星","side":"B","number":"01","src":"assets/music/tracks/b01.mp3","art":"assets/music/cover-b01.jpg"},{"title":"あのバンド","album":"あのバンド","side":"B","number":"03","src":"assets/music/tracks/b03.mp3","art":"assets/music/cover-b03.jpg"},{"title":"カラカラ","album":"カラカラ","side":"C","number":"01","src":"assets/music/tracks/c01.mp3","art":"assets/music/cover-c01.jpg"},{"title":"なにが悪い","album":"なにが悪い","side":"C","number":"03","src":"assets/music/tracks/c03.mp3","art":"assets/music/cover-c03.jpg"},{"title":"忘れてやらない","album":"結束バンド","side":"D","number":"01","src":"assets/music/tracks/d01.mp3","art":"assets/music/cover-d01.jpg"},{"title":"星座になれたら","album":"結束バンド","side":"D","number":"02","src":"assets/music/tracks/d02.mp3","art":"assets/music/cover-d01.jpg"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","side":"D","number":"04","src":"assets/music/tracks/d04.mp3","art":"assets/music/cover-d01.jpg"}],"collection":{"finished_at":"20261104_122605","popular_videos":200,"new_videos":1,"related_nodes":319,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
+  <script id="payload" type="application/json">{"version":"bocchi-v9","curated":true,"fields":["bvid","title","owner","pic","dur","pubdate","view","coin_percentile","first_seen","motive_cues","reference_n","screen_flags","admitted_on","review_note","review_basis"],"pageSize":24,"chunkSize":96,"catalog_id":"f09671a3081ee41cf326396a4765cb2e05ccd37b3ba52244479ffa5b662571c8","experiment_id":null,"generated_at":"2026-11-04 13:13:36 +08:00","latest_day":"20261104","total":14,"streams":{"daily":{"count":9,"chunks":["discovery-data/0683ef41c42d4cb6aa95.js"]},"archive":{"count":14,"chunks":["discovery-data/8e4073bf657a18e21f5d.js"]},"day:20261103":{"count":5,"chunks":["discovery-data/21b2156c3e732cff8200.js"]}},"initial":[["BV15n5164ErZ","【同人短片】假面骑士空我 - 鏖戦","变成哔头","assets/selected-covers/BV15n5164ErZ.webp",598,1778670971,679889,0.9946524064171123,"20260903",[],748,[],"20261104","《假面骑士空我》的同人翻拍，用一部独立短片重演特摄动作场面。","历史人工复核"],["BV1uKQwBUEcG","所以我在Minecraft里拍了一部高质感动画MV开头... | あたらよ - 僕は","霓虹波NeXzlyn","assets/selected-covers/BV1uKQwBUEcG.webp",169,1775824160,367355,0.9920106524633822,"20260902",["感动"],751,[],"20261104","用 Minecraft 制作《僕は》的动画 MV 开场，旧评明确认可画面制作。","历史人工复核"],["BV1GnKc6gEJM","[Verity手书] PityParty animation","","assets/selected-covers/BV1GnKc6gEJM.webp",201,1784339398,255157,0.9795918367346939,"20260902",[],784,[],"20261104","用《Pity Party》做 Verity 同人手书，以绘制和动画重新诠释角色。","历史人工复核"],["BV1mP396bEhy","“谨以此片，献给每一位依旧热爱原神的玩家”","Ambersinging","assets/selected-covers/BV1mP396bEhy.webp",226,1785673048,709817,0.9679144385026738,"20260903",[],748,[],"20261104","给原神玩家的同人短片，旧评认可的是原创制作。","历史人工复核"],["BV1XWAuzBEwH","【诗岸原创我也不知道算不算摇滚】自由落体","FREEEEEFALL_","assets/selected-covers/BV1XWAuzBEwH.webp",341,1774143909,330533,0.9440745672436751,"20260903",[],751,[],"20261104","用坠落和失重写挣扎，收有诗岸演唱和人声两个版本。","历史人工复核"],["BV1QB8x6TERz","[诗岸/星尘/原创摇滚]十八岁前想做的事都没实现","grassP","assets/selected-covers/BV1QB8x6TERz.webp",151,1787475071,180449,0.9551192145862553,"20260903",[],713,[],"20261104","grassP 作词、作曲和编曲，以诗岸和星尘写下临近成年的落空感。","历史人工复核"],["BV1rDMyzvEvg","【本家投稿】ブラッドドール / フユウ feat. 初音ミク【BLOOD DOLL】","Fuyuuu_Official","assets/selected-covers/BV1rDMyzvEvg.webp",158,1749886263,361055,0.9067909454061251,"20260903",[],751,[],"20261104","フユウ本人发布的《BLOOD DOLL》，由初音未来演唱的原创音乐影像。","历史人工复核"],["BV1X3gd6BES2","【洛天依原创】若夏日终将完结","","assets/selected-covers/BV1X3gd6BES2.webp",175,1785150000,1168513,0.9612068965517241,"20260903",[],696,[],"20261104","借季节流转写夏天结束后的少年心境，洛天依演唱的原创曲。","历史人工复核"],["BV1ohuu6LEBP","【本家投稿】トリックハート(魔术之心) / MIMI feat. 重音テトSV 【Official Video】","MIMI_music","assets/selected-covers/BV1ohuu6LEBP.webp",158,1786179776,594526,0.9598930481283422,"20260903",[],748,[],"20261104","MIMI 本人发布的《魔术之心》MV，重音 Teto 演唱，3774. 负责曲绘和动画。","历史人工复核"]],"worker":"discovery-data/7e52bce6a8612f458cd0.worker.js","calendar":{"20261104":9,"20261103":5},"music":[{"title":"青春コンプレックス","album":"青春コンプレックス","side":"A","number":"01","src":"assets/music/tracks/a01.mp3","art":"assets/music/cover-a01.jpg"},{"title":"ひとりぼっち東京","album":"青春コンプレックス","side":"A","number":"02","src":"assets/music/tracks/a02.mp3","art":"assets/music/cover-a01.jpg"},{"title":"Distortion!!","album":"Distortion!!","side":"A","number":"03","src":"assets/music/tracks/a03.mp3","art":"assets/music/cover-a03.jpg"},{"title":"ギターと孤独と蒼い惑星","album":"ギターと孤独と蒼い惑星","side":"B","number":"01","src":"assets/music/tracks/b01.mp3","art":"assets/music/cover-b01.jpg"},{"title":"あのバンド","album":"あのバンド","side":"B","number":"03","src":"assets/music/tracks/b03.mp3","art":"assets/music/cover-b03.jpg"},{"title":"カラカラ","album":"カラカラ","side":"C","number":"01","src":"assets/music/tracks/c01.mp3","art":"assets/music/cover-c01.jpg"},{"title":"なにが悪い","album":"なにが悪い","side":"C","number":"03","src":"assets/music/tracks/c03.mp3","art":"assets/music/cover-c03.jpg"},{"title":"忘れてやらない","album":"結束バンド","side":"D","number":"01","src":"assets/music/tracks/d01.mp3","art":"assets/music/cover-d01.jpg"},{"title":"星座になれたら","album":"結束バンド","side":"D","number":"02","src":"assets/music/tracks/d02.mp3","art":"assets/music/cover-d01.jpg"},{"title":"転がる岩、君に朝が降る","album":"結束バンド","side":"D","number":"04","src":"assets/music/tracks/d04.mp3","art":"assets/music/cover-d01.jpg"}],"collection":{"finished_at":"20261104_122605","popular_videos":200,"new_videos":1,"related_nodes":319,"related_requests_succeeded":8,"popular_pages_failed":0}}</script>
   <script>'use strict';
 const BOOT=JSON.parse(document.getElementById('payload').textContent),$=id=>document.getElementById(id);
 const PROFILE='craft_resonance_v1',SCHEMA='bili-review-v1',storageKey='bili_review_'+PROFILE;
@@ -467,7 +494,8 @@ function show(rows, n) {
 let searchResolvers=new Map();
 function workerSearch(args){if(location.protocol==='file:')return Promise.reject(Error('全库搜索请使用网页地址，或运行 run_review.ps1。'));if(!worker){worker=new Worker(BOOT.worker);worker.onmessage=({data})=>{const p=searchResolvers.get(data.id);if(!p)return;searchResolvers.delete(data.id);data.error?p.reject(Error(data.error)):p.resolve(data);};worker.onerror=()=>{for(const p of searchResolvers.values())p.reject(Error('搜索加载失败，请刷新重试'));searchResolvers.clear();worker.terminate();worker=null;};}const id=++workerSearch.id;return new Promise((resolve,reject)=>{searchResolvers.set(id,{resolve,reject});worker.postMessage({...args,id});});}workerSearch.id=0;
 async function render(){const my=++token;$('message').textContent='';try{if(query||tab==='saved'){const ids=tab==='saved'&&!query?Object.keys(reviews).filter(b=>status(reviews[b])==='confirmed'):null;if(ids?.length===0){show([],0);return;}$('message').textContent='正在后台查找，不影响页面浏览…';const result=await workerSearch({query,ids,offset:page*24});if(my!==token)return;$('message').textContent='';show(result.rows.map(unpack),result.total);return;}const stream=BOOT.streams[tab==='daily'&&activeDay!==BOOT.latest_day?'day:'+activeDay:tab];if(!stream||stream.count===0){show([],0);return;}const absolute=page*24,index=Math.floor(absolute/BOOT.chunkSize),offset=absolute%BOOT.chunkSize;const values=await chunk(stream.chunks[index]);if(my!==token)return;show(values.slice(offset,offset+24).map(unpack),stream.count);}catch(e){if(my===token)$('message').textContent=e.message;}}
-function persist(){try{localStorage.setItem(storageKey,JSON.stringify(documentForExport()));}catch(e){$('message').textContent='浏览器保存失败，请导出标注备份。';}}
+function persist(){try{localStorage.setItem(storageKey,JSON.stringify(documentForExport()));}catch(e){$('message').textContent='浏览器保存失败，请导出标注备份。';}paintSavedClip();}
+function paintSavedClip(){const node=$('saved-tab');if(node)node.dataset.filled=String(Object.values(reviews).some(r=>status(r)==='confirmed'));}
 function documentForExport(){return {schema:SCHEMA,profile_id:PROFILE,catalog_id:BOOT.catalog_id,experiment_id:BOOT.experiment_id,reviews};}
 function remember(){history.push(JSON.stringify(reviews));if(history.length>30)history.shift();}
 function openReview(b){selected=currentRows.find(r=>r.bvid===b);if(!selected)return;const r=reviews[b]||{};$('review-title').textContent=selected.title;$('review-note').textContent=selected.review_note?(selected.review_basis+' · '+selected.review_note):'制作与共鸣各至少2分，并认可表达本身，才加入“我的认可”。';for(const k of ['craft','resonance','reason','evidence'])$(k).value=r[k]??'';$('watched').checked=r.watched===true;$('review-dialog').showModal();}
@@ -482,7 +510,7 @@ $('grid').addEventListener('click', event => {
     render();
   }
 });
-$('review-form').addEventListener('submit',e=>{e.preventDefault();if(!$('review-form').reportValidity())return;remember();reviews[selected.bvid]={craft:Number($('craft').value),resonance:Number($('resonance').value),reason:$('reason').value,evidence:$('evidence').value,watched:$('watched').checked};persist();$('review-dialog').close();show(currentRows,total);});
+$('review-form').addEventListener('submit',e=>{e.preventDefault();if(!$('review-form').reportValidity())return;remember();reviews[selected.bvid]={craft:Number($('craft').value),resonance:Number($('resonance').value),reason:$('reason').value,evidence:$('evidence').value,watched:$('watched').checked};persist();$('review-dialog').close();show(currentRows,total);if(status(reviews[selected.bvid])==='confirmed'&&!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)$('saved-tab')?.animate?.([{transform:'translateY(-3px)'},{transform:'translateY(1px)'},{transform:'translateY(0)'}],{duration:380});});
 $('close-review').addEventListener('click',()=>$('review-dialog').close());$('clear-review').addEventListener('click',()=>{remember();delete reviews[selected.bvid];persist();$('review-dialog').close();if(tab==='saved')render();else show(currentRows,total);});
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;if(tab==='daily'&&BOOT.latest_day){activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);paintCalendar();}page=0;query='';$('search').value='';clearTimeout(searchTimer);render();}));
 $('search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{query=$('search').value.trim();page=0;render();},250);});
@@ -505,6 +533,7 @@ if (!BOOT.curated) {
   $('search').setAttribute?.('aria-label', '搜索样本目录');
 }
 show(BOOT.initial.map(unpack),BOOT.streams.daily.count);
+paintSavedClip();
 
 
 // Calendar, a scroll-responsive cover, and the turntable.
@@ -518,6 +547,12 @@ const bandDates = {
 };
 let calendarMonth=(activeDay||BOOT.generated_at.slice(0,7).replace('-','')).slice(0,6);
 const calendarUnit = BOOT.curated ? '部入选' : '条候选';
+let lastTicket = '';
+try { lastTicket = localStorage.getItem('bili_last_ticket') || ''; } catch {}
+function rememberTicket(day) {
+ lastTicket = day;
+ try { localStorage.setItem('bili_last_ticket', day); } catch {}
+}
 function paintCalendar(){
  const year=Number(calendarMonth.slice(0,4)),month=Number(calendarMonth.slice(4,6)),offset=(new Date(year,month-1,1).getDay()+6)%7,days=new Date(year,month,0).getDate();
  $('calendar-month').textContent=year+' / '+String(month).padStart(2,'0');
@@ -527,7 +562,7 @@ function paintCalendar(){
    const count = (BOOT.calendar || {})[key] || 0;
    const occasion = bandDates[key.slice(4)];
    const label = count + calendarUnit + (occasion ? ' · ' + occasion[0] : '');
-   const classes = [key === activeDay ? 'chosen' : '', occasion ? 'band-date ' + occasion[1] : ''].join(' ');
+   const classes = [key === activeDay ? 'chosen' : '', count ? 'has-entry' : '', count && key === lastTicket ? 'last-ticket' : '', occasion ? 'band-date ' + occasion[1] : ''].join(' ');
    html += `<button data-day="${key}" ${count ? '' : 'disabled'} class="${classes}" aria-pressed="${key === activeDay}" aria-label="${year}年${month}月${day}日，${label}" title="${label}">${day}</button>`;
  }
  $('calendar-days').innerHTML=html;$('calendar-selected-date').textContent=activeDay?date(activeDay):'暂无上架';$('calendar-selected-count').textContent=((BOOT.calendar||{})[activeDay]||0)+' '+calendarUnit;
@@ -544,7 +579,7 @@ function paintCalendar(){
  $('calendar-prev').disabled = calendarMonth <= Math.min(buildYear - 1, firstYear) + '01';
  $('calendar-next').disabled = calendarMonth >= (buildYear + 1) + '12';
 }
-function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();}
+function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();if(!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)$('calendar-days').animate?.([{opacity:.25,transform:`translateX(${step*5}px)`},{opacity:1,transform:'translateX(0)'}],{duration:180});}
 $('calendar-prev').addEventListener('click',()=>moveMonth(-1));$('calendar-next').addEventListener('click',()=>moveMonth(1));
 $('calendar-occasion').addEventListener('click', event => {
   const month = event.target.closest('[data-occasion-month]')?.dataset.occasionMonth;
@@ -552,8 +587,8 @@ $('calendar-occasion').addEventListener('click', event => {
   calendarMonth = calendarMonth.slice(0, 4) + month;
   paintCalendar();
 });
-$('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
-$('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
+$('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;rememberTicket(activeDay);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
+$('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;rememberTicket(activeDay);calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 paintCalendar();
 
 const hero = $('interactive-hero');
@@ -589,6 +624,50 @@ const deck = $('turntable');
 const trackList = $('music-track');
 const musicTracks = BOOT.music || [];
 let trackIndex = 0;
+let changeTimer = 0, cueTimer = 0, pendingPlay = false, changingTrack = false;
+let audioContext, analyser, meterFrame = 0;
+const meter = $('audio-meter');
+function stopMeter() {
+  if (meterFrame) cancelAnimationFrame(meterFrame);
+  meterFrame = 0;
+  if (meter) for (let i = 0; i < 7; i++) meter.style.setProperty('--v' + i, '0');
+}
+function prepareMeter() {
+  const AudioEngine = window.AudioContext || window.webkitAudioContext;
+  if (!AudioEngine) return;
+  try {
+    if (!audioContext) {
+      audioContext = new AudioEngine();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      const source = audioContext.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    }
+    audioContext.resume().catch(() => {});
+  } catch { /* Playback remains available without a meter. */ }
+}
+function startMeter() {
+  if (!analyser || !meter || document.hidden || meterFrame) return;
+  const bins = new Uint8Array(analyser.frequencyBinCount);
+  let last = 0;
+  const draw = now => {
+    if (audio.paused || document.hidden) { stopMeter(); return; }
+    if (now - last > 90) {
+      analyser.getByteFrequencyData(bins);
+      for (let i = 0; i < 7; i++) {
+        const from = Math.floor(1 + i * i * 1.7), to = Math.min(bins.length, Math.floor(4 + (i + 1) * (i + 1) * 1.7));
+        let sum = 0;
+        for (let j = from; j < to; j++) sum += bins[j];
+        meter.style.setProperty('--v' + i, String(sum / Math.max(1, to - from) / 255));
+      }
+      last = now;
+    }
+    meterFrame = requestAnimationFrame(draw);
+  };
+  meterFrame = requestAnimationFrame(draw);
+}
+document.addEventListener?.('visibilitychange', () => { if (document.hidden) stopMeter(); else if (!audio.paused) startMeter(); });
 
 const musicTime = seconds => Number.isFinite(seconds)
   ? Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0')
@@ -597,12 +676,12 @@ const musicTime = seconds => Number.isFinite(seconds)
 function musicList() {
   const groups = new Map();
   musicTracks.forEach((track, index) => {
-    const items = groups.get(track.side) || [];
-    items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.number)}</span>${esc(track.title)}</button></li>`);
-    groups.set(track.side, items);
+    const key = track.art || track.album;
+    if (!groups.has(key)) groups.set(key, {track, items: []});
+    groups.get(key).items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.side + track.number)}</span>${esc(track.title)}</button></li>`);
   });
-  trackList.innerHTML = Array.from(groups, ([side, items]) =>
-    `<section class="track-side track-side-${esc(side.toLowerCase())}"><h4>${esc(side)} 面</h4><ul>${items.join('')}</ul></section>`
+  trackList.innerHTML = Array.from(groups.values(), ({track, items}) =>
+    `<section class="track-side track-side-${esc(track.side.toLowerCase())}"><div class="album-jacket">${track.art ? `<img src="${esc(track.art)}" alt="${esc(track.album)}封面" width="64" height="64" loading="lazy">` : ''}<h4>${esc(track.album)}</h4></div><ul>${items.join('')}</ul></section>`
   ).join('');
   $('music-count').textContent = String(musicTracks.length).padStart(2, '0');
 }
@@ -629,8 +708,10 @@ function paintTransport(active) {
 }
 
 function parkArm() {
+  clearTimeout(cueTimer);
   deck.classList.remove('playing', 'arm-down', 'arm-cued');
   paintTransport(false);
+  stopMeter();
 }
 
 function paintProgress() {
@@ -643,6 +724,7 @@ function paintProgress() {
 }
 
 function startMusic() {
+  prepareMeter();
   audio.play().catch(error => {
     if (error.name === 'AbortError') return;
     parkArm();
@@ -652,9 +734,16 @@ function startMusic() {
 
 function loadTrack(index, play = false) {
   if (!musicTracks.length) return;
+  clearTimeout(changeTimer);
+  changingTrack = true;
+  pendingPlay = play;
   audio.pause();
   parkArm();
   trackIndex = (index + musicTracks.length) % musicTracks.length;
+  deck.dataset.changing = 'true';
+  $('music-queue').dataset.changing = 'true';
+  paintTransport(play);
+  changeTimer = setTimeout(() => {
   const track = musicTracks[trackIndex];
   audio.src = track.src;
   paintTrack(track);
@@ -664,7 +753,11 @@ function loadTrack(index, play = false) {
   $('music-elapsed').textContent = '0:00';
   $('music-duration').textContent = '—';
   deck.style.setProperty('--arm-angle', '18deg');
-  if (play) startMusic();
+  deck.dataset.changing = 'false';
+  $('music-queue').dataset.changing = 'false';
+  changingTrack = false;
+  if (pendingPlay) startMusic();
+  }, 360);
 }
 
 audio.addEventListener('play', () => {
@@ -672,17 +765,24 @@ audio.addEventListener('play', () => {
   deck.classList.add('arm-cued');
 });
 audio.addEventListener('playing', () => {
-  deck.classList.add('playing', 'arm-cued', 'arm-down');
+  deck.classList.add('playing', 'arm-cued');
+  clearTimeout(cueTimer);
+  cueTimer = setTimeout(() => { if (!audio.paused) deck.classList.add('arm-down'); }, 340);
+  startMeter();
   $('music-message').textContent = '';
 });
 audio.addEventListener('waiting', () => {
   if (audio.paused) return;
   deck.classList.remove('playing');
+  stopMeter();
   $('music-message').textContent = '正在缓冲…';
 });
 audio.addEventListener('pause', () => {
   if (!audio.paused) return;
-  parkArm();
+  clearTimeout(cueTimer);
+  deck.classList.remove('playing', 'arm-down');
+  paintTransport(false);
+  stopMeter();
   $('music-message').textContent = '';
 });
 audio.addEventListener('error', () => {
@@ -700,6 +800,8 @@ audio.volume = .25;
 
 $('music-play').addEventListener('click', () => {
   if (!musicTracks.length) return;
+  prepareMeter();
+  if (changingTrack) { pendingPlay = !pendingPlay; paintTransport(pendingPlay); return; }
   if (!audio.paused) {
     audio.pause();
   } else if (!audio.src || audio.error) {
@@ -708,12 +810,13 @@ $('music-play').addEventListener('click', () => {
     startMusic();
   }
 });
-$('music-prev').addEventListener('click', () => loadTrack(trackIndex - 1, !audio.paused));
-$('music-next').addEventListener('click', () => loadTrack(trackIndex + 1, !audio.paused));
+$('music-prev').addEventListener('click', () => { prepareMeter(); loadTrack(trackIndex - 1, changingTrack ? pendingPlay : !audio.paused); });
+$('music-next').addEventListener('click', () => { prepareMeter(); loadTrack(trackIndex + 1, changingTrack ? pendingPlay : !audio.paused); });
 trackList.addEventListener('click', event => {
   const button = event.target.closest('[data-track]');
   if (!button) return;
   const index = Number(button.dataset.track);
+  prepareMeter();
   if (index !== trackIndex || !audio.src || audio.error) loadTrack(index, true);
   else if (audio.paused) startMusic();
 });

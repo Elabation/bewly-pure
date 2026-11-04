@@ -18,7 +18,7 @@ function setup(companion=false){
   vm.runInContext("BOOT.calendar={20261101:1,20261103:200};BOOT.streams['day:20261101']={count:1,chunks:['older.js']};BOOT.music=[{title:'青春コンプレックス',album:'結束バンド',side:'A',number:'01',src:'assets/music/tracks/a01.mp3'}];",context);
   for(const id of ['interactive-hero','turntable']){const node=el(id);node.classes=new Set();node.classList={add:(...keys)=>keys.forEach(k=>node.classes.add(k)),remove:(...keys)=>keys.forEach(k=>node.classes.delete(k))};}
   el('music-track').querySelectorAll=()=>[];
-  for(const id of ['interactive-hero','turntable'])el(id).style={setProperty(k,v){this[k]=v;}};
+  for(const id of ['interactive-hero','turntable','audio-meter'])el(id).style={setProperty(k,v){this[k]=v;}};
   el('music-play').setAttribute=function(k,v){this[k]=v;};
   const audio=el('music-audio');audio.paused=true;audio.pause=()=>{audio.paused=true;audio.listeners.pause?.();};audio.play=()=>{audio.paused=false;audio.listeners.play?.();return Promise.resolve();};
   vm.runInContext(fs.readFileSync(path.join(__dirname,'discovery_companion.js'),'utf8'),context);
@@ -34,13 +34,15 @@ test('search kernel runs independently and bounds results to one page',async()=>
 
 test('calendar selection loads the older stream and resets to latest',async()=>{const h=setup(true);h.el('calendar-days').listeners.click({target:{closest:()=>({dataset:{day:'20261101'}})}});await new Promise(setImmediate);assert.equal(h.run('activeDay'),'20261101');assert.equal(h.run('total'),1);h.el('calendar-today').listeners.click();await new Promise(setImmediate);assert.equal(h.run('activeDay'),'20261103');assert.equal(h.run('total'),200);});
 
-test('vinyl follows playback and the arm tracks the groove even through buffering',()=>{
+test('vinyl follows playback, pauses at its angle, and the arm tracks the groove',async()=>{
  const h=setup(true),audio=h.el('music-audio'),deck=h.el('turntable');
  h.el('music-play').listeners.click();
+ await new Promise(r=>setTimeout(r,390));
  assert.equal(audio.src,'assets/music/tracks/a01.mp3');
  assert.equal(deck.classes.has('arm-cued'),true);
  assert.equal(deck.classes.has('playing'),false);
  audio.listeners.playing();
+ await new Promise(r=>setTimeout(r,360));
  assert.equal(deck.classes.has('playing'),true);
  assert.equal(deck.classes.has('arm-down'),true);
  audio.duration=200;audio.currentTime=100;audio.listeners.timeupdate();
@@ -51,7 +53,35 @@ test('vinyl follows playback and the arm tracks the groove even through bufferin
  audio.listeners.playing();
  h.el('music-play').listeners.click();
  assert.equal(audio.paused,true);
- assert.equal(deck.classes.size,0);
+ assert.equal(deck.classes.has('playing'),false);
+ assert.equal(deck.classes.has('arm-cued'),true);
+ assert.equal(deck.classes.has('arm-down'),false);
+});
+
+test('rapid record changes keep the final choice and cancellation stays paused',async()=>{
+ const h=setup(true),audio=h.el('music-audio');
+ h.run("musicTracks.push({...musicTracks[0],title:'Second',src:'assets/music/tracks/a02.mp3'});loadTrack(0,true);loadTrack(1,true)");
+ h.el('music-play').listeners.click();
+ await new Promise(r=>setTimeout(r,390));
+ assert.equal(audio.src,'assets/music/tracks/a02.mp3');
+ assert.equal(audio.paused,true);
+ assert.equal(h.el('music-title').textContent,'Second');
+ assert.equal(h.el('turntable').dataset.changing,'false');
+});
+
+test('calendar visit leaves a bookmark only on an admitted date',()=>{
+ const h=setup(true);
+ h.el('calendar-days').listeners.click({target:{closest:()=>({dataset:{day:'20261101'}})}});
+ assert.equal(h.run('lastTicket'),'20261101');
+ assert.match(h.el('calendar-days').innerHTML,/class="[^"]*has-entry last-ticket/);
+ assert.doesNotMatch(h.el('calendar-days').innerHTML,/disabled class="[^"]*has-entry/);
+});
+
+test('record shelf groups songs by album cover rather than artificial sides',()=>{
+ const h=setup(true);
+ h.run("musicTracks.push({...musicTracks[0],title:'Second'});musicList()");
+ assert.equal((h.el('music-track').innerHTML.match(/class=\"album-jacket\"/g)||[]).length,1);
+ assert.equal((h.el('music-track').innerHTML.match(/data-track=/g)||[]).length,2);
 });
 
 test('small top-edge wheel gestures expand the header, down resets and the wheel stays passive',()=>{

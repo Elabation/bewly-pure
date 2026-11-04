@@ -9,6 +9,12 @@ const bandDates = {
 };
 let calendarMonth=(activeDay||BOOT.generated_at.slice(0,7).replace('-','')).slice(0,6);
 const calendarUnit = BOOT.curated ? '部入选' : '条候选';
+let lastTicket = '';
+try { lastTicket = localStorage.getItem('bili_last_ticket') || ''; } catch {}
+function rememberTicket(day) {
+ lastTicket = day;
+ try { localStorage.setItem('bili_last_ticket', day); } catch {}
+}
 function paintCalendar(){
  const year=Number(calendarMonth.slice(0,4)),month=Number(calendarMonth.slice(4,6)),offset=(new Date(year,month-1,1).getDay()+6)%7,days=new Date(year,month,0).getDate();
  $('calendar-month').textContent=year+' / '+String(month).padStart(2,'0');
@@ -18,7 +24,7 @@ function paintCalendar(){
    const count = (BOOT.calendar || {})[key] || 0;
    const occasion = bandDates[key.slice(4)];
    const label = count + calendarUnit + (occasion ? ' · ' + occasion[0] : '');
-   const classes = [key === activeDay ? 'chosen' : '', occasion ? 'band-date ' + occasion[1] : ''].join(' ');
+   const classes = [key === activeDay ? 'chosen' : '', count ? 'has-entry' : '', count && key === lastTicket ? 'last-ticket' : '', occasion ? 'band-date ' + occasion[1] : ''].join(' ');
    html += `<button data-day="${key}" ${count ? '' : 'disabled'} class="${classes}" aria-pressed="${key === activeDay}" aria-label="${year}年${month}月${day}日，${label}" title="${label}">${day}</button>`;
  }
  $('calendar-days').innerHTML=html;$('calendar-selected-date').textContent=activeDay?date(activeDay):'暂无上架';$('calendar-selected-count').textContent=((BOOT.calendar||{})[activeDay]||0)+' '+calendarUnit;
@@ -35,7 +41,7 @@ function paintCalendar(){
  $('calendar-prev').disabled = calendarMonth <= Math.min(buildYear - 1, firstYear) + '01';
  $('calendar-next').disabled = calendarMonth >= (buildYear + 1) + '12';
 }
-function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();}
+function moveMonth(step){const y=Number(calendarMonth.slice(0,4)),m=Number(calendarMonth.slice(4,6)),d=new Date(y,m-1+step,1);calendarMonth=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0');paintCalendar();if(!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)$('calendar-days').animate?.([{opacity:.25,transform:`translateX(${step*5}px)`},{opacity:1,transform:'translateX(0)'}],{duration:180});}
 $('calendar-prev').addEventListener('click',()=>moveMonth(-1));$('calendar-next').addEventListener('click',()=>moveMonth(1));
 $('calendar-occasion').addEventListener('click', event => {
   const month = event.target.closest('[data-occasion-month]')?.dataset.occasionMonth;
@@ -43,8 +49,8 @@ $('calendar-occasion').addEventListener('click', event => {
   calendarMonth = calendarMonth.slice(0, 4) + month;
   paintCalendar();
 });
-$('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
-$('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
+$('calendar-days').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b||b.disabled)return;activeDay=b.dataset.day;rememberTicket(activeDay);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
+$('calendar-today').addEventListener('click',()=>{if(!BOOT.latest_day)return;activeDay=BOOT.latest_day;rememberTicket(activeDay);calendarMonth=activeDay.slice(0,6);tab='daily';page=0;query='';$('search').value='';clearTimeout(searchTimer);paintCalendar();render();});
 paintCalendar();
 
 const hero = $('interactive-hero');
@@ -80,6 +86,50 @@ const deck = $('turntable');
 const trackList = $('music-track');
 const musicTracks = BOOT.music || [];
 let trackIndex = 0;
+let changeTimer = 0, cueTimer = 0, pendingPlay = false, changingTrack = false;
+let audioContext, analyser, meterFrame = 0;
+const meter = $('audio-meter');
+function stopMeter() {
+  if (meterFrame) cancelAnimationFrame(meterFrame);
+  meterFrame = 0;
+  if (meter) for (let i = 0; i < 7; i++) meter.style.setProperty('--v' + i, '0');
+}
+function prepareMeter() {
+  const AudioEngine = window.AudioContext || window.webkitAudioContext;
+  if (!AudioEngine) return;
+  try {
+    if (!audioContext) {
+      audioContext = new AudioEngine();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      const source = audioContext.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+    }
+    audioContext.resume().catch(() => {});
+  } catch { /* Playback remains available without a meter. */ }
+}
+function startMeter() {
+  if (!analyser || !meter || document.hidden || meterFrame) return;
+  const bins = new Uint8Array(analyser.frequencyBinCount);
+  let last = 0;
+  const draw = now => {
+    if (audio.paused || document.hidden) { stopMeter(); return; }
+    if (now - last > 90) {
+      analyser.getByteFrequencyData(bins);
+      for (let i = 0; i < 7; i++) {
+        const from = Math.floor(1 + i * i * 1.7), to = Math.min(bins.length, Math.floor(4 + (i + 1) * (i + 1) * 1.7));
+        let sum = 0;
+        for (let j = from; j < to; j++) sum += bins[j];
+        meter.style.setProperty('--v' + i, String(sum / Math.max(1, to - from) / 255));
+      }
+      last = now;
+    }
+    meterFrame = requestAnimationFrame(draw);
+  };
+  meterFrame = requestAnimationFrame(draw);
+}
+document.addEventListener?.('visibilitychange', () => { if (document.hidden) stopMeter(); else if (!audio.paused) startMeter(); });
 
 const musicTime = seconds => Number.isFinite(seconds)
   ? Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0')
@@ -88,12 +138,12 @@ const musicTime = seconds => Number.isFinite(seconds)
 function musicList() {
   const groups = new Map();
   musicTracks.forEach((track, index) => {
-    const items = groups.get(track.side) || [];
-    items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.number)}</span>${esc(track.title)}</button></li>`);
-    groups.set(track.side, items);
+    const key = track.art || track.album;
+    if (!groups.has(key)) groups.set(key, {track, items: []});
+    groups.get(key).items.push(`<li><button type="button" data-track="${index}" aria-current="false"><span>${esc(track.side + track.number)}</span>${esc(track.title)}</button></li>`);
   });
-  trackList.innerHTML = Array.from(groups, ([side, items]) =>
-    `<section class="track-side track-side-${esc(side.toLowerCase())}"><h4>${esc(side)} 面</h4><ul>${items.join('')}</ul></section>`
+  trackList.innerHTML = Array.from(groups.values(), ({track, items}) =>
+    `<section class="track-side track-side-${esc(track.side.toLowerCase())}"><div class="album-jacket">${track.art ? `<img src="${esc(track.art)}" alt="${esc(track.album)}封面" width="64" height="64" loading="lazy">` : ''}<h4>${esc(track.album)}</h4></div><ul>${items.join('')}</ul></section>`
   ).join('');
   $('music-count').textContent = String(musicTracks.length).padStart(2, '0');
 }
@@ -120,8 +170,10 @@ function paintTransport(active) {
 }
 
 function parkArm() {
+  clearTimeout(cueTimer);
   deck.classList.remove('playing', 'arm-down', 'arm-cued');
   paintTransport(false);
+  stopMeter();
 }
 
 function paintProgress() {
@@ -134,6 +186,7 @@ function paintProgress() {
 }
 
 function startMusic() {
+  prepareMeter();
   audio.play().catch(error => {
     if (error.name === 'AbortError') return;
     parkArm();
@@ -143,9 +196,16 @@ function startMusic() {
 
 function loadTrack(index, play = false) {
   if (!musicTracks.length) return;
+  clearTimeout(changeTimer);
+  changingTrack = true;
+  pendingPlay = play;
   audio.pause();
   parkArm();
   trackIndex = (index + musicTracks.length) % musicTracks.length;
+  deck.dataset.changing = 'true';
+  $('music-queue').dataset.changing = 'true';
+  paintTransport(play);
+  changeTimer = setTimeout(() => {
   const track = musicTracks[trackIndex];
   audio.src = track.src;
   paintTrack(track);
@@ -155,7 +215,11 @@ function loadTrack(index, play = false) {
   $('music-elapsed').textContent = '0:00';
   $('music-duration').textContent = '—';
   deck.style.setProperty('--arm-angle', '18deg');
-  if (play) startMusic();
+  deck.dataset.changing = 'false';
+  $('music-queue').dataset.changing = 'false';
+  changingTrack = false;
+  if (pendingPlay) startMusic();
+  }, 360);
 }
 
 audio.addEventListener('play', () => {
@@ -163,17 +227,24 @@ audio.addEventListener('play', () => {
   deck.classList.add('arm-cued');
 });
 audio.addEventListener('playing', () => {
-  deck.classList.add('playing', 'arm-cued', 'arm-down');
+  deck.classList.add('playing', 'arm-cued');
+  clearTimeout(cueTimer);
+  cueTimer = setTimeout(() => { if (!audio.paused) deck.classList.add('arm-down'); }, 340);
+  startMeter();
   $('music-message').textContent = '';
 });
 audio.addEventListener('waiting', () => {
   if (audio.paused) return;
   deck.classList.remove('playing');
+  stopMeter();
   $('music-message').textContent = '正在缓冲…';
 });
 audio.addEventListener('pause', () => {
   if (!audio.paused) return;
-  parkArm();
+  clearTimeout(cueTimer);
+  deck.classList.remove('playing', 'arm-down');
+  paintTransport(false);
+  stopMeter();
   $('music-message').textContent = '';
 });
 audio.addEventListener('error', () => {
@@ -191,6 +262,8 @@ audio.volume = .25;
 
 $('music-play').addEventListener('click', () => {
   if (!musicTracks.length) return;
+  prepareMeter();
+  if (changingTrack) { pendingPlay = !pendingPlay; paintTransport(pendingPlay); return; }
   if (!audio.paused) {
     audio.pause();
   } else if (!audio.src || audio.error) {
@@ -199,12 +272,13 @@ $('music-play').addEventListener('click', () => {
     startMusic();
   }
 });
-$('music-prev').addEventListener('click', () => loadTrack(trackIndex - 1, !audio.paused));
-$('music-next').addEventListener('click', () => loadTrack(trackIndex + 1, !audio.paused));
+$('music-prev').addEventListener('click', () => { prepareMeter(); loadTrack(trackIndex - 1, changingTrack ? pendingPlay : !audio.paused); });
+$('music-next').addEventListener('click', () => { prepareMeter(); loadTrack(trackIndex + 1, changingTrack ? pendingPlay : !audio.paused); });
 trackList.addEventListener('click', event => {
   const button = event.target.closest('[data-track]');
   if (!button) return;
   const index = Number(button.dataset.track);
+  prepareMeter();
   if (index !== trackIndex || !audio.src || audio.error) loadTrack(index, true);
   else if (audio.paused) startMusic();
 });

@@ -20,7 +20,7 @@
         <nav class="tabs" aria-label="视频分区">
           <button data-tab="daily" class="on">本期</button>
           <button data-tab="archive">全部入选</button>
-          <button data-tab="saved">我的认可</button>
+          <button data-tab="saved" id="saved-tab"><span class="saved-clip" aria-hidden="true"></span>我的认可</button>
         </nav>
         <div class="searchbox">
           <span aria-hidden="true">⌕</span>
@@ -58,13 +58,13 @@
             <div class="calendar-days" id="calendar-days"></div>
             <p class="calendar-occasion" id="calendar-occasion" hidden></p>
             <div class="calendar-selected">
-              <span id="calendar-selected-date"></span>
-              <span id="calendar-selected-count"></span>
+              <span class="ticket-stamp"><span id="calendar-selected-date"></span><small id="calendar-selected-count"></small></span>
+              <span class="ticket-notch" aria-hidden="true"></span>
               <button id="calendar-today" title="回到最近上架日">最近</button>
             </div>
           </section>
           <section class="record-panel">
-            <div class="record-heading"><h3>結束バンド</h3></div>
+            <div class="record-heading"><h3>結束バンド</h3><span class="audio-meter" id="audio-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
             <div class="turntable" id="turntable" aria-hidden="true">
               <div class="turntable-plate"><div class="vinyl"><div class="record-label"><img id="record-art" alt="" hidden></div></div></div>
               <svg class="deck-hardware" viewBox="0 0 216 192">
@@ -101,7 +101,7 @@
             </div>
             <p class="music-message" id="music-message" role="status"></p>
             <details class="music-queue" id="music-queue">
-              <summary>曲目 <span id="music-count"></span></summary>
+              <summary>唱片架 <span id="music-count"></span></summary>
               <div id="music-track"></div>
             </details>
             <audio id="music-audio" preload="none"></audio>
