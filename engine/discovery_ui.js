@@ -67,7 +67,9 @@ function show(rows, n) {
     saved: '我的认可'
   };
   $('section-title').textContent = query ? '搜索结果' : titles[tab];
-  $('section-sub').textContent = query ? '「' + query + '」' : tab === 'daily' && activeDay ? date(activeDay) : '';
+  const span = rows => { const ds = rows.map(r => r.admitted_on).filter(Boolean).sort();
+    return ds.length ? (ds[0] === ds[ds.length - 1] ? date(ds[0]) : date(ds[0]) + ' – ' + date(ds[ds.length - 1])) : ''; };
+  $('section-sub').textContent = query ? '「' + query + '」' : tab === 'daily' ? span(rows) : '';
   document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
 }
 let searchResolvers=new Map();

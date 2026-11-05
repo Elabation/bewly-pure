@@ -9,6 +9,7 @@ import shutil
 VERSION = "bocchi-v9"
 CHUNK_SIZE = 96
 PAGE_SIZE = 24
+DAILY_SIZE = 9
 FIELDS = ("bvid", "title", "owner", "pic", "dur", "pubdate", "view",
           "coin_percentile", "first_seen", "motive_cues", "reference_n", "screen_flags",
           "admitted_on", "review_note", "review_basis")
@@ -66,7 +67,8 @@ def approved_streams(rows, approvals):
     for row in archive:
         by_day.setdefault(row["admitted_on"], []).append(row)
     day = max(by_day, default="")
-    streams = {"daily": by_day.get(day, []), "archive": archive}
+    # 不设时间窗口：本期 = 最近 DAILY_SIZE 部，跨天取；日历仍按上架日记录。
+    streams = {"daily": archive[:DAILY_SIZE], "archive": archive}
     streams.update(("day:" + date, items) for date, items in by_day.items())
     return streams, day
 
