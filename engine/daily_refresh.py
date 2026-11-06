@@ -6,6 +6,7 @@ from pathlib import Path
 import argparse
 import json
 import sys
+import time
 from datetime import datetime, timedelta
 
 from collect_stats import BiliClient
@@ -137,6 +138,49 @@ def homefeed_client():
     return client
 
 
+def collect_creators(client, mids, per_author=8, limit=60, spacing=2.5):
+    """站上已收录作者的新投稿：不依赖任何关键词，直接顺着作者走。
+
+    space 接口风控较严，逐条慢放并在 412 时退避重试。
+    """
+    found, failed = {}, 0
+    for mid in mids:
+        if len(found) >= limit:
+            break
+        data = None
+        for _ in range(2):
+            try:
+                data = client.get_json("https://api.bilibili.com/x/space/wbi/arc/search",
+                                       {"mid": mid, "ps": per_author, "pn": 1, "order": "pubdate"},
+                                       sign_wbi=True, tries=1)
+                break
+            except Exception as error:
+                failed += 1
+                log("creator {} failed: {}".format(mid, str(error)[:90]))
+                time.sleep(3)
+        time.sleep(spacing)
+        if not data:
+            continue
+        for item in ((data or {}).get("list") or {}).get("vlist") or []:
+            bvid = item.get("bvid")
+            length = duration_seconds(item.get("length"))
+            if not bvid or not (150 < length <= 1800):
+                continue
+            if anime_game_flag(item.get("title") or ""):
+                continue
+            found.setdefault(bvid, item)
+    videos = {}
+    for bvid in found:
+        try:
+            detail = client.get_json("https://api.bilibili.com/x/web-interface/view", {"bvid": bvid}, tries=1)
+        except Exception:
+            continue
+        time.sleep(0.6)
+        if normalize_video(detail, "creator"):
+            videos[bvid] = detail
+    return videos, failed
+
+
 def collect_ranking(client, rids=RANK_RIDS):
     """分区排行榜：匿名可用，带完整元数据，一次覆盖多个分区。"""
     videos, ok, failed = {}, 0, 0
@@ -157,6 +201,8 @@ def collect_ranking(client, rids=RANK_RIDS):
 
 def bootstrap_buvid(client):
     """匿名调 view 需要 buvid3，popular 不会下发，单独取一次。"""
+    if not hasattr(client, "cookies"):
+        return False
     if "buvid3" in client.cookies:
         return True
     try:
@@ -217,7 +263,7 @@ def write_source_capture(folder, prefix, captured, videos, src):
     return len(rows)
 
 
-def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=(), search_keywords=()):
+def collect(client, pages=10, seeds=20, auth_client=None, feed_pages=0, rids=(), search_keywords=()):
     mine, samples, graphs = ROOT/"data/fav_mine", ROOT/"data/samples", ROOT/"data/flow_graph"
     known = set(load_population(mine, samples)) | set(load_flow_nodes(graphs))
     videos, failures = {}, []
@@ -266,20 +312,41 @@ def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=(), 
     fresh = (set(videos) | set(ranking_videos) | set(feed_videos) | set(search_videos)) - known
     log("首页有效 {} 条，首次发现 {} 条。".format(len(rows), len(fresh)))
     pool, meta = catalog(ROOT)
-    choices = sorted([r for r in pool if r["bvid"] in videos and not r.get("motive_cues") and not r.get("screen_flags") and r.get("dur",0)>150
-                      and r.get("reference_n",0)>=30 and r.get("recall_priority") is not None],
-                     key=lambda r:r["recall_priority"], reverse=True)[:seeds]
+    pool_ids = {r["bvid"] for r in pool}
+    try:
+        approvals_data = json.loads((ROOT/"data/reference/shelf_approvals.json").read_text(encoding="utf-8"))
+        approved_ids = [e["bvid"] for e in (approvals_data["items"] if isinstance(approvals_data, dict) else approvals_data)]
+    except Exception:
+        approved_ids = []
+    # 种子 = 站上已收录作品（相关推荐即同口味邻居）+ 当轮热门里合格的补足
+    seed_list = [b for b in approved_ids if b in pool_ids][:seeds]
+    hot = sorted([r for r in pool if r["bvid"] in videos and not r.get("motive_cues") and not r.get("screen_flags")
+                  and r.get("dur",0)>150 and r.get("reference_n",0)>=30 and r.get("recall_priority") is not None],
+                 key=lambda r:r["recall_priority"], reverse=True)
+    for row in hot:
+        if len(seed_list) >= seeds:
+            break
+        if row["bvid"] not in seed_list:
+            seed_list.append(row["bvid"])
+    bootstrap_buvid(client)
     nodes, seen, related_ok = [], set(), 0
-    for candidate in choices:
-        source = videos[candidate["bvid"]]
-        aid = source.get("aid")
+    for bvid in seed_list:
+        source = videos.get(bvid)
+        aid = (source or {}).get("aid")
+        if not aid:
+            try:
+                detail = client.get_json("https://api.bilibili.com/x/web-interface/view", {"bvid": bvid}, tries=1)
+                aid = (detail or {}).get("aid")
+            except Exception as error:
+                log("seed {} detail failed: {}".format(bvid, str(error)[:80]))
+                continue
         if not aid:
             continue
         try:
             items = client.get_json("https://api.bilibili.com/x/web-interface/archive/related", {"aid":aid}, tries=1)
             related_ok += 1
         except Exception as error:
-            log("related {} failed: {}".format(candidate["bvid"], str(error)[:100]))
+            log("related {} failed: {}".format(bvid, str(error)[:100]))
             continue
         for video in items if isinstance(items, list) else []:
             rec = normalize_video(video, "related")
@@ -289,9 +356,9 @@ def collect(client, pages=10, seeds=8, auth_client=None, feed_pages=0, rids=(), 
             nodes.append({"bvid":rec["bvid"],"title":rec["title"],"view":rec["view"],"dur":rec["dur"],
                           "coin_rate":rec["coin"]/rec["view"],"fav_rate":rec["fav"]/rec["view"],
                           "like_rate":rec["like"]/rec["view"],"stat":video["stat"],"pubdate":rec["pubdate"],
-                          "owner":video.get("owner"),"pic":rec["pic"],"parent":candidate["bvid"],"arm":"daily"})
+                          "owner":video.get("owner"),"pic":rec["pic"],"parent":bvid,"arm":"daily"})
     if nodes:
-        write_capture(graphs/("godflowdaily_"+stamp()+".json"),{"meta":{"src":"daily","requests":{"related":len(choices)}},"flows":[{"nodes":nodes}]})
+        write_capture(graphs/("godflowdaily_"+stamp()+".json"),{"meta":{"src":"daily","requests":{"related":len(seed_list)}},"flows":[{"nodes":nodes}]})
     return {"finished_at":stamp(),"popular_videos":len(rows),"new_videos":len(fresh),
             "related_nodes":len(nodes),"related_requests_succeeded":related_ok,"popular_pages_failed":len(failures),
             "ranking_videos":ranking_written,"ranking_partitions_ok":ranking_ok,"ranking_partitions_failed":ranking_failed,
@@ -314,7 +381,7 @@ def main():
                 log("未找到 .sessdata，首页推荐源跳过（分区排行与热门照常）。")
             result=collect(BiliClient(interval=.8), rids=RANK_RIDS, auth_client=auth,
                            feed_pages=FEED_PAGES if auth else 0,
-                           search_keywords=SEARCH_KEYWORDS if auth else ())
+                           search_keywords=())
             status_path.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding="utf-8")
             log("采集成功："+json.dumps(result,ensure_ascii=False))
         summary=rebuild(ROOT)
