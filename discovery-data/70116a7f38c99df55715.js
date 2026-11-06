@@ -1,0 +1,1 @@
+window.BiliDiscovery.receive(document.currentScript.dataset.key,[["BV1r2sR6dEBw","【本家】ラズベリー - 重音テト【カササギ】","カササギ_柿崎ユウタ","assets/selected-covers/BV1r2sR6dEBw.webp",162,1793793600,226509,0.9872448979591837,"20261105",[],784,[],"20261105","カササギ本家投稿的 Vocaloid 原创曲，词曲/映像同源，投币率 8.2%","维护代理筛选（未观看画面）"]]);
