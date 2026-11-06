@@ -1,4 +1,4 @@
-const INDEX="7e09fee42d62c1340e24.json";
+const INDEX="5e42c19e84164fd7a5ba.json";
 let catalogPromise;
 function catalog(){
  if(!catalogPromise)catalogPromise=fetch(INDEX).then(r=>{if(!r.ok)throw Error('搜索索引加载失败');return r.json();}).then(rows=>rows.map(row=>({row,text:(row[0]+' '+row[1]+' '+row[2]).normalize('NFKC').toLowerCase()})));
