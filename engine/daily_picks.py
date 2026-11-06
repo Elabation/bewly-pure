@@ -54,9 +54,8 @@ def build_picks(root=ROOT, count=PICK_COUNT, day=None):
               "series": 0, "not_work": 0, "game": 0, "small": 0, "kept": 0}
     pool = []
     for row in rows:
-        if row.get("first_seen") != day:
-            continue
-        funnel["fresh"] += 1
+        if row.get("first_seen") == day:
+            funnel["fresh"] += 1
         if row["bvid"] in approved:
             funnel["approved"] += 1
             continue
@@ -84,12 +83,18 @@ def build_picks(root=ROOT, count=PICK_COUNT, day=None):
             continue
         row["_ratio"] = coin / view if view else 0
         row["_form"] = form_of(title)
+        src = (row.get("src") or "")
+        row["_src"] = ("search" if "search" in src else
+                       "ranking" if "rank" in src else
+                       "homefeed" if "feed" in src else "home")
+        row["_new"] = row.get("first_seen") == day
         row["_numflag"] = numeric_title_flag(title) == "number_review"
         pool.append(row)
 
     for row in pool:
         row["_motive"] = bool(row.get("motive_cues"))
-    pool.sort(key=lambda row: (row["_motive"], -row["_ratio"]))
+    order = {"search": 0, "ranking": 1, "homefeed": 2, "home": 3}
+    pool.sort(key=lambda row: (order.get(row["_src"], 9), row["_motive"], -row["_ratio"]))
     picked, owners, forms = [], set(), {}
     for row in pool:
         owner = (row.get("owner") or "").strip()
@@ -104,6 +109,8 @@ def build_picks(root=ROOT, count=PICK_COUNT, day=None):
         if len(picked) >= count:
             break
     funnel["pool"] = len(pool)
+    funnel["from_search"] = sum(1 for r in pool if r["_src"] == "search")
+    funnel["new_today"] = sum(1 for r in pool if r["_new"])
     funnel["kept"] = len(picked)
     return day, funnel, picked
 
@@ -119,9 +126,10 @@ def write_picks(root=ROOT, count=PICK_COUNT, day=None):
              "| # | 标题 | UP | 时长 | 投币率 | 形态 |", "|---|---|---|---|---|---|"]
     for index, row in enumerate(picked, 1):
         flag = " ⚠感动线索" if row.get("_motive") else ""
-        lines.append("| %d | %s | %s | %d 秒 | %.1f%% | %s%s |" % (
+        lines.append("| %d | %s | %s | %d 秒 | %.1f%% | %s / %s%s |" % (
             index, row.get("title", ""), (row.get("owner") or "").strip()[:16],
-            row.get("dur") or 0, row["_ratio"] * 100, row["_form"], flag))
+            row.get("dur") or 0, row["_ratio"] * 100, row["_form"],
+            row["_src"] + ("·今日" if row["_new"] else "·存量"), flag))
         lines.append("| | https://www.bilibili.com/video/%s | | | | |" % row["bvid"])
     lines += ["", "## 确认后执行", "",
               "```powershell",
