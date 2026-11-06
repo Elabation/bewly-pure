@@ -41,9 +41,22 @@ def write_capture(path, data):
 RANK_RIDS = (1, 3, 4, 5, 36, 160, 181, 188)  # 动画/音乐/游戏/娱乐/科技/生活/影视/数码
 FEED_PAGES = 5
 SEARCH_KEYWORDS = ("手书", "原创动画", "定格动画", "同人短片", "原创曲", "原创音乐",
-                   "翻调", "二创", "动画短片", "微电影", "演奏", "手作", "特效短片", "剧情MV")
+                   "翻调", "二创", "动画短片", "微电影", "演奏", "手作", "特效短片", "剧情MV",
+                   "原创MV", "自制动画", "手绘动画", "同人动画", "独立短片", "毕业设计动画",
+                   "翻唱", "改编曲", "乐器演奏", "定格", "黏土动画", "皮影", "沙画", "特摄",
+                   "模型制作", "道具制作", "特效化妆", "分镜", "动画毕设", "原创歌曲", "曲子配布")
 SEARCH_PAGES = 2
 SEARCH_LIMIT = 40
+SEARCH_PER_DAY = 12                      # 每天轮换 12 个词，避免同一批结果反复命中
+SEARCH_ORDERS = ("scores", "pubdate", "stow", "click")
+
+
+def daily_slice(items, day, count):
+    """按日期对列表做确定性轮换，保证每天看到不同的一段。"""
+    if not items:
+        return ()
+    start = sum(ord(ch) for ch in day) % len(items)
+    return tuple(items[(start + index) % len(items)] for index in range(min(count, len(items))))
 
 
 def duration_seconds(value):
@@ -61,15 +74,22 @@ def duration_seconds(value):
     return total
 
 
-def collect_search(client, enrich_client, keywords=SEARCH_KEYWORDS, pages=SEARCH_PAGES, limit=SEARCH_LIMIT):
-    """关键词搜索（登录态）：结果自带标签，先按标签/时长粗筛，再对存活者补全统计。"""
+def collect_search(client, enrich_client, keywords=None, pages=SEARCH_PAGES, limit=SEARCH_LIMIT, order=None):
+    """关键词搜索（登录态）：结果自带标签，先按标签/时长粗筛，再对存活者补全统计。
+
+    词表与排序方式按天轮换，避免每天抓到同一批结果。
+    """
+    day = stamp()[:8]
+    keywords = keywords or daily_slice(SEARCH_KEYWORDS, day, SEARCH_PER_DAY)
+    order = order or SEARCH_ORDERS[sum(ord(ch) for ch in day) % len(SEARCH_ORDERS)]
+    log("搜索轮换：{} 词 / order={}".format(len(keywords), order))
     raw, failed = {}, 0
     for keyword in keywords:
         for page in range(1, pages + 1):
             try:
                 data = client.get_json("https://api.bilibili.com/x/web-interface/wbi/search/type",
                                        {"search_type": "video", "keyword": keyword,
-                                        "page": page, "order": "scores"}, sign_wbi=True, tries=1)
+                                        "page": page, "order": order}, sign_wbi=True, tries=1)
             except Exception as error:
                 failed += 1
                 log("search {} p{} failed: {}".format(keyword, page, str(error)[:100]))
